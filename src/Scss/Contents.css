@@ -1,0 +1,19 @@
+.contents {
+  position: absolute;
+  width: calc(100% - 4rem);
+  height: calc(100% - 13.5rem);
+  top: 9rem;
+  background: #fff;
+  left: 2rem;
+  -webkit-box-shadow: 5px 5px 10px rgba(20, 50, 80, 0.15);
+          box-shadow: 5px 5px 10px rgba(20, 50, 80, 0.15);
+  border-radius: 8px;
+}
+
+.contents.left {
+  width: calc(100% - 19rem);
+  height: calc(100% - 10rem);
+  top: 5.5rem;
+  left: 17rem;
+}
+/*# sourceMappingURL=Contents.css.map */

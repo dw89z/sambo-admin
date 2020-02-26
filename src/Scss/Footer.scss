@@ -1,0 +1,125 @@
+@import "Variables.scss";
+
+.footer {
+  width: 100%;
+  height: 2.5rem;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background: #ffffff;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.8rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 1.25rem;
+  padding-left: 16rem;
+
+  &.non-padding {
+    padding-left: 0rem;
+  }
+
+  img {
+    width: 7rem;
+  }
+}
+
+.footer-util {
+  height: 2.5rem;
+
+  ul {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+
+    li {
+      font-size: 0.8rem;
+      background: url("../assets/img/data.svg") 20% 55% no-repeat;
+      background-size: 1.5rem !important;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      border-right: 1px solid #e1e1e9;
+      padding: 0 2rem 0 3.5rem;
+      cursor: pointer;
+      font-weight: 500;
+
+      &:nth-child(2) {
+        background: url("../assets/img/manual.svg") 20% 55% no-repeat;
+        padding-left: 5rem;
+
+        &:hover {
+          background-image: url("../assets/img/manual-on.svg");
+        }
+      }
+
+      &:nth-child(3) {
+        background: url("../assets/img/list.svg") 20% 55% no-repeat;
+
+        &:hover {
+          background-image: url("../assets/img/list-on.svg");
+        }
+      }
+
+      &:hover {
+        color: $pri;
+        background-image: url("../assets/img/data-on.svg");
+      }
+    }
+  }
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .client,
+  .production {
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+  }
+
+  span {
+    font-weight: 300;
+    color: #a1a1a9;
+    padding: 0 1.5rem;
+    position: relative;
+  }
+
+  a {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #a1a1a9;
+    font-weight: 600;
+    color: #a1a1a9;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 1rem;
+
+    &:hover {
+      color: $pri;
+      border-color: $pri;
+    }
+  }
+}
+
+.preloading {
+  position: absolute;
+  z-index: -9999;
+  left: -9999px;
+
+  p {
+    background: url("../assets/img/list-on.svg") center center no-repeat;
+    &:first-child {
+      background: url("../assets/img/manual-on.svg") center center no-repeat;
+    }
+
+    &:last-child {
+      background: url("../assets/img/data-on.svg") center center no-repeat;
+    }
+  }
+}

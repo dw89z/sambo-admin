@@ -1,0 +1,162 @@
+.left-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15rem;
+  overflow-y: auto;
+  height: 100vh;
+  padding-top: 7rem;
+  padding-bottom: 3rem;
+  background: #fff;
+  z-index: 999;
+  -webkit-box-shadow: 5px 0px 5px rgba(20, 50, 80, 0.1);
+          box-shadow: 5px 0px 5px rgba(20, 50, 80, 0.1);
+}
+
+.left-menu .menu-list {
+  border-top: 1px solid #e1e1e9;
+  font-family: "Spoqa Han Sans", sans-serif;
+  border-left: 8px solid transparent;
+}
+
+.left-menu .menu-list p {
+  padding: 1.3rem 0 1.4rem 1.8rem;
+  cursor: pointer;
+  font-weight: 500;
+  position: relative;
+}
+
+.left-menu .menu-list p:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-left: 1.5px solid #818189;
+  border-top: 1.5px solid #818189;
+  -webkit-transform: rotate(-135deg);
+          transform: rotate(-135deg);
+  top: 1.5rem;
+  right: 1.5rem;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.left-menu .menu-list p:hover {
+  background: #f9f9ff;
+}
+
+.left-menu .menu-list.active {
+  border-left: 8px solid #1d2baa;
+}
+
+.left-menu .menu-list.active p:after {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  top: 1.65rem;
+}
+
+.left-menu .sub-menu {
+  background: #f1f1fa;
+  max-height: 0;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.left-menu .sub-menu .sub-menu-list {
+  padding: 1.25rem 1.8rem;
+  font-weight: 300;
+  border-top: 1px solid #c1c1c9;
+}
+
+.left-menu .sub-menu .sub-menu-list:active {
+  background: #1d2baa !important;
+  color: #fff;
+}
+
+.left-menu .sub-menu .sub-menu-list:hover {
+  background: #e1e1ef;
+}
+
+.header-menu {
+  width: calc(100% - 15rem);
+  position: absolute;
+  height: 3.5rem;
+  top: 3.5rem;
+  left: 15rem;
+  background: #fff;
+  z-index: 999;
+  -webkit-box-shadow: 0 5px 5px rgba(20, 50, 80, 0.1);
+          box-shadow: 0 5px 5px rgba(20, 50, 80, 0.1);
+}
+
+.header-menu .menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding-left: 1rem;
+}
+
+.header-menu .menu .menu-list {
+  position: relative;
+  height: 3.5rem;
+  line-height: 3.5rem;
+  padding: 0 3rem 0 1.25rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  position: relative;
+  color: #999;
+}
+
+.header-menu .menu .menu-list:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 3.5px;
+  height: 18px;
+  background: #1d2baa;
+  top: 1.27rem;
+  left: 0.5rem;
+  opacity: 0;
+}
+
+.header-menu .menu .menu-list:hover:after {
+  opacity: 1;
+}
+
+.header-menu .menu .menu-list:hover .sub-menu {
+  opacity: 1;
+  visibility: visible;
+}
+
+.header-menu .menu .sub-menu {
+  opacity: 0;
+  visibility: hidden;
+  background: #fff;
+  width: 9rem;
+  position: absolute;
+  left: 0;
+  top: 3.5rem;
+  line-height: 3.5rem;
+  -webkit-box-shadow: 0 2px 6px rgba(20, 50, 80, 0.2);
+          box-shadow: 0 2px 6px rgba(20, 50, 80, 0.2);
+}
+
+.header-menu .menu .sub-menu .sub-menu-list {
+  padding: 0 1.25rem;
+  border-top: 1px solid #e1e1e9;
+  color: #333;
+  font-weight: 300;
+}
+
+.header-menu .menu .sub-menu .sub-menu-list:first-child {
+  border: none;
+}
+
+.header-menu .menu .sub-menu .sub-menu-list:hover {
+  background: #1d2baa;
+  color: #fff;
+}
+/*# sourceMappingURL=Menu.css.map */
