@@ -2,17 +2,16 @@ import React from "react";
 import "../Scss/Menu.css";
 import Footer from "./Footer";
 import Header from "./Header";
-import Contents from "./Contents";
+import Components from "./Content/ContentIndex";
 
 class Menu extends React.Component {
   constructor(props) {
     super(props);
-    this.toggleClassParent = this.toggleClassParent.bind(this);
     this.toggleMenuAxis = this.toggleMenuAxis.bind(this);
     this.state = {
       menu: this.props.menu.list,
       menuAxis: true,
-      currentContent: "YearPlan"
+      currentComp: "YearPlan"
     };
   }
 
@@ -27,6 +26,24 @@ class Menu extends React.Component {
     }
   }
 
+  createTabs() {
+    const { menuAxis } = this.state;
+    const menu = this.state.menu;
+    const allTabs = menu.map((tab, idx) => {
+      return (
+        <li key={idx} className="tab">
+          {tab.menuList}
+          <span
+            className="delete-btn"
+            onClick={() => console.log("deleted")}
+          ></span>
+        </li>
+      );
+    });
+
+    return <ul className={menuAxis ? "tabs" : "tabs left"}>{allTabs}</ul>;
+  }
+
   toggleMenuAxis() {
     const { menuAxis } = this.state;
     this.setState({
@@ -34,15 +51,16 @@ class Menu extends React.Component {
     });
   }
 
-  handleContent(content) {
+  handleContent(comp) {
     this.setState({
-      currentContent: content
+      currentComp: comp
     });
   }
 
   render() {
     const menu = this.state.menu;
-    const currentContent = this.state.currentContent;
+    const comp = this.state.currentComp;
+    const CurrentComp = Components[comp];
     const { menuAxis } = this.state;
 
     return (
@@ -73,7 +91,10 @@ class Menu extends React.Component {
             ))}
           </ul>
         </div>
-        <Contents axis={menuAxis} content={currentContent} />
+        {this.createTabs()}
+        <div className={menuAxis ? "contents" : "contents left"}>
+          <CurrentComp />
+        </div>
         <Footer axis={menuAxis} />
       </>
     );

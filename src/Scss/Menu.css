@@ -159,4 +159,84 @@
   background: #1d2baa;
   color: #fff;
 }
+
+.contents {
+  position: absolute;
+  width: calc(100% - 4rem);
+  height: calc(100% - 16.5rem);
+  top: 11.8rem;
+  background: #fff;
+  left: 2rem;
+  -webkit-box-shadow: 10px 10px 10px rgba(20, 50, 80, 0.15);
+          box-shadow: 10px 10px 10px rgba(20, 50, 80, 0.15);
+  border-radius: 8px;
+  border-top-left-radius: 0;
+  padding: 2rem;
+}
+
+.contents.left {
+  width: calc(100% - 19rem);
+  height: calc(100% - 12.5rem);
+  top: 8rem;
+  left: 17rem;
+}
+
+.tabs {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  top: 9rem;
+  left: 2rem;
+}
+
+.tabs.left {
+  top: 5.2rem;
+  left: 17rem;
+}
+
+.tabs .tab {
+  border-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: #fff;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: "Noto sans KR", sans-serif;
+  cursor: pointer;
+}
+
+.tabs .delete-btn {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+
+.tabs .delete-btn:after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 12px;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  background: red;
+  position: absolute;
+  top: 9px;
+  right: 1px;
+}
+
+.tabs .delete-btn:before {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 12px;
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+  background: red;
+  position: absolute;
+  top: 9px;
+  right: 1px;
+}
 /*# sourceMappingURL=Menu.css.map */

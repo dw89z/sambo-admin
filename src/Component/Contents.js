@@ -5,13 +5,13 @@ import Components from "./Content/ContentIndex";
 
 class Contents extends React.Component {
   render() {
-    let content = this.props.content;
-    // console.log(content);
-    const ContentComp = Components[content];
+    console.log(this.props);
+    let comp = this.props.currentComp;
+    const CurrentComp = Components[comp];
     return (
       <>
         <div className={this.props.axis ? "contents" : "contents left"}>
-          <ContentComp />
+          <CurrentComp />
         </div>
       </>
     );

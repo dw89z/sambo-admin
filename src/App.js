@@ -9,7 +9,7 @@ class App extends React.Component {
         subList: [
           {
             id: 1,
-            name: "월간계획",
+            name: "년간계획",
             comp: "YearPlan"
           },
           {
