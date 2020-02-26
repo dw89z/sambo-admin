@@ -1,18 +1,17 @@
 import React from "react";
 import "../Scss/Contents.css";
 import Dashboard from "./Dashboard";
+import Components from "./Content/ContentIndex";
 
 class Contents extends React.Component {
-  state = {
-    axis: this.props.axis
-  };
   render() {
-    const { axis } = this.state;
-    console.log(axis);
+    let content = this.props.content;
+    // console.log(content);
+    const ContentComp = Components[content];
     return (
       <>
         <div className={this.props.axis ? "contents" : "contents left"}>
-          <Dashboard />
+          <ContentComp />
         </div>
       </>
     );

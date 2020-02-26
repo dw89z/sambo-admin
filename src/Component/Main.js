@@ -10,8 +10,9 @@ class Menu extends React.Component {
     this.toggleClassParent = this.toggleClassParent.bind(this);
     this.toggleMenuAxis = this.toggleMenuAxis.bind(this);
     this.state = {
-      list: this.props.menu,
-      menuAxis: true
+      menu: this.props.menu.list,
+      menuAxis: true,
+      currentContent: "YearPlan"
     };
   }
 
@@ -33,13 +34,15 @@ class Menu extends React.Component {
     });
   }
 
-  test(item, idx) {
-    console.log(item);
-    console.log(idx);
+  handleContent(content) {
+    this.setState({
+      currentContent: content
+    });
   }
 
   render() {
-    const { list } = this.state.list;
+    const menu = this.state.menu;
+    const currentContent = this.state.currentContent;
     const { menuAxis } = this.state;
 
     return (
@@ -47,7 +50,7 @@ class Menu extends React.Component {
         <Header toggleMenuAxis={this.toggleMenuAxis} />
         <div className={menuAxis ? "header-menu" : "left-menu"}>
           <ul className="menu">
-            {list.map((menu, idx) => (
+            {menu.map((menu, idx) => (
               <li className="menu-list" key={idx}>
                 {menuAxis ? (
                   <p>{menu.menuList}</p>
@@ -60,9 +63,9 @@ class Menu extends React.Component {
                     <li
                       className="sub-menu-list"
                       key={idx}
-                      onClick={() => this.test(sub, idx)}
+                      onClick={() => this.handleContent(sub.comp)}
                     >
-                      {sub}
+                      {sub.name}
                     </li>
                   ))}
                 </ul>
@@ -70,7 +73,7 @@ class Menu extends React.Component {
             ))}
           </ul>
         </div>
-        <Contents axis={menuAxis} />
+        <Contents axis={menuAxis} content={currentContent} />
         <Footer axis={menuAxis} />
       </>
     );
