@@ -189,7 +189,7 @@
   }
 
   .tab {
-    border-radius: 5px;
+    border-radius: 8px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     background: #fff;
@@ -198,6 +198,11 @@
     font-weight: 700;
     font-family: "Noto sans KR", sans-serif;
     cursor: pointer;
+    opacity: 0.5;
+
+    &.active {
+      opacity: 1;
+    }
   }
 
   .delete-btn {
@@ -212,7 +217,7 @@
       width: 1px;
       height: 12px;
       transform: rotate(45deg);
-      background: red;
+      background: #ee2472;
       position: absolute;
       top: 9px;
       right: 1px;
@@ -224,7 +229,7 @@
       width: 1px;
       height: 12px;
       transform: rotate(-45deg);
-      background: red;
+      background: #ee2472;
       position: absolute;
       top: 9px;
       right: 1px;
