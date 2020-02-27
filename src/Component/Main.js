@@ -57,10 +57,14 @@ class Menu extends React.Component {
             onClick={() => this.handleSelect(comps)}
           >
             {comps.name}
-            <span
-              className="delete-btn"
-              onClick={() => this.deleteComponent(comps.id)}
-            ></span>
+            {comps.id === currentComp.id ? (
+              <span
+                className="delete-btn"
+                onClick={e => this.deleteComponent(e, comps.id)}
+              ></span>
+            ) : (
+              <span className="delete-btn disable"></span>
+            )}
           </li>
         ))}
       </ul>
@@ -89,7 +93,8 @@ class Menu extends React.Component {
     return mountedCompsRender;
   }
 
-  deleteComponent(id) {
+  deleteComponent(e, id) {
+    e.stopPropagation();
     const { mountedComps } = this.state;
     const deleteToId = mountedComps.filter(comp => comp.id !== id);
     let previousComp = deleteToId[deleteToId.length - 1];
@@ -101,13 +106,12 @@ class Menu extends React.Component {
   }
 
   handleSelect(comps) {
-    console.log(comps);
     this.setState({
       currentComp: comps
     });
   }
 
-  handleContent(comp, name, id) {
+  selectContent(comp, name, id) {
     const { mountedComps } = this.state;
     const isMounted = mountedComps.some(comps => comps.id === id);
 
@@ -154,7 +158,7 @@ class Menu extends React.Component {
                       className="sub-menu-list"
                       key={idx}
                       onClick={() =>
-                        this.handleContent(sub.comp, sub.name, sub.id)
+                        this.selectContent(sub.comp, sub.name, sub.id)
                       }
                     >
                       {sub.name}

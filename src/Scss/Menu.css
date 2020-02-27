@@ -222,6 +222,14 @@
   right: 8px;
 }
 
+.tabs .delete-btn.disable:after {
+  background: #999;
+}
+
+.tabs .delete-btn.disable:before {
+  background: #999;
+}
+
 .tabs .delete-btn:after {
   content: "";
   display: block;

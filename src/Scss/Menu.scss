@@ -214,6 +214,16 @@
     top: 12px;
     right: 8px;
 
+    &.disable {
+      &:after {
+        background: #999;
+      }
+
+      &:before {
+        background: #999;
+      }
+    }
+
     &:after {
       content: "";
       display: block;
