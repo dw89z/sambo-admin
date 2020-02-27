@@ -108,12 +108,12 @@ class App extends React.Component {
         menuList: "업체현황",
         subList: [
           {
-            id: 13,
+            id: 16,
             name: "업체일반",
             comp: "GeneralStatus"
           },
           {
-            id: 14,
+            id: 17,
             name: "BOM조회",
             comp: "BOMLookup"
           }
@@ -123,17 +123,17 @@ class App extends React.Component {
         menuList: "협력업체 ERP",
         subList: [
           {
-            id: 12,
+            id: 18,
             name: "품목현황",
             comp: "ItemStatus"
           },
           {
-            id: 13,
+            id: 19,
             name: "BOM현황",
             comp: "BOMStatus"
           },
           {
-            id: 14,
+            id: 20,
             name: "재고현황",
             comp: "StockStatus"
           }
@@ -143,22 +143,22 @@ class App extends React.Component {
         menuList: "임가공 현황",
         subList: [
           {
-            id: 12,
+            id: 21,
             name: "수불명세서",
             comp: "Bill"
           },
           {
-            id: 13,
+            id: 22,
             name: "재고현황",
             comp: "ProItemStatus"
           },
           {
-            id: 14,
+            id: 23,
             name: "불량등록",
             comp: "RegistBad"
           },
           {
-            id: 14,
+            id: 24,
             name: "불량현황",
             comp: "BadStatus"
           }

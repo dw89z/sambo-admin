@@ -160,8 +160,8 @@
 .contents {
   position: absolute;
   width: calc(100% - 4rem);
-  height: calc(100% - 16.5rem);
-  top: 11.8rem;
+  height: calc(100% - 17rem);
+  top: 11.5rem;
   background: #fff;
   left: 2rem;
   box-shadow: 10px 10px 10px rgba(20, 50, 80, 0.15);
@@ -193,12 +193,13 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     background: #fff;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 2.75rem 0.75rem 1.25rem;
     font-size: 0.8rem;
     font-weight: 700;
     font-family: "Noto sans KR", sans-serif;
     cursor: pointer;
     opacity: 0.5;
+    position: relative;
 
     &.active {
       opacity: 1;
@@ -207,9 +208,11 @@
 
   .delete-btn {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    position: relative;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 12px;
+    right: 8px;
 
     &:after {
       content: "";
@@ -219,8 +222,8 @@
       transform: rotate(45deg);
       background: #ee2472;
       position: absolute;
-      top: 9px;
-      right: 1px;
+      top: 5px;
+      right: 10px;
     }
 
     &:before {
@@ -231,8 +234,20 @@
       transform: rotate(-45deg);
       background: #ee2472;
       position: absolute;
-      top: 9px;
-      right: 1px;
+      top: 5px;
+      right: 10px;
     }
+  }
+}
+
+.content-inner {
+  width: calc(100% - 4rem);
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+
+  &.active {
+    visibility: visible;
+    opacity: 1;
   }
 }

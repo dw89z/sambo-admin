@@ -11,8 +11,26 @@ class Menu extends React.Component {
     this.state = {
       menu: this.props.menu.list,
       menuAxis: true,
-      currentComp: "YearPlan"
+      mountedComps: [
+        {
+          id: 0,
+          comp: "Dashboard",
+          name: "대쉬보드"
+        }
+      ],
+      currentComp: {
+        id: 0,
+        comp: "Dashboard",
+        name: "대쉬보드"
+      }
     };
+  }
+
+  toggleMenuAxis() {
+    const { menuAxis } = this.state;
+    this.setState({
+      menuAxis: !menuAxis
+    });
   }
 
   toggleClassParent(e) {
@@ -27,40 +45,94 @@ class Menu extends React.Component {
   }
 
   createTabs() {
+    const { mountedComps, currentComp } = this.state;
     const { menuAxis } = this.state;
-    const menu = this.state.menu;
-    const allTabs = menu.map((tab, idx) => {
+
+    return (
+      <ul className={menuAxis ? "tabs" : "tabs left"}>
+        {mountedComps.map((comps, idx) => (
+          <li
+            key={idx}
+            className={comps.id === currentComp.id ? "tab active" : "tab"}
+            onClick={() => this.handleSelect(comps)}
+          >
+            {comps.name}
+            <span
+              className="delete-btn"
+              onClick={() => this.deleteComponent(comps.id)}
+            ></span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  createContent() {
+    const { mountedComps } = this.state;
+    const { currentComp } = this.state;
+
+    const mountedCompsRender = mountedComps.map((comp, idx) => {
+      let CurrentComp = Components[comp.comp];
       return (
-        <li key={idx} className="tab">
-          {tab.menuList}
-          <span
-            className="delete-btn"
-            onClick={() => console.log("deleted")}
-          ></span>
-        </li>
+        <div
+          className={
+            comp.id === currentComp.id
+              ? "content-inner active"
+              : "content-inner"
+          }
+          key={idx}
+        >
+          <CurrentComp />
+        </div>
       );
     });
-
-    return <ul className={menuAxis ? "tabs" : "tabs left"}>{allTabs}</ul>;
+    return mountedCompsRender;
   }
 
-  toggleMenuAxis() {
-    const { menuAxis } = this.state;
+  deleteComponent(id) {
+    const { mountedComps } = this.state;
+    const deleteToId = mountedComps.filter(comp => comp.id !== id);
+    let previousComp = deleteToId[deleteToId.length - 1];
     this.setState({
-      menuAxis: !menuAxis
+      mountedComps: deleteToId,
+      currentComp: previousComp
+    });
+    this.handleSelect(previousComp);
+  }
+
+  handleSelect(comps) {
+    console.log(comps);
+    this.setState({
+      currentComp: comps
     });
   }
 
-  handleContent(comp) {
-    this.setState({
-      currentComp: comp
-    });
+  handleContent(comp, name, id) {
+    const { mountedComps } = this.state;
+    const isMounted = mountedComps.some(comps => comps.id === id);
+
+    const newComp = {
+      id: id,
+      comp: comp,
+      name: name
+    };
+
+    if (isMounted) {
+      this.setState({
+        currentComp: newComp
+      });
+    } else {
+      this.setState({
+        mountedComps: [...mountedComps, newComp],
+        currentComp: newComp
+      });
+    }
+
+    this.createTabs(comp, id);
   }
 
   render() {
     const menu = this.state.menu;
-    const comp = this.state.currentComp;
-    const CurrentComp = Components[comp];
     const { menuAxis } = this.state;
 
     return (
@@ -81,7 +153,9 @@ class Menu extends React.Component {
                     <li
                       className="sub-menu-list"
                       key={idx}
-                      onClick={() => this.handleContent(sub.comp)}
+                      onClick={() =>
+                        this.handleContent(sub.comp, sub.name, sub.id)
+                      }
                     >
                       {sub.name}
                     </li>
@@ -93,7 +167,7 @@ class Menu extends React.Component {
         </div>
         {this.createTabs()}
         <div className={menuAxis ? "contents" : "contents left"}>
-          <CurrentComp />
+          {this.createContent()}
         </div>
         <Footer axis={menuAxis} />
       </>

@@ -1,11 +1,10 @@
 .chart-section {
   width: 100%;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 .chart {
-  width: 33%;
+  width: 33.33%;
   height: 30vh;
   display: -webkit-box;
   display: -ms-flexbox;
