@@ -15,7 +15,7 @@ class Footer extends React.Component {
         <div className="footer-util">
           <ul>
             <li>자료실</li>
-            <li>사용자매뉴얼 / 폰트</li>
+            <li>사용자매뉴얼</li>
             <li>공지사항</li>
           </ul>
         </div>

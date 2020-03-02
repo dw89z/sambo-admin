@@ -10,12 +10,12 @@ class App extends React.Component {
           {
             id: 1,
             name: "년간계획",
-            comp: "YearPlan"
+            component: "YearPlan"
           },
           {
             id: 2,
             name: "월간계획",
-            comp: "MonthPlan"
+            component: "MonthPlan"
           }
         ]
       },
@@ -25,22 +25,22 @@ class App extends React.Component {
           {
             id: 3,
             name: "주간납입지시",
-            comp: "WeeklyOrder"
+            component: "WeeklyOrder"
           },
           {
             id: 4,
             name: "출발처리",
-            comp: "Departure"
+            component: "Departure"
           },
           {
             id: 5,
             name: "납입카드 발행",
-            comp: "DeliveryPublish"
+            component: "DeliveryPublish"
           },
           {
             id: 6,
             name: "출발취소",
-            comp: "CancelDeparture"
+            component: "CancelDeparture"
           }
         ]
       },
@@ -50,27 +50,27 @@ class App extends React.Component {
           {
             id: 7,
             name: "품목정보",
-            comp: "GoodsInfo"
+            component: "GoodsInfo"
           },
           {
             id: 8,
             name: "발주현황",
-            comp: "OrderStatus"
+            component: "OrderStatus"
           },
           {
             id: 9,
             name: "납입현황",
-            comp: "DeliveryStatus"
+            component: "DeliveryStatus"
           },
           {
             id: 10,
             name: "출하계획현황",
-            comp: "PlanStatus"
+            component: "PlanStatus"
           },
           {
             id: 11,
             name: "납입준수현황",
-            comp: "ObservationStatus"
+            component: "ObservationStatus"
           }
         ]
       },
@@ -80,17 +80,17 @@ class App extends React.Component {
           {
             id: 12,
             name: "검수현황",
-            comp: "InspectionStatus"
+            component: "InspectionStatus"
           },
           {
             id: 13,
             name: "소급현황",
-            comp: "RetroactiveStatus"
+            component: "RetroactiveStatus"
           },
           {
             id: 14,
             name: "정기검사현황",
-            comp: "InspectionRoutine"
+            component: "InspectionRoutine"
           }
         ]
       },
@@ -100,7 +100,7 @@ class App extends React.Component {
           {
             id: 15,
             name: "채권/채무현황",
-            comp: "BondDeptStatus"
+            component: "BondDeptStatus"
           }
         ]
       },
@@ -110,12 +110,12 @@ class App extends React.Component {
           {
             id: 16,
             name: "업체일반",
-            comp: "GeneralStatus"
+            component: "GeneralStatus"
           },
           {
             id: 17,
             name: "BOM조회",
-            comp: "BOMLookup"
+            component: "BOMLookup"
           }
         ]
       },
@@ -125,17 +125,17 @@ class App extends React.Component {
           {
             id: 18,
             name: "품목현황",
-            comp: "ItemStatus"
+            component: "ItemStatus"
           },
           {
             id: 19,
             name: "BOM현황",
-            comp: "BOMStatus"
+            component: "BOMStatus"
           },
           {
             id: 20,
             name: "재고현황",
-            comp: "StockStatus"
+            component: "StockStatus"
           }
         ]
       },
@@ -145,22 +145,22 @@ class App extends React.Component {
           {
             id: 21,
             name: "수불명세서",
-            comp: "Bill"
+            component: "Bill"
           },
           {
             id: 22,
             name: "재고현황",
-            comp: "ProItemStatus"
+            component: "ProItemStatus"
           },
           {
             id: 23,
             name: "불량등록",
-            comp: "RegistBad"
+            component: "RegistBad"
           },
           {
             id: 24,
             name: "불량현황",
-            comp: "BadStatus"
+            component: "BadStatus"
           }
         ]
       }

@@ -14,14 +14,14 @@ class Menu extends React.Component {
       mountedComps: [
         {
           id: 0,
-          comp: "Dashboard",
-          name: "대쉬보드"
+          name: "대쉬보드",
+          component: "Dashboard"
         }
       ],
       currentComp: {
         id: 0,
-        comp: "Dashboard",
-        name: "대쉬보드"
+        name: "대쉬보드",
+        component: "Dashboard"
       }
     };
   }
@@ -76,7 +76,7 @@ class Menu extends React.Component {
     const { currentComp } = this.state;
 
     const mountedCompsRender = mountedComps.map((comp, idx) => {
-      let CurrentComp = Components[comp.comp];
+      let CurrentComp = Components[comp.component];
       return (
         <div
           className={
@@ -111,13 +111,13 @@ class Menu extends React.Component {
     });
   }
 
-  selectContent(comp, name, id) {
+  selectContent(component, name, id) {
     const { mountedComps } = this.state;
     const isMounted = mountedComps.some(comps => comps.id === id);
 
     const newComp = {
       id,
-      comp,
+      component,
       name
     };
 
@@ -132,7 +132,7 @@ class Menu extends React.Component {
       });
     }
 
-    this.createTabs(comp, id);
+    this.createTabs(component, id);
   }
 
   render() {
@@ -158,7 +158,7 @@ class Menu extends React.Component {
                       className="sub-menu-list"
                       key={idx}
                       onClick={() =>
-                        this.selectContent(sub.comp, sub.name, sub.id)
+                        this.selectContent(sub.component, sub.name, sub.id)
                       }
                     >
                       {sub.name}
