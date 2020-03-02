@@ -1,7 +1,7 @@
 import React from "react";
 import { jsonApi } from "../../api";
 
-class Yearplan extends React.Component {
+class BadStatus extends React.Component {
   state = {
     data: null
   };
@@ -25,4 +25,4 @@ class Yearplan extends React.Component {
   }
 }
 
-export default Yearplan;
+export default BadStatus;

@@ -116,9 +116,9 @@ class Menu extends React.Component {
     const isMounted = mountedComps.some(comps => comps.id === id);
 
     const newComp = {
-      id: id,
-      comp: comp,
-      name: name
+      id,
+      comp,
+      name
     };
 
     if (isMounted) {

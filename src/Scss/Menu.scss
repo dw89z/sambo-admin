@@ -4,7 +4,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 15rem;
+  width: 14rem;
   overflow-y: auto;
   height: 100vh;
   padding-top: 7rem;
@@ -12,10 +12,10 @@
   background: #fff;
   z-index: 999;
   box-shadow: 5px 0px 5px rgba(20, 50, 80, 0.1);
+  font-size: 0.9rem;
 
   .menu-list {
     border-top: 1px solid #e1e1e9;
-    font-family: "Spoqa Han Sans", sans-serif;
     border-left: 8px solid transparent;
 
     p {
@@ -34,7 +34,7 @@
         border-top: 1.5px solid #818189;
         transform: rotate(-135deg);
         top: 1.5rem;
-        right: 1.5rem;
+        right: 1.8rem;
         transition: all 0.2s;
       }
 
@@ -63,7 +63,8 @@
     transition: all 0.2s;
 
     .sub-menu-list {
-      padding: 1.25rem 1.8rem;
+      padding: 1rem 1.8rem;
+      padding-left: 2.2rem;
       font-weight: 300;
       border-top: 1px solid #c1c1c9;
 
@@ -80,11 +81,11 @@
 }
 
 .header-menu {
-  width: calc(100% - 15rem);
+  width: calc(100% - 14rem);
   position: absolute;
   height: 3.5rem;
   top: 3.5rem;
-  left: 15rem;
+  left: 14rem;
   background: #fff;
   z-index: 999;
   box-shadow: 0 5px 5px rgba(20, 50, 80, 0.1);
@@ -102,6 +103,7 @@
       font-size: 0.9rem;
       position: relative;
       color: #999;
+      font-weight: 500;
 
       &:after {
         content: "";
@@ -160,32 +162,36 @@
 .contents {
   position: absolute;
   width: calc(100% - 4rem);
-  height: calc(100% - 17rem);
+  height: calc(100% - 16rem);
   top: 11.5rem;
   background: #fff;
   left: 2rem;
-  box-shadow: 10px 10px 10px rgba(20, 50, 80, 0.15);
+  box-shadow: 0 10px 5px rgba(20, 50, 80, 0.1);
   border-radius: 8px;
   border-top-left-radius: 0;
+  border-top-right-radius: 0;
   padding: 2rem;
 
   &.left {
-    width: calc(100% - 19rem);
+    width: calc(100% - 18rem);
     height: calc(100% - 12.5rem);
-    top: 8rem;
-    left: 17rem;
+    top: 8.2rem;
+    left: 16rem;
   }
 }
 
 .tabs {
   position: absolute;
   display: flex;
-  top: 9rem;
+  top: 8.5rem;
   left: 2rem;
+  width: calc(100% - 4rem);
+  overflow-x: scroll;
 
   &.left {
+    width: calc(100% - 18rem);
     top: 5.2rem;
-    left: 17rem;
+    left: 16rem;
   }
 
   .tab {
@@ -200,6 +206,7 @@
     cursor: pointer;
     opacity: 0.5;
     position: relative;
+    white-space: nowrap;
 
     &.active {
       opacity: 1;

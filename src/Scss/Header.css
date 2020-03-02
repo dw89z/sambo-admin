@@ -23,7 +23,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 15rem;
+  width: 14rem;
   height: 7rem;
   background: #fff;
   display: -webkit-box;
@@ -62,7 +62,6 @@
 .message {
   color: #fff;
   font-weight: 600;
-  font-family: "Spoqa Han Sans", sans-serif;
 }
 
 .util-box {
@@ -121,7 +120,7 @@
 }
 
 .util-box div span {
-  font-weight: 400;
+  font-weight: 300;
   color: #fff;
   padding: 0 0.35rem;
 }
