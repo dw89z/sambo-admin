@@ -7,17 +7,9 @@
   left: 0;
   bottom: 0;
   background: #ffffff;
-  display: flex;
   flex-direction: row;
   font-size: 0.8rem;
   align-items: center;
-  justify-content: space-between;
-  padding-right: 1.25rem;
-  padding-left: 16rem;
-
-  &.non-padding {
-    padding-left: 0rem;
-  }
 
   img {
     width: 7rem;
@@ -25,7 +17,13 @@
 }
 
 .footer-util {
+  position: absolute;
+  left: 0.5rem;
   height: 2.5rem;
+
+  &.left {
+    left: 14.5rem;
+  }
 
   ul {
     display: flex;
@@ -49,7 +47,7 @@
 
       &:nth-child(2) {
         background: url("../assets/img/manual.svg") 20% 55% no-repeat;
-        padding-left: 5rem;
+        padding-left: 4rem;
 
         &:hover {
           background-image: url("../assets/img/manual-on.svg");
@@ -76,6 +74,10 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  position: absolute;
+  right: 1rem;
+  bottom: 0;
+  height: 2.5rem;
 
   .client,
   .production {

@@ -9,7 +9,7 @@ class Menu extends React.Component {
     super(props);
     this.toggleMenuAxis = this.toggleMenuAxis.bind(this);
     this.state = {
-      menu: this.props.menu.list,
+      menu: this.props.menu,
       menuAxis: true,
       mountedComps: [
         {
@@ -26,6 +26,7 @@ class Menu extends React.Component {
     };
   }
 
+  // UI변경을 위한 축(axis) 업데이트
   toggleMenuAxis() {
     const { menuAxis } = this.state;
     this.setState({
@@ -33,6 +34,7 @@ class Menu extends React.Component {
     });
   }
 
+  // 좌측 메뉴일 경우 클릭한 메뉴 리스트의 클래스 업데이트
   toggleClassParent(e) {
     let parent = e.currentTarget.parentElement;
     parent.classList.toggle("active");
@@ -44,15 +46,16 @@ class Menu extends React.Component {
     }
   }
 
+  // 각 메뉴를 눌렀을 때 탭을 생성 및 추가
   createTabs() {
     const { mountedComps, currentComp } = this.state;
     const { menuAxis } = this.state;
 
     return (
       <ul className={menuAxis ? "tabs" : "tabs left"}>
-        {mountedComps.map((comps, idx) => (
+        {mountedComps.map((comps, index) => (
           <li
-            key={idx}
+            key={index}
             className={comps.id === currentComp.id ? "tab active" : "tab"}
             onClick={() => this.handleSelect(comps)}
           >
@@ -71,11 +74,12 @@ class Menu extends React.Component {
     );
   }
 
+  // 각 메뉴를 눌렀을 경우 화면에 컨텐츠를 출력
   createContent() {
     const { mountedComps } = this.state;
     const { currentComp } = this.state;
 
-    const mountedCompsRender = mountedComps.map((comp, idx) => {
+    const mountedCompsRender = mountedComps.map((comp, index) => {
       let CurrentComp = Components[comp.component];
       return (
         <div
@@ -84,7 +88,7 @@ class Menu extends React.Component {
               ? "content-inner active"
               : "content-inner"
           }
-          key={idx}
+          key={index}
         >
           <CurrentComp />
         </div>
@@ -93,6 +97,7 @@ class Menu extends React.Component {
     return mountedCompsRender;
   }
 
+  // 탭에서 X버튼을 눌렀을때 해당하는 탭과 컴포넌트를 삭제
   deleteComponent(e, id) {
     e.stopPropagation();
     const { mountedComps } = this.state;
@@ -105,12 +110,7 @@ class Menu extends React.Component {
     this.handleSelect(previousComp);
   }
 
-  handleSelect(comps) {
-    this.setState({
-      currentComp: comps
-    });
-  }
-
+  // 탭을 눌렀을 때 현재 화면을 그 탭의 컨텐츠로 변경
   selectContent(component, name, id) {
     const { mountedComps } = this.state;
     const isMounted = mountedComps.some(comps => comps.id === id);
@@ -135,17 +135,27 @@ class Menu extends React.Component {
     this.createTabs(component, id);
   }
 
+  // 선택창 변경 하위 메소드
+  handleSelect(comps) {
+    this.setState({
+      currentComp: comps
+    });
+  }
+
   render() {
     const menu = this.state.menu;
     const { menuAxis } = this.state;
 
     return (
       <>
-        <Header toggleMenuAxis={this.toggleMenuAxis} />
+        <Header
+          toggleMenuAxis={this.toggleMenuAxis}
+          logout={this.props.logout}
+        />
         <div className={menuAxis ? "header-menu" : "left-menu"}>
           <ul className="menu">
-            {menu.map((menu, idx) => (
-              <li className="menu-list" key={idx}>
+            {menu.map((menu, index) => (
+              <li className="menu-list" key={index}>
                 {menuAxis ? (
                   <p>{menu.menuList}</p>
                 ) : (
@@ -153,10 +163,10 @@ class Menu extends React.Component {
                 )}
 
                 <ul className="sub-menu">
-                  {menu.subList.map((sub, idx) => (
+                  {menu.subList.map((sub, index) => (
                     <li
                       className="sub-menu-list"
-                      key={idx}
+                      key={index}
                       onClick={() =>
                         this.selectContent(sub.component, sub.name, sub.id)
                       }

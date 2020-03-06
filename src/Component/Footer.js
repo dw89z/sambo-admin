@@ -6,13 +6,13 @@ import pLogo from "../assets/img/f-logo02.png";
 class Footer extends React.Component {
   render() {
     return (
-      <div className={this.props.axis ? "footer non-padding" : "footer"}>
+      <div className="footer">
         <div className="preloading">
           <p></p>
           <p></p>
           <p></p>
         </div>
-        <div className="footer-util">
+        <div className={this.props.axis ? "footer-util" : "footer-util left"}>
           <ul>
             <li>자료실</li>
             <li>사용자매뉴얼</li>

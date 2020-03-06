@@ -39,7 +39,7 @@
       }
 
       &:hover {
-        background: #f9f9ff;
+        background: $gray;
       }
     }
 
@@ -56,7 +56,7 @@
   }
 
   .sub-menu {
-    background: #f1f1fa;
+    background: $gray2;
     max-height: 0;
     overflow: hidden;
     cursor: pointer;
@@ -67,7 +67,7 @@
       padding: 0.7rem 1rem 0.7rem 2rem;
       padding-left: 2.5rem;
       font-weight: 400;
-      border-top: 1px solid #c1c1c9;
+      border-top: 1px solid $gray3;
 
       &:active {
         background: $pri !important;
@@ -111,16 +111,20 @@
         content: "";
         display: block;
         position: absolute;
-        width: 3.5px;
-        height: 18px;
-        background: #e1e1e9;
-        top: 1.05rem;
+        width: 4.5px;
+        height: 4.5px;
+        background: $gray3;
+        top: 1.4rem;
         left: 0.5rem;
+        border-radius: 4.5px;
+        transition: all 0.2s;
       }
 
       &:hover {
         &:after {
           background: $pri;
+          top: 1.05rem;
+          height: 18px;
         }
         .sub-menu {
           opacity: 1;

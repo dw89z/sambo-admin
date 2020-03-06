@@ -1,9 +1,16 @@
 import React from "react";
 import Main from "./Component/Main";
+import Login from "./Component/Login";
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+  }
   state = {
-    list: [
+    userLogin: false,
+    menu: [
       {
         menuList: "구매계획",
         subList: [
@@ -16,6 +23,11 @@ class App extends React.Component {
             id: 2,
             name: "월간계획",
             component: "MonthPlan"
+          },
+          {
+            id: 3,
+            name: "주간/일 생산계획",
+            component: "DailyPlan"
           }
         ]
       },
@@ -23,22 +35,22 @@ class App extends React.Component {
         menuList: "납입지시",
         subList: [
           {
-            id: 3,
+            id: 4,
             name: "주간납입지시",
             component: "WeeklyOrder"
           },
           {
-            id: 4,
+            id: 5,
             name: "출발처리",
             component: "Departure"
           },
           {
-            id: 5,
+            id: 6,
             name: "납입카드 발행",
             component: "DeliveryPublish"
           },
           {
-            id: 6,
+            id: 7,
             name: "출발취소",
             component: "CancelDeparture"
           }
@@ -48,27 +60,27 @@ class App extends React.Component {
         menuList: "납입정보",
         subList: [
           {
-            id: 7,
+            id: 8,
             name: "품목정보",
             component: "GoodsInfo"
           },
           {
-            id: 8,
+            id: 9,
             name: "발주현황",
             component: "OrderStatus"
           },
           {
-            id: 9,
+            id: 10,
             name: "납입현황",
             component: "DeliveryStatus"
           },
           {
-            id: 10,
+            id: 11,
             name: "출하계획현황",
             component: "PlanStatus"
           },
           {
-            id: 11,
+            id: 12,
             name: "납입준수현황",
             component: "ObservationStatus"
           }
@@ -78,17 +90,17 @@ class App extends React.Component {
         menuList: "검수정보",
         subList: [
           {
-            id: 12,
+            id: 13,
             name: "검수현황",
             component: "InspectionStatus"
           },
           {
-            id: 13,
+            id: 14,
             name: "소급현황",
             component: "RetroactiveStatus"
           },
           {
-            id: 14,
+            id: 15,
             name: "정기검사현황",
             component: "InspectionRoutine"
           }
@@ -98,7 +110,7 @@ class App extends React.Component {
         menuList: "대금지급",
         subList: [
           {
-            id: 15,
+            id: 16,
             name: "채권/채무현황",
             component: "BondDeptStatus"
           }
@@ -108,12 +120,12 @@ class App extends React.Component {
         menuList: "업체현황",
         subList: [
           {
-            id: 16,
+            id: 17,
             name: "업체일반",
             component: "GeneralStatus"
           },
           {
-            id: 17,
+            id: 18,
             name: "BOM조회",
             component: "BOMLookup"
           }
@@ -123,17 +135,17 @@ class App extends React.Component {
         menuList: "협력업체 ERP",
         subList: [
           {
-            id: 18,
+            id: 19,
             name: "품목현황",
             component: "ItemStatus"
           },
           {
-            id: 19,
+            id: 20,
             name: "BOM현황",
             component: "BOMStatus"
           },
           {
-            id: 20,
+            id: 21,
             name: "재고현황",
             component: "StockStatus"
           }
@@ -143,22 +155,22 @@ class App extends React.Component {
         menuList: "임가공 현황",
         subList: [
           {
-            id: 21,
+            id: 22,
             name: "수불명세서",
             component: "Bill"
           },
           {
-            id: 22,
+            id: 23,
             name: "재고현황",
             component: "ProItemStatus"
           },
           {
-            id: 23,
+            id: 24,
             name: "불량등록",
             component: "RegistBad"
           },
           {
-            id: 24,
+            id: 25,
             name: "불량현황",
             component: "BadStatus"
           }
@@ -167,11 +179,29 @@ class App extends React.Component {
     ]
   };
 
+  // 부모 컴포넌트(App.js)의 state를 업데이트 하는 함수(자식 컴포넌트에 전달)
+  handleLogin(e) {
+    e.preventDefault();
+    this.setState({
+      userLogin: true
+    });
+  }
+
+  handleLogout() {
+    this.setState({
+      userLogin: false
+    });
+  }
+
   render() {
-    const menu = this.state;
+    const { userLogin, menu } = this.state;
     return (
       <>
-        <Main menu={menu} />
+        {userLogin ? (
+          <Main menu={menu} logout={this.handleLogout} />
+        ) : (
+          <Login login={this.handleLogin} />
+        )}
       </>
     );
   }

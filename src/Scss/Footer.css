@@ -5,9 +5,6 @@
   left: 0;
   bottom: 0;
   background: #ffffff;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
@@ -16,15 +13,6 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  padding-right: 1.25rem;
-  padding-left: 16rem;
-}
-
-.footer.non-padding {
-  padding-left: 0rem;
 }
 
 .footer img {
@@ -32,7 +20,13 @@
 }
 
 .footer-util {
+  position: absolute;
+  left: 0.5rem;
   height: 2.5rem;
+}
+
+.footer-util.left {
+  left: 14.5rem;
 }
 
 .footer-util ul {
@@ -71,7 +65,7 @@
 
 .footer-util ul li:nth-child(2) {
   background: url("../assets/img/manual.svg") 20% 55% no-repeat;
-  padding-left: 5rem;
+  padding-left: 4rem;
 }
 
 .footer-util ul li:nth-child(2):hover {
@@ -101,6 +95,10 @@
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
+  position: absolute;
+  right: 1rem;
+  bottom: 0;
+  height: 2.5rem;
 }
 
 .footer-info .client,

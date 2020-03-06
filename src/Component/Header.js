@@ -23,11 +23,11 @@ class Header extends React.Component {
               <span>UI변경</span>
             </div>
             <div>
-              <img src={user} alt="" />
+              <img src={user} alt="user" />
               <span>회원정보</span>
             </div>
-            <div>
-              <img src={logout} alt="" />
+            <div onClick={this.props.logout}>
+              <img src={logout} alt="logout" />
               <span>로그아웃</span>
             </div>
           </div>
