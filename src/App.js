@@ -8,8 +8,9 @@ class App extends React.Component {
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
   }
+
   state = {
-    userLogin: false,
+    userLogin: true,
     menu: [
       {
         menuList: "구매계획",
@@ -179,7 +180,7 @@ class App extends React.Component {
     ]
   };
 
-  // 부모 컴포넌트(App.js)의 state를 업데이트 하는 함수(자식 컴포넌트에 전달)
+  // 로그인을 제어하는 메소드(자식 컴포넌트에 props로 전달하여 자식 컴포넌트에서 제어)
   handleLogin(e) {
     e.preventDefault();
     this.setState({
@@ -187,6 +188,7 @@ class App extends React.Component {
     });
   }
 
+  // 로그아웃을 제어하는 메소드(자식 컴포넌트에 props로 전달하여 자식 컴포넌트에서 제어)
   handleLogout() {
     this.setState({
       userLogin: false

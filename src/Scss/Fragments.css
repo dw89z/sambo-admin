@@ -1,0 +1,24 @@
+.year-table {
+  width: 100%;
+  overflow: scroll;
+  text-align-last: left;
+}
+
+.year-table .react-bootstrap-table table {
+  width: 2000px;
+  border-collapse: collapse;
+}
+
+.year-table th {
+  padding: 0.5rem 0.8rem;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  background: #1d2baa;
+  color: #fff;
+}
+
+.year-table td {
+  padding: 0.5rem 0.8rem;
+  border-top: 1px solid #a1a1a9;
+}
+/*# sourceMappingURL=Fragments.css.map */

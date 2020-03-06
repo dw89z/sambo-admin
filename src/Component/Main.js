@@ -8,23 +8,24 @@ class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.toggleMenuAxis = this.toggleMenuAxis.bind(this);
-    this.state = {
-      menu: this.props.menu,
-      menuAxis: true,
-      mountedComps: [
-        {
-          id: 0,
-          name: "대쉬보드",
-          component: "Dashboard"
-        }
-      ],
-      currentComp: {
-        id: 0,
-        name: "대쉬보드",
-        component: "Dashboard"
-      }
-    };
   }
+
+  state = {
+    menu: this.props.menu,
+    menuAxis: true,
+    mountedComps: [
+      {
+        id: 1,
+        name: "년간계획",
+        component: "YearPlan"
+      }
+    ],
+    currentComp: {
+      id: 1,
+      name: "년간계획",
+      component: "YearPlan"
+    }
+  };
 
   // UI변경을 위한 축(axis) 업데이트
   toggleMenuAxis() {

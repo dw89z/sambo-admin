@@ -1,26 +1,30 @@
 import React from "react";
 import { jsonApi } from "../../api";
+import Table from "../Fragments/Table";
 
 class Yearplan extends React.Component {
   state = {
-    data: null
+    data: [
+      {
+        dataField: "id",
+        text: "Product ID"
+      },
+      {
+        dataField: "name",
+        text: "Product Name"
+      },
+      {
+        dataField: "price",
+        text: "Product Price"
+      }
+    ]
   };
 
-  async componentDidMount() {
-    const { data } = await jsonApi.getUser();
-    this.setState({
-      data
-    });
-    console.log(data);
-  }
-
   render() {
-    const { data } = this.state;
-
     return (
-      <div>
-        <table></table>
-      </div>
+      <>
+        <Table data={this.state.data} />
+      </>
     );
   }
 }

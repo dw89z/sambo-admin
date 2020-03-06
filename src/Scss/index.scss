@@ -39,6 +39,10 @@ button {
   }
 }
 
+table {
+  border-collapse: collapse;
+}
+
 html {
   font-family: "Noto Sans KR", "Sans-serif";
   font-size: calc(14px + 0.15vw);

@@ -74,7 +74,7 @@ class Login extends React.Component {
       this.setState({
         loginFailed: false
       });
-    }, 2500);
+    }, 2000);
   }
 
   render() {
