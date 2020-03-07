@@ -1,6 +1,8 @@
 import React from "react";
 import { jsonApi } from "../../api";
 import Table from "../Fragments/Table";
+import Basic from "../Fragments/Basic";
+
 
 class Yearplan extends React.Component {
   state = {
@@ -23,7 +25,11 @@ class Yearplan extends React.Component {
   render() {
     return (
       <>
+      <div>
+        <Basic />
         <Table data={this.state.data} />
+      </div>
+        
       </>
     );
   }

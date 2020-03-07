@@ -3,6 +3,7 @@ let Components = {};
 Components["Dashboard"] = require("./Dashboard").default;
 Components["YearPlan"] = require("./YearPlan").default;
 Components["MonthPlan"] = require("./MonthPlan").default;
+Components["DailyPlan"] = require("./DailyPlan").default;
 Components["WeeklyOrder"] = require("./WeeklyOrder").default;
 Components["Departure"] = require("./Departure").default;
 Components["DeliveryPublish"] = require("./DeliveryPublish").default;

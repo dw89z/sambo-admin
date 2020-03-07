@@ -3,16 +3,19 @@ import "../Scss/Menu.css";
 import Footer from "./Footer";
 import Header from "./Header";
 import Components from "./Content/ContentIndex";
+import logo from "../assets/img/logo.png";
 
 class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.toggleMenuAxis = this.toggleMenuAxis.bind(this);
+    this.handleMode = this.handleMode.bind(this);
   }
 
   state = {
     menu: this.props.menu,
     menuAxis: true,
+    mode: "scm",
     mountedComps: [
       {
         id: 1,
@@ -80,6 +83,7 @@ class Menu extends React.Component {
     const { mountedComps } = this.state;
     const { currentComp } = this.state;
 
+    // state에서 컴포넌트 이름을 받아 이름에 해당하는 컴포넌트를 호출하는 로직
     const mountedCompsRender = mountedComps.map((comp, index) => {
       let CurrentComp = Components[comp.component];
       return (
@@ -95,6 +99,7 @@ class Menu extends React.Component {
         </div>
       );
     });
+
     return mountedCompsRender;
   }
 
@@ -143,9 +148,15 @@ class Menu extends React.Component {
     });
   }
 
+  handleMode(e) {
+    this.setState({
+      mode: e.target.value
+    })
+  }
+
   render() {
     const menu = this.state.menu;
-    const { menuAxis } = this.state;
+    const { menuAxis, mode } = this.state;
 
     return (
       <>
@@ -154,6 +165,13 @@ class Menu extends React.Component {
           logout={this.props.logout}
         />
         <div className={menuAxis ? "header-menu" : "left-menu"}>
+          <div className="select-section">
+            <img src={logo} alt="logo"/>
+            <select value={mode} onChange={this.handleMode} className="mode-selection">
+              <option value="scm">SCM 모드</option>
+              <option value="admin">관리자 모드</option>
+            </select>
+          </div>
           <ul className="menu">
             {menu.map((menu, index) => (
               <li className="menu-list" key={index}>

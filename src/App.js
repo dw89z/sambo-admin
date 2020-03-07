@@ -1,6 +1,7 @@
 import React from "react";
 import Main from "./Component/Main";
 import Login from "./Component/Login";
+import axios from 'axios'
 
 class App extends React.Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class App extends React.Component {
   }
 
   state = {
-    userLogin: true,
+    userLogin: false,
     menu: [
       {
         menuList: "구매계획",
@@ -202,7 +203,7 @@ class App extends React.Component {
         {userLogin ? (
           <Main menu={menu} logout={this.handleLogout} />
         ) : (
-          <Login login={this.handleLogin} />
+          <Login handleLogin={this.handleLogin} />
         )}
       </>
     );

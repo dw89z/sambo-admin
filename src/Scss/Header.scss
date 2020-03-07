@@ -2,7 +2,7 @@
 
 .header {
   width: 100%;
-  height: 3.5rem;
+  height: 2.5rem;
   position: fixed;
   top: 0;
   left: 0;
@@ -11,38 +11,8 @@
   padding-right: 1.5rem;
   display: flex;
   align-items: center;
-  font-size: 1.3rem;
+  font-size: 0.8rem;
   justify-content: flex-end;
-}
-
-.logo-section {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 14rem;
-  height: 6.5rem;
-  background: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 9999;
-  box-shadow: 0 5px 5px rgba(20, 50, 80, 0.05);
-
-  h1 {
-    width: 70%;
-
-    img {
-      width: 100%;
-    }
-  }
-
-  p {
-    font-weight: 600;
-    font-size: 0.7rem;
-    letter-spacing: 0.5px;
-    color: $pri;
-  }
 }
 
 .message {
@@ -51,7 +21,6 @@
 }
 
 .util-box {
-  font-size: 0.85rem;
   color: #fff;
   display: flex;
   flex-direction: row;
@@ -59,12 +28,10 @@
   align-items: center;
 
   p {
-    font-size: 1rem;
     color: #fff;
     padding-right: 1rem;
     font-weight: 300;
     opacity: 0.6;
-    font-size: 0.9rem;
   }
 
   div {
@@ -74,7 +41,7 @@
     align-items: center;
     cursor: pointer;
     margin: 0 0.1rem;
-    padding: 0.5rem 0.6rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 5px;
     border: 1px solid $pri;
 
@@ -84,7 +51,7 @@
     }
 
     img {
-      width: 1.5rem;
+      width: 1.1rem;
     }
 
     span {

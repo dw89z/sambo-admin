@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios'
 import "../Scss/Login.css";
 import logo from "../assets/img/logo.png";
 import userIcon from "../assets/img/login-user.svg";
@@ -77,6 +78,23 @@ class Login extends React.Component {
     }, 2000);
   }
 
+  login(e) {
+    e.preventDefault();
+    console.log("post")
+    axios.post('http://192.168.75.199:8080/login', {
+      headers: {'Access-Control-Allow-Origin': '*'},
+      params: {
+        logid: "fdasf",
+        passwd: "fdasf"
+      }
+      }).then(res => {
+        console.log(res)
+    });
+    // this.setState({
+    //   userLogin: true
+    // });
+  }
+
   render() {
     const {
       loginFailed,
@@ -127,11 +145,7 @@ class Login extends React.Component {
 
               <button
                 className={loginFailed ? "wrong login-submit" : "login-submit"}
-                onClick={
-                  userId === id && pass === password
-                    ? this.props.login
-                    : this.handleError
-                }
+                onClick={this.login}
               >
                 {loginFailed ? "로그인 정보가 올바르지 않습니다" : "로그인"}
               </button>
