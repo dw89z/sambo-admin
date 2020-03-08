@@ -1,66 +1,29 @@
 import React from "react";
-import axios from 'axios'
+import axios from "axios";
 import "../Scss/Login.css";
 import logo from "../assets/img/logo.png";
 import userIcon from "../assets/img/login-user.svg";
 import passwordIcon from "../assets/img/password.svg";
+import qs from "querystring";
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.handleId = this.handleId.bind(this);
-    this.handlePassword = this.handlePassword.bind(this);
     this.handleError = this.handleError.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    console.log(this.props.history);
   }
 
   state = {
-    userId: "",
+    id: "",
     password: "",
-    user: {
-      id: "bselpin",
-      password: "bselpin"
-    },
     loginFailed: false
   };
 
-  // userID를 업데이트 및 엔터키 로그인 바인딩
-  handleId(e) {
-    const {
-      userId,
-      password: pass,
-      user: { id, password }
-    } = this.state;
+  handleUpdate(e) {
     this.setState({
-      userId: e.target.value
+      [e.target.name]: e.target.value
     });
-    if (e.charCode === 13) {
-      if (id === userId && pass === password) {
-        e.preventDefault();
-        this.props.login(e);
-      } else {
-        this.handleError(e);
-      }
-    }
-  }
-
-  // password를 업데이트 및 엔터키 로그인 바인딩
-  handlePassword(e) {
-    const {
-      userId,
-      password: pass,
-      user: { id, password }
-    } = this.state;
-    this.setState({
-      password: e.target.value
-    });
-    if (e.charCode === 13) {
-      if (id === userId && pass === password) {
-        e.preventDefault();
-        this.props.login(e);
-      } else {
-        this.handleError(e);
-      }
-    }
   }
 
   // 로그인이 실패했을 경우 버튼 스타일 변경 및 애니메이션 호출
@@ -80,28 +43,22 @@ class Login extends React.Component {
 
   login(e) {
     e.preventDefault();
-    console.log("post")
-    axios.post('http://192.168.75.199:8080/login', {
-      headers: {'Access-Control-Allow-Origin': '*'},
-      params: {
-        logid: "fdasf",
-        passwd: "fdasf"
-      }
-      }).then(res => {
-        console.log(res)
-    });
-    // this.setState({
-    //   userLogin: true
-    // });
+    this.props.history.push("/");
+    // axios
+    //   .post(
+    //     "http://192.168.75.199:8080/login",
+    //     qs.stringify({
+    //       logid: "system",
+    //       passwd: "111"
+    //     })
+    //   )
+    //   .then(res => {
+    //     console.log(res.data);
+    //   });
   }
 
   render() {
-    const {
-      loginFailed,
-      userId,
-      password: pass,
-      user: { id, password }
-    } = this.state;
+    const { loginFailed, id, password } = this.state;
 
     return (
       <>
@@ -113,18 +70,18 @@ class Login extends React.Component {
             시스템
           </p> */}
           <div className="login-wrap">
-            <form action="">
+            <form onSubmit={this.login}>
               <div className="login-inner">
                 <img src={userIcon} alt="user" className="icon" />
                 <input
                   id="id"
                   className="login-input id"
                   type="text"
-                  required
-                  value={this.state.userId}
-                  onChange={this.handleId}
+                  name="id"
+                  value={id}
+                  onChange={this.handleUpdate}
                 />
-                <label htmlFor="id" className={userId ? "active" : ""}>
+                <label htmlFor="id" className={id ? "active" : ""}>
                   ID
                 </label>
               </div>
@@ -134,18 +91,17 @@ class Login extends React.Component {
                   id="password"
                   className="login-input password"
                   type="password"
-                  required
-                  value={this.state.password}
-                  onChange={this.handlePassword}
+                  name="password"
+                  value={password}
+                  onChange={this.handleUpdate}
                 />
-                <label htmlFor="password" className={pass ? "active" : ""}>
+                <label htmlFor="password" className={password ? "active" : ""}>
                   PASSWORD
                 </label>
               </div>
 
               <button
                 className={loginFailed ? "wrong login-submit" : "login-submit"}
-                onClick={this.login}
               >
                 {loginFailed ? "로그인 정보가 올바르지 않습니다" : "로그인"}
               </button>
