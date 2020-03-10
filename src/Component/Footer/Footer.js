@@ -1,9 +1,9 @@
 import React from "react";
-import "../Scss/Footer.css";
-import cLogo from "../assets/img/f-logo01.png";
-import pLogo from "../assets/img/f-logo02.png";
+import "./Footer.css";
+import cLogo from "../../assets/img/f-logo01.png";
+import pLogo from "../../assets/img/f-logo02.png";
 
-class Footer extends React.Component {
+export default class extends React.Component {
   render() {
     return (
       <div className="footer">
@@ -39,5 +39,3 @@ class Footer extends React.Component {
     );
   }
 }
-
-export default Footer;

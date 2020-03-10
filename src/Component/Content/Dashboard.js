@@ -1,6 +1,6 @@
 import React from "react";
 import { Bar, Line, Pie } from "react-chartjs-2";
-import "../../Scss/Dashboard.css";
+import "../../scss/Dashboard.css";
 
 class Dashboard extends React.Component {
   constructor(props) {

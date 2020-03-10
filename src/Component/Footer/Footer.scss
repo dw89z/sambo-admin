@@ -1,4 +1,4 @@
-@import "Variables.scss";
+@import "../../Scss/Variables.scss";
 
 .footer {
   width: 100%;
@@ -33,7 +33,7 @@
     justify-content: center;
 
     li {
-      background: url("../assets/img/data.svg") 20% 55% no-repeat;
+      background: url("../../assets/img/data.svg") 20% 55% no-repeat;
       background-size: 1.5rem !important;
       display: flex;
       height: 100%;
@@ -45,25 +45,25 @@
       font-weight: 500;
 
       &:nth-child(2) {
-        background: url("../assets/img/manual.svg") 20% 55% no-repeat;
+        background: url("../../assets/img/manual.svg") 20% 55% no-repeat;
         padding-left: 4rem;
 
         &:hover {
-          background-image: url("../assets/img/manual-on.svg");
+          background-image: url("../../assets/img/manual-on.svg");
         }
       }
 
       &:nth-child(3) {
-        background: url("../assets/img/list.svg") 20% 55% no-repeat;
+        background: url("../../assets/img/list.svg") 20% 55% no-repeat;
 
         &:hover {
-          background-image: url("../assets/img/list-on.svg");
+          background-image: url("../../assets/img/list-on.svg");
         }
       }
 
       &:hover {
         color: $pri;
-        background-image: url("../assets/img/data-on.svg");
+        background-image: url("../../assets/img/data-on.svg");
       }
     }
   }
@@ -114,13 +114,13 @@
   left: -9999px;
 
   p {
-    background: url("../assets/img/list-on.svg") center center no-repeat;
+    background: url("../../assets/img/list-on.svg") center center no-repeat;
     &:first-child {
-      background: url("../assets/img/manual-on.svg") center center no-repeat;
+      background: url("../../assets/img/manual-on.svg") center center no-repeat;
     }
 
     &:last-child {
-      background: url("../assets/img/data-on.svg") center center no-repeat;
+      background: url("../../assets/img/data-on.svg") center center no-repeat;
     }
   }
 }

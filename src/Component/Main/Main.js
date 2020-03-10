@@ -1,11 +1,11 @@
 import React from "react";
-import "../Scss/Menu.css";
-import Footer from "./Footer";
-import Header from "./Header";
-import Components from "./Content/ContentIndex";
-import logo from "../assets/img/logo.png";
+import "./Main.css";
+import Footer from "component/Footer";
+import Header from "component/Header";
+import Components from "../Content/ContentIndex";
+import logo from "../../assets/img/logo.png";
 
-class Menu extends React.Component {
+export default class extends React.Component {
   constructor(props) {
     super(props);
     this.toggleMenuAxis = this.toggleMenuAxis.bind(this);
@@ -13,6 +13,7 @@ class Menu extends React.Component {
   }
 
   state = {
+    history: this.props.history,
     menu: [
       {
         menuList: "구매계획",
@@ -271,7 +272,10 @@ class Menu extends React.Component {
 
   // 탭에서 X버튼을 눌렀을때 해당하는 탭과 컴포넌트를 삭제
   deleteComponent(e, id) {
+    // 이벤트 전파 방지
     e.stopPropagation();
+
+    // 삭제했을 경우 현재 탭을 이전에 바라보고 있던 탭 화면으로 변경
     const { mountedComps } = this.state;
     const deleteToId = mountedComps.filter(comp => comp.id !== id);
     let previousComp = deleteToId[deleteToId.length - 1];
@@ -307,13 +311,14 @@ class Menu extends React.Component {
     this.createTabs(component, id);
   }
 
-  // 선택창 변경 하위 메소드
+  // 선택창 변경 응용 메소드
   handleSelect(comps) {
     this.setState({
       currentComp: comps
     });
   }
 
+  //업무 모드 변경
   handleMode(e) {
     this.setState({
       mode: e.target.value
@@ -322,14 +327,11 @@ class Menu extends React.Component {
 
   render() {
     const menu = this.state.menu;
-    const { menuAxis, mode } = this.state;
+    const { menuAxis, mode, history } = this.state;
 
     return (
       <>
-        <Header
-          toggleMenuAxis={this.toggleMenuAxis}
-          logout={this.props.logout}
-        />
+        <Header toggleMenuAxis={this.toggleMenuAxis} history={history} />
         <div className={menuAxis ? "header-menu" : "left-menu"}>
           <div className="select-section">
             <img src={logo} alt="logo" />
@@ -377,5 +379,3 @@ class Menu extends React.Component {
     );
   }
 }
-
-export default Menu;

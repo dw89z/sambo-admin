@@ -1,14 +1,9 @@
 import React from "react";
-import Main from "./Component/Main";
-import Login from "./Component/Login";
-import WithAuth from "./Component/WithAuth";
-import {
-  Switch,
-  Route,
-  BrowserRouter as Router,
-  useHistory
-} from "react-router-dom";
+import Main from "./component/Main";
+import Login from "./component/Login";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import axios from "axios";
+import { Private } from "./component/Private";
 
 class App extends React.Component {
   constructor(props) {
@@ -16,20 +11,8 @@ class App extends React.Component {
     this.handleLogin = this.handleLogin.bind(this);
   }
 
-  state = {
-    login: false
-  };
-
-  history() {
-    let history = useHistory();
-  }
-
   handleLogin(e) {
-    console.log(e);
     e.preventDefault();
-    this.setState({
-      login: true
-    });
   }
 
   render() {
@@ -37,10 +20,9 @@ class App extends React.Component {
       <>
         <Router>
           <Switch>
-            <Route exact path="/">
-              <Login handleLogin={this.handleLogin} history={this.history} />
-            </Route>
-            <Route path="/main" component={WithAuth(Main)} />
+            <Route exact path="/" component={Login} />
+            <Private exact path="/main" component={Main} />
+            <Route path="*" component={Login} />
           </Switch>
         </Router>
       </>

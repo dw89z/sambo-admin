@@ -1,4 +1,4 @@
-@import "Variables.scss";
+@import "../../scss/Variables.scss";
 
 .left-menu {
   position: absolute;
@@ -110,7 +110,7 @@
 
       &:focus {
         border: 1px solid $pri;
-      border-radius: 5px;
+        border-radius: 5px;
       }
     }
   }
@@ -155,7 +155,7 @@
 
       &:focus {
         border: 1px solid $pri;
-      border-radius: 5px;
+        border-radius: 5px;
       }
     }
   }

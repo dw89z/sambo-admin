@@ -1,14 +1,11 @@
 import React from "react";
-import "../Scss/Header.css";
-import user from "../assets/img/user.svg";
-import logout from "../assets/img/logout.svg";
-import ui from "../assets/img/ui.svg";
+import "./Header.css";
+import user from "../../assets/img/user.svg";
+import logout from "../../assets/img/logout.svg";
+import ui from "../../assets/img/ui.svg";
+import auth from "../auth";
 
-class Header extends React.Component {
-  state = {
-
-  }
-
+export default class extends React.Component {
   render() {
     return (
       <>
@@ -23,7 +20,13 @@ class Header extends React.Component {
               <img src={user} alt="user" />
               <span>회원정보</span>
             </div>
-            <div onClick={this.props.logout}>
+            <div
+              onClick={() => {
+                auth.logout(() => {
+                  this.props.history.push("/");
+                });
+              }}
+            >
               <img src={logout} alt="logout" />
               <span>로그아웃</span>
             </div>
@@ -33,5 +36,3 @@ class Header extends React.Component {
     );
   }
 }
-
-export default Header;

@@ -3,6 +3,6 @@ import "react-app-polyfill/stable";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import "./Scss/index.css";
+import "./scss/index.css";
 
 ReactDOM.render(<App />, document.getElementById("root"));
