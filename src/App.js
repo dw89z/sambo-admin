@@ -6,15 +6,6 @@ import axios from "axios";
 import { Private } from "./component/Private";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleLogin = this.handleLogin.bind(this);
-  }
-
-  handleLogin(e) {
-    e.preventDefault();
-  }
-
   render() {
     return (
       <>
