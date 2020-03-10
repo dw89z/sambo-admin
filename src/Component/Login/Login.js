@@ -4,7 +4,6 @@ import "./Login.css";
 import logo from "../../assets/img/logo.png";
 import userIcon from "../../assets/img/login-user.svg";
 import passwordIcon from "../../assets/img/password.svg";
-import qs from "querystring";
 import auth from "../auth";
 
 export default class extends React.Component {
@@ -86,7 +85,7 @@ export default class extends React.Component {
             <button
               className={loginFailed ? "wrong login-submit" : "login-submit"}
               onClick={() => {
-                auth.login(() => {
+                auth.login(id, password, () => {
                   this.props.history.push("/main");
                 });
               }}
