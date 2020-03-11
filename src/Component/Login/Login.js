@@ -18,21 +18,6 @@ export default class extends React.Component {
     loginFailed: auth.isAuthenticated()
   };
 
-  async getUserInfo() {
-    try {
-      await axios.post("/main/userinfo", null).then(res => {
-        console.log("response", res);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  componentDidMount() {
-    axios.defaults.headers.common["Authorization"] = "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpZCI6InN5c3RlbSJ9.0yvEjGDJpXzQ5KhVneBsXX2-rVDubGRKeV33W5eVkpM"
-    this.getUserInfo();
-  }
-
   detectLoginFail(e) {
     e.preventDefault();
     setTimeout(() => {

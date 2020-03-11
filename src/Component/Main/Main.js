@@ -5,9 +5,8 @@ import Header from "component/Header";
 import Components from "../Content/ContentIndex";
 import logo from "../../assets/img/logo.png";
 import axios from "axios";
-import { postApi } from "../../api";
 import qs from "querystring";
-import { CLIENT_RENEG_WINDOW } from "tls";
+import { api, postApi } from "../../api";
 
 export default class extends React.Component {
   constructor(props) {
@@ -202,21 +201,22 @@ export default class extends React.Component {
     }
   };
 
-  // async getUserInfo() {
-  //   try {
-  //     await axios.post("/main/userinfo", null).then(res => {
-  //       console.log("response", res);
-  //     });
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
+  getUserInfo() {
+    const token = sessionStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: token
+      }
+    };
+
+    const response = postApi("/main/userinfo");
+    response.then(res => console.log(res));
+  }
 
   componentDidMount() {
-    axios.defaults.headers.common["Authorization"] = sessionStorage.getItem(
-      "token"
-    );
-    console.log(sessionStorage.token);
+    // axios.defaults.headers.common["Authorization"] = sessionStorage.getItem(
+    //   "token"
+    // );
     setTimeout(() => {
       this.getUserInfo();
     }, 1000);
