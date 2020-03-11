@@ -1,18 +1,12 @@
 import axios from "axios";
 import qs from "querystring";
 
-const api = axios.create({
+axios.defaults.baseURL = 'http://125.141.30.222:8757';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-});
-
-const loginConfig = {
-  headers: {
-    "Content-Type": "application/x-www-form-urlencoded"
-  }
-};
 
 export const jsonApi = {
-  getUser: () => api.get("users")
+  getUser: () => axios.get("users")
 };
 
 export const LoginApi = (id, password) => {
@@ -20,16 +14,15 @@ export const LoginApi = (id, password) => {
     logid: id,
     passwd: password
   };
-  const response = api.post(
-    "http://125.141.30.222:8757/auth/login",
+  const response = axios.post(
+    "/auth/login",
     qs.stringify(data),
-    loginConfig
   );
   return response;
 };
 
 export const postApi = (url, params, config) => {
-  const response = api.post(url, params, config);
+  const response = axios.post(url, params, config);
   return response;
 };
 

@@ -9,9 +9,11 @@ class Auth {
   login(id, password, callback) {
     const response = LoginApi(id, password);
     response.then(res => {
-      const { data } = res;
-      if (data.data) {
-        sessionStorage.setItem("token", data.data);
+      const {
+        data: { data }
+      } = res;
+      if (data) {
+        sessionStorage.setItem("token", data);
         this.authenticated = true;
         callback();
       }

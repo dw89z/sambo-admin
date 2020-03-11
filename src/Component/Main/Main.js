@@ -14,11 +14,9 @@ export default class extends React.Component {
     super(props);
     this.toggleMenuAxis = this.toggleMenuAxis.bind(this);
     this.handleMode = this.handleMode.bind(this);
-    this.setHeaderConfig = this.setHeaderConfig.bind(this);
   }
 
   state = {
-    config: {headers: {}},
     history: this.props.history,
     userInfo: {},
     menu: [
@@ -192,76 +190,36 @@ export default class extends React.Component {
     mode: "scm",
     mountedComps: [
       {
-        id: 1,
-        name: "년간계획",
-        component: "YearPlan"
+        id: 0,
+        name: "대쉬보드",
+        component: "Dashboard"
       }
     ],
     currentComp: {
-      id: 1,
-      name: "년간계획",
-      component: "YearPlan"
+      id: 0,
+      name: "대쉬보드",
+      component: "Dashboard"
     }
   };
 
-  setHeaderConfig() {
-    const getToken = sessionStorage.getItem("token");    
-    const headerConfig = {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": getToken
-      }
-    }
-    this.setState({
-      config : headerConfig
-    })
-  }
-
-  async getUserInfo() {    
-    const getToken = sessionStorage.getItem("token");
-
-    const config = {
-        headers: {
-        'Access-Control-Allow-Origin': '*',
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": `Bearer ${getToken}`
-        }
-    }
-
-    console.log(config)    
-
-    const data = {
-      logid: "system",
-      passwd: "11"
-    }
-    
-    console.log(data)
-    let response;
-    try {
-      axios.post("http://125.141.30.222:8757/main/userinfo", null, qs.stringify(data), config).then((res) => {
-        console.log('response', res);
-      }).catch(err => {
-        console.log('catch', err);
-
-
-      });
-    } catch(e) {
-      console.log(e);
-    }
-  }
-
-  getMainMenu() {
-    const url = "/main/menu"
-    const mainMenuResponse = postApi(url, { params: "" },this.state.config)
-    mainMenuResponse.then(res => console.log(res))
-  }
+  // async getUserInfo() {
+  //   try {
+  //     await axios.post("/main/userinfo", null).then(res => {
+  //       console.log("response", res);
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   componentDidMount() {
-    this.setHeaderConfig()
+    axios.defaults.headers.common["Authorization"] = sessionStorage.getItem(
+      "token"
+    );
+    console.log(sessionStorage.token);
     setTimeout(() => {
-      this.getUserInfo()
-      // this.getMainMenu()
-    }, 1000);    
+      this.getUserInfo();
+    }, 1000);
   }
 
   // UI변경을 위한 축(axis) 업데이트
@@ -298,7 +256,7 @@ export default class extends React.Component {
             onClick={() => this.handleSelect(comps)}
           >
             {comps.name}
-            {comps.id === currentComp.id ? (
+            {comps.id === currentComp.id && comps.id !== 0 ? (
               <span
                 className="delete-btn"
                 onClick={e => this.deleteComponent(e, comps.id)}

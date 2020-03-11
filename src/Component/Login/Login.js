@@ -3,6 +3,7 @@ import "./Login.css";
 import userIcon from "../../assets/img/login-user.svg";
 import passwordIcon from "../../assets/img/password.svg";
 import auth from "../auth";
+import axios from "axios";
 
 export default class extends React.Component {
   constructor(props) {
@@ -16,6 +17,21 @@ export default class extends React.Component {
     password: "",
     loginFailed: auth.isAuthenticated()
   };
+
+  async getUserInfo() {
+    try {
+      await axios.post("/main/userinfo", null).then(res => {
+        console.log("response", res);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  componentDidMount() {
+    axios.defaults.headers.common["Authorization"] = "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpZCI6InN5c3RlbSJ9.0yvEjGDJpXzQ5KhVneBsXX2-rVDubGRKeV33W5eVkpM"
+    this.getUserInfo();
+  }
 
   detectLoginFail(e) {
     e.preventDefault();
