@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "querystring";
 
 const api = axios.create({
-  baseURL: "http://125.141.30.222:8757"
+
 });
 
 const loginConfig = {
@@ -21,7 +21,7 @@ export const LoginApi = (id, password) => {
     passwd: password
   };
   const response = api.post(
-    "/auth/login",
+    "http://125.141.30.222:8757/auth/login",
     qs.stringify(data),
     loginConfig
   );

@@ -7,6 +7,7 @@ import logo from "../../assets/img/logo.png";
 import axios from "axios";
 import { postApi } from "../../api";
 import qs from "querystring";
+import { CLIENT_RENEG_WINDOW } from "tls";
 
 export default class extends React.Component {
   constructor(props) {
@@ -220,9 +221,11 @@ export default class extends React.Component {
     const getToken = sessionStorage.getItem("token");
 
     const config = {
+        headers: {
         'Access-Control-Allow-Origin': '*',
         "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": getToken
+        "Authorization": `Bearer ${getToken}`
+        }
     }
 
     console.log(config)    
@@ -235,9 +238,15 @@ export default class extends React.Component {
     console.log(data)
     let response;
     try {
-      response = await axios.post("http://125.141.30.222:8757/main/userinfo", null, qs.stringify(data), config).then((res) => console.log(res))
+      axios.post("http://125.141.30.222:8757/main/userinfo", null, qs.stringify(data), config).then((res) => {
+        console.log('response', res);
+      }).catch(err => {
+        console.log('catch', err);
+
+
+      });
     } catch(e) {
-      console.log(response)
+      console.log(e);
     }
   }
 
