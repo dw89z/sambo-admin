@@ -4,16 +4,22 @@ import Footer from "component/Footer";
 import Header from "component/Header";
 import Components from "../Content/ContentIndex";
 import logo from "../../assets/img/logo.png";
+import axios from "axios";
+import { postApi } from "../../api";
+import qs from "querystring";
 
 export default class extends React.Component {
   constructor(props) {
     super(props);
     this.toggleMenuAxis = this.toggleMenuAxis.bind(this);
     this.handleMode = this.handleMode.bind(this);
+    this.setHeaderConfig = this.setHeaderConfig.bind(this);
   }
 
   state = {
+    config: {headers: {}},
     history: this.props.history,
+    userInfo: {},
     menu: [
       {
         menuList: "구매계획",
@@ -196,6 +202,58 @@ export default class extends React.Component {
       component: "YearPlan"
     }
   };
+
+  setHeaderConfig() {
+    const getToken = sessionStorage.getItem("token");    
+    const headerConfig = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": getToken
+      }
+    }
+    this.setState({
+      config : headerConfig
+    })
+  }
+
+  async getUserInfo() {    
+    const getToken = sessionStorage.getItem("token");
+
+    const config = {
+        'Access-Control-Allow-Origin': '*',
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": getToken
+    }
+
+    console.log(config)    
+
+    const data = {
+      logid: "system",
+      passwd: "11"
+    }
+    
+    console.log(data)
+    let response;
+    try {
+      response = await axios.post("http://125.141.30.222:8757/main/userinfo", null, qs.stringify(data), config).then((res) => console.log(res))
+    } catch(e) {
+      console.log(response)
+    }
+  }
+
+  getMainMenu() {
+    const url = "/main/menu"
+    const mainMenuResponse = postApi(url, { params: "" },this.state.config)
+    mainMenuResponse.then(res => console.log(res))
+  }
+
+  componentDidMount() {
+    this.setHeaderConfig()
+    setTimeout(() => {
+      this.getUserInfo()
+      // this.getMainMenu()
+    }, 1000);    
+  }
 
   // UI변경을 위한 축(axis) 업데이트
   toggleMenuAxis() {

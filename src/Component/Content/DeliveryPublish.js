@@ -1,21 +1,11 @@
 import React from "react";
-import { jsonApi } from "../../api";
 
 class DeliveryPublish extends React.Component {
   state = {
     data: null
   };
-
-  async componentDidMount() {
-    const { data } = await jsonApi.getUser();
-    this.setState({
-      data
-    });
-    console.log(data);
-  }
-
+  
   render() {
-    const { data } = this.state;
 
     return (
       <div>

@@ -5,7 +5,7 @@ const api = axios.create({
   baseURL: "http://125.141.30.222:8757"
 });
 
-const config = {
+const loginConfig = {
   headers: {
     "Content-Type": "application/x-www-form-urlencoded"
   }
@@ -20,7 +20,16 @@ export const LoginApi = (id, password) => {
     logid: id,
     passwd: password
   };
-  return api.post("/auth/login", qs.stringify(data), config).then(res => {
-    return res;
-  });
+  const response = api.post(
+    "/auth/login",
+    qs.stringify(data),
+    loginConfig
+  );
+  return response;
 };
+
+export const postApi = (url, params, config) => {
+  const response = api.post(url, params, config);
+  return response;
+};
+

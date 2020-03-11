@@ -2,7 +2,6 @@ import React from "react";
 import Main from "./component/Main";
 import Login from "./component/Login";
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
-import axios from "axios";
 import { Private } from "./component/Private";
 
 class App extends React.Component {

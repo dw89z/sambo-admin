@@ -1,5 +1,4 @@
 import React from "react";
-import { jsonApi } from "../../api";
 import Table from "../Fragments/Table";
 import Basic from "../Fragments/Basic";
 
