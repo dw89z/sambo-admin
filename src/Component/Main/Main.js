@@ -2,10 +2,11 @@ import React from "react";
 import "./Main.css";
 import Footer from "component/Footer";
 import Header from "component/Header";
-import SubmenuComponents from "../SubmenuContent/SubmenuIndex";
 import logo from "../../assets/img/logo.png";
 import qs from "querystring";
 import { postApi } from "../../api";
+import ScmCreateContent from "component/ScmCreateContent";
+import AdminCreateContent from "component/AdminCreateContent";
 
 export default class extends React.Component {
   state = {
@@ -15,186 +16,26 @@ export default class extends React.Component {
       main_id: ""
     },
     mode: [],
-    bmenu: [
-      {
-        menuList: "구매계획",
-        subList: [
-          {
-            id: 1,
-            name: "년간계획",
-            component: "YearPlan"
-          },
-          {
-            id: 2,
-            name: "월간계획",
-            component: "MonthPlan"
-          },
-          {
-            id: 3,
-            name: "주간/일 생산계획",
-            component: "DailyPlan"
-          }
-        ]
-      },
-      {
-        menuList: "납입지시",
-        subList: [
-          {
-            id: 4,
-            name: "주간납입지시",
-            component: "WeeklyOrder"
-          },
-          {
-            id: 5,
-            name: "출발처리",
-            component: "Departure"
-          },
-          {
-            id: 6,
-            name: "납입카드 발행",
-            component: "DeliveryPublish"
-          },
-          {
-            id: 7,
-            name: "출발취소",
-            component: "CancelDeparture"
-          }
-        ]
-      },
-      {
-        menuList: "납입정보",
-        subList: [
-          {
-            id: 8,
-            name: "품목정보",
-            component: "GoodsInfo"
-          },
-          {
-            id: 9,
-            name: "발주현황",
-            component: "OrderStatus"
-          },
-          {
-            id: 10,
-            name: "납입현황",
-            component: "DeliveryStatus"
-          },
-          {
-            id: 11,
-            name: "출하계획현황",
-            component: "PlanStatus"
-          },
-          {
-            id: 12,
-            name: "납입준수현황",
-            component: "ObservationStatus"
-          }
-        ]
-      },
-      {
-        menuList: "검수정보",
-        subList: [
-          {
-            id: 13,
-            name: "검수현황",
-            component: "InspectionStatus"
-          },
-          {
-            id: 14,
-            name: "소급현황",
-            component: "RetroactiveStatus"
-          },
-          {
-            id: 15,
-            name: "정기검사현황",
-            component: "InspectionRoutine"
-          }
-        ]
-      },
-      {
-        menuList: "대금지급",
-        subList: [
-          {
-            id: 16,
-            name: "채권/채무현황",
-            component: "BondDeptStatus"
-          }
-        ]
-      },
-      {
-        menuList: "업체현황",
-        subList: [
-          {
-            id: 17,
-            name: "업체일반",
-            component: "GeneralStatus"
-          },
-          {
-            id: 18,
-            name: "BOM조회",
-            component: "BOMLookup"
-          }
-        ]
-      },
-      {
-        menuList: "협력업체 ERP",
-        subList: [
-          {
-            id: 19,
-            name: "품목현황",
-            component: "ItemStatus"
-          },
-          {
-            id: 20,
-            name: "BOM현황",
-            component: "BOMStatus"
-          },
-          {
-            id: 21,
-            name: "재고현황",
-            component: "StockStatus"
-          }
-        ]
-      },
-      {
-        menuList: "임가공 현황",
-        subList: [
-          {
-            id: 22,
-            name: "수불명세서",
-            component: "Bill"
-          },
-          {
-            id: 23,
-            name: "재고현황",
-            component: "ProItemStatus"
-          },
-          {
-            id: 24,
-            name: "불량등록",
-            component: "RegistBad"
-          },
-          {
-            id: 25,
-            name: "불량현황",
-            component: "BadStatus"
-          }
-        ]
-      }
-    ],
     currentMenu: [],
     menuAxis: true,
-    mountedComps: [
+    scmMountedComp: [
       {
-        id: 0,
-        name: "대쉬보드",
-        component: "Dashboard"
+        index: 0,
+        window_name: "대시보드",
+        window_id: "Dashboard"
+      }
+    ],
+    adminMountedComp: [
+      {
+        index: 0,
+        window_name: "대시보드",
+        window_id: "Dashboard"
       }
     ],
     currentComp: {
-      id: 0,
-      name: "대쉬보드",
-      component: "Dashboard"
+      index: 0,
+      window_name: "대시보드",
+      window_id: "Dashboard"
     },
     loading: true
   };
@@ -221,22 +62,24 @@ export default class extends React.Component {
     },
     // 각 메뉴를 눌렀을 때 탭을 생성 및 추가
     createTabs: () => {
-      const { mountedComps, currentComp } = this.state;
+      const { scmMountedComp, currentComp } = this.state;
       const { menuAxis } = this.state;
 
       return (
         <ul className={menuAxis ? "tabs" : "tabs left"}>
-          {mountedComps.map((comps, index) => (
+          {scmMountedComp.map((comps, index) => (
             <li
               key={index}
-              className={comps.id === currentComp.id ? "tab active" : "tab"}
+              className={
+                comps.index === currentComp.index ? "tab active" : "tab"
+              }
               onClick={() => this.uiFunc.handleSelect(comps)}
             >
-              {comps.name}
-              {comps.id === currentComp.id && comps.id !== 0 ? (
+              {comps.window_name}
+              {comps.index === currentComp.index && comps.index !== 0 ? (
                 <span
                   className="delete-btn"
-                  onClick={e => this.uiFunc.deleteComponent(e, comps.id)}
+                  onClick={e => this.uiFunc.deleteComponent(e, comps.index)}
                 ></span>
               ) : (
                 <span className="delete-btn disable"></span>
@@ -247,53 +90,57 @@ export default class extends React.Component {
       );
     },
     // 각 메뉴를 눌렀을 경우 화면에 컨텐츠를 출력
-    createContent: () => {
-      const { mountedComps } = this.state;
-      const { currentComp } = this.state;
 
-      // state에서 컴포넌트 이름을 받아 이름에 해당하는 컴포넌트를 호출하는 로직
-      const mountedCompsRender = mountedComps.map((comp, index) => {
-        let CurrentComp = SubmenuComponents[comp.component];
-        return (
-          <div
-            className={
-              comp.id === currentComp.id
-                ? "content-inner active"
-                : "content-inner"
-            }
-            key={index}
-          >
-            <CurrentComp />
-          </div>
-        );
-      });
+    // createContent: () => {
+    //   const { scmMountedComp } = this.state;
+    //   const { currentComp } = this.state;
+    //   const { currentMode } = this.state;
 
-      return mountedCompsRender;
-    },
+    //   // state에서 컴포넌트 이름을 받아 이름에 해당하는 컴포넌트를 호출하는 로직
+    //   const scmMountedCompRender = scmMountedComp.map((comp, index) => {
+    //     let CurrentComp = SubMenuComponents[comp.window_id];
+
+    //     return (
+    //       <div
+    //         className={
+    //           comp.window_id === currentComp.window_id
+    //             ? "content-inner active"
+    //             : "content-inner"
+    //         }
+    //         key={index}
+    //       >
+    //         <CurrentComp />
+    //       </div>
+    //     );
+    //   });
+
+    //   return scmMountedCompRender;
+    // },
+
     // 탭에서 X버튼을 눌렀을때 해당하는 탭과 컴포넌트를 삭제
-    deleteComponent: (e, id) => {
+    deleteComponent: (e, index) => {
       // 이벤트 전파 방지
       e.stopPropagation();
 
       // 삭제했을 경우 현재 탭을 이전에 바라보고 있던 탭 화면으로 변경
-      const { mountedComps } = this.state;
-      const deleteToId = mountedComps.filter(comp => comp.id !== id);
+      const { scmMountedComp } = this.state;
+      const deleteToId = scmMountedComp.filter(comp => comp.index !== index);
       let previousComp = deleteToId[deleteToId.length - 1];
       this.setState({
-        mountedComps: deleteToId,
+        scmMountedComp: deleteToId,
         currentComp: previousComp
       });
       this.uiFunc.handleSelect(previousComp);
     },
     // 탭을 눌렀을 때 현재 화면을 그 탭의 컨텐츠로 변경
-    selectContent: (component, name, id) => {
-      const { mountedComps } = this.state;
-      const isMounted = mountedComps.some(comps => comps.id === id);
+    selectContent: (window_id, window_name, index) => {
+      const { scmMountedComp } = this.state;
+      const isMounted = scmMountedComp.some(comps => comps.index === index);
 
       const newComp = {
-        id,
-        component,
-        name
+        index,
+        window_name,
+        window_id
       };
 
       if (isMounted) {
@@ -302,12 +149,12 @@ export default class extends React.Component {
         });
       } else {
         this.setState({
-          mountedComps: [...mountedComps, newComp],
+          scmMountedComp: [...scmMountedComp, newComp],
           currentComp: newComp
         });
       }
 
-      this.uiFunc.createTabs(component, id);
+      this.uiFunc.createTabs(window_id, index);
     },
     // 선택창 변경 응용 메소드
     handleSelect: comps => {
@@ -320,6 +167,11 @@ export default class extends React.Component {
       await this.setState({
         currentMode: {
           main_id: e.target.value
+        },
+        currentComp: {
+          index: 0,
+          window_name: "대시보드",
+          window_id: "Dashboard"
         }
       });
 
@@ -369,8 +221,17 @@ export default class extends React.Component {
 
   render() {
     const menu = this.state.currentMenu;
-    const { menuAxis, mode, history, user } = this.state;
+    const {
+      menuAxis,
+      mode,
+      history,
+      user,
+      currentComp,
+      currentMode,
+      scmMountedComp
+    } = this.state;
     const uiFunc = this.uiFunc;
+    console.log(currentMode);
 
     return (
       <>
@@ -407,13 +268,13 @@ export default class extends React.Component {
                     <li
                       className="sub-menu-list"
                       key={index}
-                      // onClick={() =>
-                      //   this.uiFunc.selectContent(
-                      //     sub.component,
-                      //     sub.name,
-                      //     sub.id
-                      //   )
-                      // }
+                      onClick={() =>
+                        this.uiFunc.selectContent(
+                          sub.window_id,
+                          sub.window_name,
+                          sub.index
+                        )
+                      }
                     >
                       {sub.window_name}
                     </li>
@@ -425,7 +286,17 @@ export default class extends React.Component {
         </div>
         {uiFunc.createTabs()}
         <div className={menuAxis ? "contents" : "contents left"}>
-          {/* {uiFunc.createContent()} */}
+          {/* {currentMode.main_id === "10" ? (
+            <ScmCreateContent
+              scmMountedComp={scmMountedComp}
+              currentComp={currentComp}
+            />
+          ) : (
+            <AdminCreateContent
+              scmMountedComp={scmMountedComp}
+              currentComp={currentComp}
+            />
+          )} */}
         </div>
         <Footer axis={menuAxis} />
       </>
