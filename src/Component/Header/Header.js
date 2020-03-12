@@ -11,9 +11,9 @@ export default class extends React.Component {
       <>
         <div className="header">
           <div className="util-box">
-            <p>삼모모터스㈜ – (구매) 환영합니다.</p>
+            <p>{this.props.user.cvnas} - 환영합니다.</p>
             <div onClick={this.props.toggleMenuAxis}>
-              <img src={ui} alt="" />
+              <img src={ui} alt="ui" />
               <span>UI변경</span>
             </div>
             <div>

@@ -3,7 +3,6 @@ import "./Login.css";
 import userIcon from "../../assets/img/login-user.svg";
 import passwordIcon from "../../assets/img/password.svg";
 import auth from "../auth";
-import axios from "axios";
 
 export default class extends React.Component {
   constructor(props) {
@@ -24,7 +23,7 @@ export default class extends React.Component {
       this.setState({
         loginFailed: !auth.isAuthenticated()
       });
-    }, 500);
+    }, 250);
 
     setTimeout(() => {
       this.setState({
@@ -33,7 +32,6 @@ export default class extends React.Component {
     }, 1700);
   }
 
-  //
   handleUpdate(e) {
     this.setState({
       [e.target.name]: e.target.value

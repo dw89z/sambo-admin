@@ -1,4 +1,4 @@
-import { LoginApi } from "../api";
+import { loginApi } from "../api";
 
 class Auth {
   constructor() {
@@ -6,18 +6,15 @@ class Auth {
     this.isAuthenticated();
   }
 
-  login(id, password, callback) {
-    const response = LoginApi(id, password);
-    response.then(res => {
-      const {
-        data: { data }
-      } = res;
+  async login(id, password, callback) {
+    await loginApi(id, password).then(({ data: { data } }) => {
       if (data) {
         sessionStorage.setItem("token", data);
         this.authenticated = true;
         callback();
+      } else {
+        this.authenticated = false;
       }
-      return;
     });
   }
 

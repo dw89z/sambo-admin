@@ -1,24 +1,24 @@
 import axios from "axios";
 import qs from "querystring";
 
-// axios.defaults.baseURL = "http://125.141.30.222:8757";
-// axios.defaults.headers.post["Content-Type"] =
-//   "application/x-www-form-urlencoded";
+//axios 기본 설정
 export const api = axios.create({
-  baseURL: "http://192.168.75.199:8080",
-  headers: {
-    "Content-Type": "application/x-www-form-urlencoded"
-  }
+  baseURL: "http://125.141.30.222:8757/"
 });
 
+//토큰을 받아오는 함수
 const getAuthToken = () => {
   return sessionStorage.getItem("token");
 };
 
+//axios 헤더 인터셉트, 모든 요청에 토큰을 실어서 요청
 api.interceptors.request.use(
   function(config) {
-    config.headers = { ...config.headers, Authorization: getAuthToken() };
-    // you can also do other modification in config
+    config.headers = {
+      ...config.headers,
+      Authorization: getAuthToken(),
+      "Content-Type": "application/x-www-form-urlencoded"
+    };
     return config;
   },
   function(error) {
@@ -26,16 +26,16 @@ api.interceptors.request.use(
   }
 );
 
-export const LoginApi = (id, password) => {
+//로그인 api
+export const loginApi = (id, password) => {
   const data = {
     logid: id,
     passwd: password
   };
-  const response = api.post("/auth/login", qs.stringify(data));
-  return response;
+  return api.post("/auth/login", qs.stringify(data));
 };
 
+//post요청 공용 api
 export const postApi = (url, params, config) => {
-  const response = api.post(url, params, config);
-  return response;
+  return api.post(url, params, config);
 };
