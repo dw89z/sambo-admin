@@ -1,0 +1,10 @@
+{
+    "version": 3,
+    "mappings": "AAEA,AAAA,QAAQ,CAAC;EACP,QAAQ,EAAE,KAAK;EACf,KAAK,EAAE,KAAK;EACZ,MAAM,EAAE,KAAK;EACb,OAAO,EAAE,KAAK;EACd,UAAU,EAAE,qBAAqB;CAClC",
+    "sources": [
+        "Loading.scss",
+        "../../Scss/Variables.scss"
+    ],
+    "names": [],
+    "file": "Loading.css"
+}
