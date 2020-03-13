@@ -7,6 +7,8 @@ import qs from "querystring";
 import { postApi } from "../../api";
 import ScmCreateContent from "component/ScmCreateContent";
 import AdminCreateContent from "component/AdminCreateContent";
+import Sample from "./Sample";
+import { isArray } from "util";
 
 export default class extends React.Component {
   state = {
@@ -25,6 +27,11 @@ export default class extends React.Component {
         window_id: "Dashboard"
       }
     ],
+    scmCurrentComp: {
+      index: 0,
+      window_name: "대시보드",
+      window_id: "Dashboard"
+    },
     adminMountedComp: [
       {
         index: 0,
@@ -32,23 +39,34 @@ export default class extends React.Component {
         window_id: "Dashboard"
       }
     ],
-    currentComp: {
+    adminCurrentComp: {
       index: 0,
       window_name: "대시보드",
       window_id: "Dashboard"
     },
-    loading: true
+    loading: true,
+    test: [
+      {
+        id: 10,
+        mes: "text10"
+      },
+      {
+        id: 20,
+        mes: "text20"
+      }
+    ]
   };
+
+  // UI변경을 위한 축(axis) 업데이트
+  toggleMenuAxis() {
+    const { menuAxis } = this.state;
+    this.setState({
+      menuAxis: !menuAxis
+    });
+  }
 
   //ui조작 function 모음
   uiFunc = {
-    // UI변경을 위한 축(axis) 업데이트
-    toggleMenuAxis: () => {
-      const { menuAxis } = this.state;
-      this.setState({
-        menuAxis: !menuAxis
-      });
-    },
     // 좌측 메뉴일 경우 클릭한 메뉴 리스트의 클래스 업데이트
     toggleClassParent: e => {
       let parent = e.currentTarget.parentElement;
@@ -60,14 +78,101 @@ export default class extends React.Component {
         subMenu.style.maxHeight = subMenu.scrollHeight + "px";
       }
     },
+
+    //업무 모드 변경
+    handleMode: async e => {
+      await this.setState({
+        currentMode: {
+          main_id: e.target.value
+        },
+        scmCurrentComp: {
+          index: 0,
+          window_name: "대시보드",
+          window_id: "Dashboard"
+        }
+      });
+
+      try {
+        const { currentMode } = this.state;
+        await postApi(
+          "main/submenu",
+          qs.stringify({ mainid: currentMode.main_id })
+        ).then(res => {
+          this.setState({
+            currentMenu: res.data.data
+          });
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    // 탭을 눌렀을 때 현재 화면을 그 탭의 컨텐츠로 변경
+    selectContent: (window_id, window_name, index, callback) => {
+      const { currentMode } = this.state;
+      const newComp = {
+        window_name,
+        window_id,
+        index
+      };
+      let mountedComp;
+      let isMounted;
+
+      const detectContent = (index, callback) => {
+        if (currentMode.main_id === "10") {
+          mountedComp = this.state.scmMountedComp;
+        } else {
+          mountedComp = this.state.adminMountedComp;
+        }
+        isMounted = mountedComp.some(comps => comps.index === index);
+        console.log("detect", mountedComp);
+        callback();
+      };
+
+      const setStateContent = () => {
+        if (currentMode.main_id === "10" && isMounted) {
+          this.setState({
+            scmCurrentComp: newComp
+          });
+        } else if (currentMode.main_id === "10" && !isMounted) {
+          this.setState({
+            scmMountedComp: [...mountedComp, newComp],
+            scmCurrentComp: newComp
+          });
+        } else if (currentMode.main_id !== "10" && isMounted) {
+          this.setState({
+            adminCurrentComp: newComp
+          });
+        } else if (currentMode.main_id !== "10" && !isMounted) {
+          this.setState({
+            adminMountedComp: [...mountedComp, newComp],
+            adminCurrentComp: newComp
+          });
+        }
+        this.uiFunc.createTabs(newComp.window_id, newComp.index);
+      };
+
+      detectContent(index, setStateContent);
+    },
+
     // 각 메뉴를 눌렀을 때 탭을 생성 및 추가
     createTabs: () => {
-      const { scmMountedComp, currentComp } = this.state;
+      const { currentMode } = this.state;
       const { menuAxis } = this.state;
+      let mountedComp;
+      let currentComp;
+
+      if (currentMode.main_id === "10") {
+        mountedComp = this.state.scmMountedComp;
+        currentComp = this.state.scmCurrentComp;
+      } else {
+        mountedComp = this.state.adminMountedComp;
+        currentComp = this.state.adminCurrentComp;
+      }
 
       return (
         <ul className={menuAxis ? "tabs" : "tabs left"}>
-          {scmMountedComp.map((comps, index) => (
+          {mountedComp.map((comps, index) => (
             <li
               key={index}
               className={
@@ -89,33 +194,6 @@ export default class extends React.Component {
         </ul>
       );
     },
-    // 각 메뉴를 눌렀을 경우 화면에 컨텐츠를 출력
-
-    // createContent: () => {
-    //   const { scmMountedComp } = this.state;
-    //   const { currentComp } = this.state;
-    //   const { currentMode } = this.state;
-
-    //   // state에서 컴포넌트 이름을 받아 이름에 해당하는 컴포넌트를 호출하는 로직
-    //   const scmMountedCompRender = scmMountedComp.map((comp, index) => {
-    //     let CurrentComp = SubMenuComponents[comp.window_id];
-
-    //     return (
-    //       <div
-    //         className={
-    //           comp.window_id === currentComp.window_id
-    //             ? "content-inner active"
-    //             : "content-inner"
-    //         }
-    //         key={index}
-    //       >
-    //         <CurrentComp />
-    //       </div>
-    //     );
-    //   });
-
-    //   return scmMountedCompRender;
-    // },
 
     // 탭에서 X버튼을 눌렀을때 해당하는 탭과 컴포넌트를 삭제
     deleteComponent: (e, index) => {
@@ -128,66 +206,16 @@ export default class extends React.Component {
       let previousComp = deleteToId[deleteToId.length - 1];
       this.setState({
         scmMountedComp: deleteToId,
-        currentComp: previousComp
+        scmCurrentComp: previousComp
       });
       this.uiFunc.handleSelect(previousComp);
     },
-    // 탭을 눌렀을 때 현재 화면을 그 탭의 컨텐츠로 변경
-    selectContent: (window_id, window_name, index) => {
-      const { scmMountedComp } = this.state;
-      const isMounted = scmMountedComp.some(comps => comps.index === index);
 
-      const newComp = {
-        index,
-        window_name,
-        window_id
-      };
-
-      if (isMounted) {
-        this.setState({
-          currentComp: newComp
-        });
-      } else {
-        this.setState({
-          scmMountedComp: [...scmMountedComp, newComp],
-          currentComp: newComp
-        });
-      }
-
-      this.uiFunc.createTabs(window_id, index);
-    },
     // 선택창 변경 응용 메소드
     handleSelect: comps => {
       this.setState({
-        currentComp: comps
+        scmCurrentComp: comps
       });
-    },
-    //업무 모드 변경
-    handleMode: async e => {
-      await this.setState({
-        currentMode: {
-          main_id: e.target.value
-        },
-        currentComp: {
-          index: 0,
-          window_name: "대시보드",
-          window_id: "Dashboard"
-        }
-      });
-
-      try {
-        const { currentMode } = this.state;
-        await postApi(
-          "main/submenu",
-          qs.stringify({ mainid: currentMode.main_id })
-        ).then(res => {
-          this.setState({
-            currentMenu: res.data.data
-          });
-        });
-      } catch (error) {
-        console.log(error);
-      }
     }
   };
 
@@ -212,26 +240,31 @@ export default class extends React.Component {
         "main/submenu",
         qs.stringify({ mainid: currentMode.main_id })
       ).then(res => {
+        const {
+          data: { data }
+        } = res;
         this.setState({
-          currentMenu: res.data.data
+          currentMenu: data
         });
       });
     }
   }
 
   render() {
-    const menu = this.state.currentMenu;
     const {
+      currentMenu,
       menuAxis,
       mode,
       history,
       user,
-      currentComp,
+      scmCurrentComp,
       currentMode,
-      scmMountedComp
+      scmMountedComp,
+      adminMountedComp,
+      adminCurrentComp,
+      test
     } = this.state;
     const uiFunc = this.uiFunc;
-    console.log(currentMode);
 
     return (
       <>
@@ -255,7 +288,7 @@ export default class extends React.Component {
             </select>
           </div>
           <ul className="menu">
-            {menu.map((menu, index) => (
+            {currentMenu.map((menu, index) => (
               <li className="menu-list" key={index}>
                 {menuAxis ? (
                   <p>{menu.window_name}</p>
@@ -268,13 +301,13 @@ export default class extends React.Component {
                     <li
                       className="sub-menu-list"
                       key={index}
-                      onClick={() =>
+                      onClick={() => {
                         this.uiFunc.selectContent(
                           sub.window_id,
                           sub.window_name,
                           sub.index
-                        )
-                      }
+                        );
+                      }}
                     >
                       {sub.window_name}
                     </li>
@@ -284,20 +317,23 @@ export default class extends React.Component {
             ))}
           </ul>
         </div>
-        {uiFunc.createTabs()}
+        {/* {uiFunc.createTabs()}
         <div className={menuAxis ? "contents" : "contents left"}>
-          {/* {currentMode.main_id === "10" ? (
+          {currentMode.main_id === "10" ? (
             <ScmCreateContent
               scmMountedComp={scmMountedComp}
-              currentComp={currentComp}
+              scmCurrentComp={scmCurrentComp}
             />
           ) : (
             <AdminCreateContent
-              scmMountedComp={scmMountedComp}
-              currentComp={currentComp}
+              adminMountedComp={adminMountedComp}
+              adminCurrentComp={adminCurrentComp}
             />
-          )} */}
-        </div>
+          )}
+        </div> */}
+        {test.map((test, index) => {
+          return <Sample test={test} key={index} />;
+        })}
         <Footer axis={menuAxis} />
       </>
     );

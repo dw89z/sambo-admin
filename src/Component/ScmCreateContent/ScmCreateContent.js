@@ -1,48 +1,35 @@
 import React from "react";
-import ScmMenuComponents from "../ScmMenuContent/ScmMenuIndex";
+import ScmMenuContent from "../ScmMenuContent/ScmMenuIndex";
 
 class ScmCreateContent extends React.Component {
   state = {
-    mountedComps: this.props.mountedComps,
-    currentComp: this.props.currentComp
+    scmMountedComp: this.props.scmMountedComp,
+    scmCurrentComp: this.props.scmCurrentComp
   };
-  componentWillUnmount() {
-    this.setState({
-      currentComp: {
-        index: 0,
-        window_name: "대시보드",
-        window_id: "Dashboard"
-      },
-      mountedComps: {
-        index: 0,
-        window_name: "대시보드",
-        window_id: "Dashboard"
-      }
-    });
-  }
+
   render() {
-    const { mountedComps } = this.state;
-    const { currentComp } = this.state;
+    const { scmMountedComp } = this.state;
+    const { scmCurrentComp } = this.state;
 
     // state에서 컴포넌트 이름을 받아 이름에 해당하는 컴포넌트를 호출하는 로직
-    const mountedCompsRender = mountedComps.map((comp, index) => {
-      let CurrentComp = ScmMenuComponents[comp.window_id];
+    const scmMountedCompRender = scmMountedComp.map((comp, index) => {
+      let ScmCurrentComp = ScmMenuContent[comp.window_id];
 
       return (
         <div
           className={
-            comp.window_id === currentComp.window_id
+            comp.window_id === scmCurrentComp.window_id
               ? "content-inner active"
               : "content-inner"
           }
           key={index}
         >
-          <CurrentComp />
+          <ScmCurrentComp />
         </div>
       );
     });
 
-    return mountedCompsRender;
+    return scmMountedCompRender;
   }
 }
 

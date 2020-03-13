@@ -1,48 +1,64 @@
 import React from "react";
-import AdminMenuComponents from "../AdminMenuContent/AdminMenuIndex";
+import AdminMenuContent from "../AdminMenuContent/AdminMenuIndex";
 
 class AdminCreateContent extends React.Component {
   state = {
-    mountedComps: this.props.mountedComps,
-    currentComp: this.props.currentComp
+    adminMountedComp: this.props.adminMountedComp,
+    adminCurrentComp: this.props.adminCurrentComp
   };
-  componentWillUnmount() {
-    this.setState({
-      currentComp: {
-        index: 0,
-        window_name: "대시보드",
-        window_id: "Dashboard"
-      },
-      mountedComps: {
-        index: 0,
-        window_name: "대시보드",
-        window_id: "Dashboard"
-      }
-    });
+
+  createTabs() {
+    const { scmMountedComp, adminCurrentComp } = this.state;
+    const { menuAxis } = this.state;
+
+    return (
+      <ul className={menuAxis ? "tabs" : "tabs left"}>
+        {scmMountedComp.map((comps, index) => (
+          <li
+            key={index}
+            className={
+              comps.index === adminCurrentComp.index ? "tab active" : "tab"
+            }
+            onClick={() => this.uiFunc.handleSelect(comps)}
+          >
+            {comps.window_name}
+            {comps.index === adminCurrentComp.index && comps.index !== 0 ? (
+              <span
+                className="delete-btn"
+                onClick={e => this.uiFunc.deleteComponent(e, comps.index)}
+              ></span>
+            ) : (
+              <span className="delete-btn disable"></span>
+            )}
+          </li>
+        ))}
+      </ul>
+    );
   }
+
   render() {
-    const { mountedComps } = this.state;
-    const { currentComp } = this.state;
+    const { adminMountedComp } = this.state;
+    const { adminCurrentComp } = this.state;
 
     // state에서 컴포넌트 이름을 받아 이름에 해당하는 컴포넌트를 호출하는 로직
-    const mountedCompsRender = mountedComps.map((comp, index) => {
-      let CurrentComp = AdminMenuComponents[comp.window_id];
+    const adminMountedCompRender = adminMountedComp.map((comp, index) => {
+      let AdminCurrentComp = AdminMenuContent[comp.window_id];
 
       return (
         <div
           className={
-            comp.window_id === currentComp.window_id
+            comp.window_id === adminCurrentComp.window_id
               ? "content-inner active"
               : "content-inner"
           }
           key={index}
         >
-          <CurrentComp />
+          <AdminCurrentComp />
         </div>
       );
     });
 
-    return mountedCompsRender;
+    return adminMountedCompRender;
   }
 }
 
