@@ -55,7 +55,6 @@ export default class extends React.Component {
     },
 
     handleMode: e => {
-      console.log(e.target.value);
       this.setState({
         currentMode: {
           main_id: e.target.value
@@ -65,11 +64,11 @@ export default class extends React.Component {
 
     selectContent: (window_id, window_name, index) => {
       const { mountedComp } = this.state;
-      let newComp = {
-        index,
-        window_name,
-        window_id
-      };
+      // let newComp = {
+      //   index,
+      //   window_name,
+      //   window_id
+      // };
       let isMounted = mountedComp.some(comp => comp.index === index);
       if (isMounted) {
       }
@@ -110,7 +109,7 @@ export default class extends React.Component {
       } = await postApi("main/userinfo");
       const {
         data: { data: mode }
-      } = await postApi("main/menu");
+      } = await postApi("main/mode");
 
       this.setState({
         user,
@@ -121,7 +120,7 @@ export default class extends React.Component {
     } finally {
       const { currentMode } = this.state;
       await postApi(
-        "main/submenu",
+        "main/menu",
         qs.stringify({ mainid: currentMode.main_id })
       ).then(res => {
         const {
@@ -149,7 +148,6 @@ export default class extends React.Component {
     } = this.state;
     const uiFunc = this.uiFunc;
     const stateFunc = this.stateFunc;
-    console.log(this.state.targetComp);
 
     return (
       <>
@@ -190,11 +188,6 @@ export default class extends React.Component {
                           className="sub-menu-list"
                           key={index}
                           onClick={() => {
-                            console.log(
-                              sub.window_id,
-                              sub.window_name,
-                              sub.index
-                            );
                             this.uiFunc.selectContent(
                               sub.window_id,
                               sub.window_name,
@@ -219,6 +212,7 @@ export default class extends React.Component {
                 createTabs={this.uiFunc.createTabs}
                 menuAxis={menuAxis}
                 setMounted={stateFunc.setMounted}
+                key={mountedComp.index}
               />
             </div>
 

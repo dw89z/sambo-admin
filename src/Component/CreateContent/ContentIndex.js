@@ -1,7 +1,7 @@
 let Components = {};
 
-Components["Dashboard"] = require("./Dashboard").default;
-Components["StckAllList"] = require("./StckAllList.js").default;
+Components["Dashboard"] = require("./Dashboard/Dashboard").default;
+Components["StckAllList"] = require("./StckAllList").default;
 Components["StckCurrent"] = require("./StckCurrent").default;
 Components["StckFailRequest"] = require("./StckFailRequest").default;
 Components["StckFailStatus"] = require("./StckFailStatus").default;

@@ -41,20 +41,17 @@ class CreateContent extends React.Component {
     try {
       const { currentMode } = this.state;
       await postApi(
-        "main/submenu",
+        "main/menu",
         qs.stringify({ mainid: currentMode.main_id })
-      ).then(res => {
-        console.log(res);
-      });
+      ).then(res => {});
     } catch (err) {}
   }
 
   render() {
-    const { currentComp, mountedComp, currentMode } = this.props;
+    const { currentComp, mountedComp } = this.props;
 
     const mountedCompRender = mountedComp.map((comp, index) => {
       let component = comp.window_id;
-      console.log(component);
       let CurrentComp = MountContentIndex[component];
 
       return (
@@ -68,8 +65,7 @@ class CreateContent extends React.Component {
             }
             key={index}
           >
-            <CurrentComp />
-            {this.props.currentMode.main_id}
+            <CurrentComp key={index} />
           </div>
         </>
       );

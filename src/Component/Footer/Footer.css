@@ -44,8 +44,8 @@
 }
 
 .footer-util ul li {
-  background: url("../../assets/img/data.svg") 20% 55% no-repeat;
-  background-size: 1.5rem !important;
+  background: url("../../assets/img/data.png") 20% 55% no-repeat;
+  background-size: 0.85rem !important;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -63,25 +63,25 @@
 }
 
 .footer-util ul li:nth-child(2) {
-  background: url("../../assets/img/manual.svg") 20% 55% no-repeat;
+  background: url("../../assets/img/manual.png") 20% 55% no-repeat;
   padding-left: 4rem;
 }
 
 .footer-util ul li:nth-child(2):hover {
-  background-image: url("../../assets/img/manual-on.svg");
+  background-image: url("../../assets/img/manual-on.png");
 }
 
 .footer-util ul li:nth-child(3) {
-  background: url("../../assets/img/list.svg") 20% 55% no-repeat;
+  background: url("../../assets/img/list.png") 20% 55% no-repeat;
 }
 
 .footer-util ul li:nth-child(3):hover {
-  background-image: url("../../assets/img/list-on.svg");
+  background-image: url("../../assets/img/list-on.png");
 }
 
 .footer-util ul li:hover {
   color: #1d2baa;
-  background-image: url("../../assets/img/data-on.svg");
+  background-image: url("../../assets/img/data-on.png");
 }
 
 .footer-info {
@@ -140,14 +140,14 @@
 }
 
 .preloading p {
-  background: url("../../assets/img/list-on.svg") center center no-repeat;
+  background: url("../../assets/img/list-on.png") center center no-repeat;
 }
 
 .preloading p:first-child {
-  background: url("../../assets/img/manual-on.svg") center center no-repeat;
+  background: url("../../assets/img/manual-on.png") center center no-repeat;
 }
 
 .preloading p:last-child {
-  background: url("../../assets/img/data-on.svg") center center no-repeat;
+  background: url("../../assets/img/data-on.png") center center no-repeat;
 }
 /*# sourceMappingURL=Footer.css.map */

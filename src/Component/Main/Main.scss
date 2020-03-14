@@ -194,6 +194,7 @@
           top: 0.75rem;
           height: 18px;
         }
+
         .sub-menu {
           opacity: 1;
           visibility: visible;
@@ -235,20 +236,20 @@
 .contents {
   position: absolute;
   width: calc(100% - 3rem);
-  height: calc(100% - 13.5rem);
-  top: 9.5rem;
+  height: calc(100% - 12.2rem);
+  top: 8.5rem;
   background: #fff;
   left: 1.5rem;
   box-shadow: 0 10px 5px rgba(20, 50, 80, 0.1);
   border-radius: 8px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  padding: 1.5rem;
+  padding: 1rem;
 
   &.left {
     width: calc(100% - 17rem);
-    height: calc(100% - 10.2rem);
-    top: 6.7rem;
+    height: calc(100% - 9.2rem);
+    top: 5.8rem;
     left: 15.5rem;
   }
 }
@@ -256,24 +257,19 @@
 .tabs {
   position: absolute;
   display: flex;
-  top: -2.7rem;
+  top: -2rem;
   left: 0;
-  width: calc(100% - 3rem);
+  width: 100%;
   overflow-x: scroll;
-
-  &.left {
-    width: calc(100% - 17rem);
-    top: 3.8rem;
-    left: 15.5rem;
-  }
+  overflow-y: hidden;
 
   .tab {
     border-radius: 8px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     background: #fff;
-    padding: 0.75rem 2.75rem 0.75rem 1.25rem;
-    font-size: 0.8rem;
+    padding: 0.5rem 2.1rem 0.5rem 1rem;
+    font-size: 0.7rem;
     font-weight: 700;
     font-family: "Noto sans KR", sans-serif;
     cursor: pointer;
@@ -288,10 +284,10 @@
 
   .delete-btn {
     display: inline-block;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     position: absolute;
-    top: 12px;
+    top: 7px;
     right: 8px;
 
     &.disable {
@@ -308,7 +304,7 @@
       content: "";
       display: block;
       width: 1px;
-      height: 12px;
+      height: 10px;
       transform: rotate(45deg);
       background: #ee2472;
       position: absolute;
@@ -320,7 +316,7 @@
       content: "";
       display: block;
       width: 1px;
-      height: 12px;
+      height: 10px;
       transform: rotate(-45deg);
       background: #ee2472;
       position: absolute;
@@ -331,7 +327,10 @@
 }
 
 .content-inner {
-  width: calc(100% - 4rem);
+  width: calc(100% - 2rem);
+  height: calc(100% - 2rem);
+  overflow-y: scroll;
+  overflow-x: hidden;
   position: absolute;
   opacity: 0;
   visibility: hidden;
