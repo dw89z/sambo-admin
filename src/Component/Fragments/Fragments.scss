@@ -1,0 +1,59 @@
+@import "../../scss/Variables.scss";
+
+.year-table {
+  width: 100%;
+  text-align-last: left;
+  font-size: 0.8rem;
+
+
+  .react-bootstrap-table {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      tbody {
+        tr {
+          color: #a1a1a9 !important;
+
+          &:hover {
+            color: $pri !important;
+          }
+        }
+      }
+    }
+  }
+
+  th {
+    padding: 0.5rem 0.8rem;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    color: $pri;
+    border: 1px solid $pri;
+    border-left: none;
+    border-right: none;
+  }
+
+  td {
+    padding: 0.5rem 0.8rem;
+    border-top: 1px solid #a1a1a9;
+
+  }
+
+
+
+  tr {
+    cursor: pointer;
+
+    th:nth-child(1) {
+      width: 15%
+    }
+
+    th:nth-child(2) {
+      width: 15%;
+    }
+
+    th:nth-child(3) {
+      width: 70%;
+    }
+  }
+}

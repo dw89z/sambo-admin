@@ -1,69 +1,21 @@
 import React from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import "../../scss/Fragments.css";
+import "./Fragments.css";
 
 class Table extends React.Component {
   state = {
-    products: [
-      {
-        id: 1,
-        name: "TV",
-        price: 1000,
-        exex: "duck",
-        a: "a",
-        b: "b",
-        c: "c",
-        d: "d",
-        e: "e",
-        f: "f"
-      },
-      {
-        id: 2,
-        name: "Mobile",
-        price: 500,
-        exex: "duck"
-      }
-    ],
     columns: [
       {
-        dataField: "id",
-        text: "Product ID"
+        dataField: "crtdat",
+        text: "일자"
       },
       {
-        dataField: "name",
-        text: "Product Name"
+        dataField: "seqno",
+        text: "등록번호"
       },
       {
-        dataField: "price",
-        text: "Product Price"
-      },
-      {
-        dataField: "exex",
-        text: "duck boot"
-      },
-      {
-        dataField: "a",
-        text: "sfsaf"
-      },
-      {
-        dataField: "b",
-        text: "sfsaf"
-      },
-      {
-        dataField: "c",
-        text: "sfsaf"
-      },
-      {
-        dataField: "d",
-        text: "sfsaf"
-      },
-      {
-        dataField: "e",
-        text: "sfsaf"
-      },
-      {
-        dataField: "f",
-        text: "sfsaf"
+        dataField: "title",
+        text: "제목"
       }
     ]
   };
@@ -74,7 +26,7 @@ class Table extends React.Component {
         <div className="year-table">
           <BootstrapTable
             keyField="id"
-            data={this.state.products}
+            data={this.props.data}
             columns={this.state.columns}
             rowClasses={rowClasses}
           />

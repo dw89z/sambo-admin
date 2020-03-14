@@ -1,12 +1,10 @@
 @import "../../../scss/Variables.scss";
 
-
-
 .chart-section {
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  display: flex;
+  position: relative;
 
   h2 {
     color: $pri;
@@ -33,16 +31,21 @@
   border-radius: 10px;
   display: flex;
   flex-wrap: wrap;
+  position: absolute;
 
-  &:last-child {
-    margin-right: 0;
+  &.right {
+    right: 0;
+    margin: 0;
+  }
+
+  &.bottom {
+    bottom: 0;
   }
 
   &.half {
     height: 45%;
     padding: 1.5rem 0;
   }
-
 }
 
 .chart-inner {
@@ -55,5 +58,48 @@
 }
 
 .bottom {
-  margin-top: 2rem;
+  margin-top: 1rem;
+}
+
+.react-tabs {
+  width: 100%;
+  padding: 0 1.5rem;
+}
+
+.react-tabs__tab-list {
+  position: absolute;
+  top: -3rem;
+  display: flex;
+  left: -0.5rem;
+
+  li {
+    font-size: 0.8rem;
+    border: 1px solid $gray2;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    font-weight: 600;
+    color: $gray3;
+    cursor: pointer;
+
+    &:hover,
+    &.react-tabs__tab--selected {
+      border-color: $pri;
+      color: $pri;
+    }
+  }
+}
+
+.table-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  position: absolute;
+  padding: 0 1.5rem;
+  visibility: hidden;
+
+  &.react-tabs__tab-panel--selected {
+    visibility: visible;
+  }
+
 }

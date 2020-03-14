@@ -33,11 +33,11 @@
   width: 64px;
   height: 64px;
   margin: 8px;
-  border: 8px solid #1d2baa;
+  border: 8px solid #1225c9;
   border-radius: 50%;
   -webkit-animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
           animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #1d2baa transparent transparent transparent;
+  border-color: #1225c9 transparent transparent transparent;
 }
 
 .loading .lds-ring div:nth-child(1) {

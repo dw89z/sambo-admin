@@ -4,7 +4,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background: #1d2baa;
+  background: #1225c9;
   padding-left: 16.5rem;
   padding-right: 1.5rem;
   display: -webkit-box;
@@ -64,7 +64,7 @@
   margin: 0 0.1rem;
   padding: 0.2rem 0.6rem;
   border-radius: 5px;
-  border: 1px solid #1d2baa;
+  border: 1px solid #1225c9;
 }
 
 .util-box div:hover {

@@ -172,7 +172,7 @@
       cursor: pointer;
       font-size: 0.85rem;
       position: relative;
-      color: #999;
+      color: #000;
       font-weight: 500;
 
       &:after {
@@ -217,7 +217,7 @@
       .sub-menu-list {
         padding: 0.5rem 0 0.5rem 1.25rem;
         border-top: 1px solid #e1e1e9;
-        color: #333;
+        color: #000;
         font-weight: 300;
 
         &:first-child {
@@ -329,8 +329,7 @@
 .content-inner {
   width: calc(100% - 2rem);
   height: calc(100% - 2rem);
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
   position: absolute;
   opacity: 0;
   visibility: hidden;

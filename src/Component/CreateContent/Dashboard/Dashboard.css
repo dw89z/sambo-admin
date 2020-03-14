@@ -2,13 +2,11 @@
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  position: relative;
 }
 
 .chart-section h2 {
-  color: #1d2baa;
+  color: #1225c9;
   letter-spacing: -1px;
 }
 
@@ -36,10 +34,16 @@
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
+  position: absolute;
 }
 
-.chart-wrapper:last-child {
-  margin-right: 0;
+.chart-wrapper.right {
+  right: 0;
+  margin: 0;
+}
+
+.chart-wrapper.bottom {
+  bottom: 0;
 }
 
 .chart-wrapper.half {
@@ -57,6 +61,49 @@
 }
 
 .bottom {
-  margin-top: 2rem;
+  margin-top: 1rem;
+}
+
+.react-tabs {
+  width: 100%;
+  padding: 0 1.5rem;
+}
+
+.react-tabs__tab-list {
+  position: absolute;
+  top: -3rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  left: -0.5rem;
+}
+
+.react-tabs__tab-list li {
+  font-size: 0.8rem;
+  border: 1px solid #e1e1ef;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  font-weight: 600;
+  color: #c1c1cf;
+  cursor: pointer;
+}
+
+.react-tabs__tab-list li:hover, .react-tabs__tab-list li.react-tabs__tab--selected {
+  border-color: #1225c9;
+  color: #1225c9;
+}
+
+.table-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  position: absolute;
+  padding: 0 1.5rem;
+  visibility: hidden;
+}
+
+.table-wrapper.react-tabs__tab-panel--selected {
+  visibility: visible;
 }
 /*# sourceMappingURL=Dashboard.css.map */

@@ -2,6 +2,9 @@ import React from "react";
 import "./Login.css";
 import userIcon from "../../assets/img/login-user.svg";
 import passwordIcon from "../../assets/img/password.svg";
+import logo from "../../assets/img/login-logo.svg";
+import mainlogo from "../../assets/img/login-main-logo.svg";
+
 import auth from "../auth";
 
 export default class extends React.Component {
@@ -44,13 +47,20 @@ export default class extends React.Component {
     return (
       <>
         <div className="container">
-          {/* <p>
-            삼보모터스
-            <br />
-            공급망 관리 <br />
-            시스템
-          </p> */}
+          <div className="title">
+            <p>삼보모터스 공급망 관리 시스템</p>
+          </div>
+          <div className="back-wrap">
+            <img src={logo} alt="logo" />
+            <p>NEW FRONTIER SPIRIT</p>
+          </div>
           <div className="login-wrap">
+            <div className="login-logo">
+              <img src={mainlogo} alt="logo" />
+              <p>
+                Global leading company <br /> <strong>SAMBOMOTORS</strong>
+              </p>
+            </div>
             <form action="" onSubmit={this.detectLoginFail}>
               <div className="login-inner">
                 <img src={userIcon} alt="user" className="icon" />

@@ -47,7 +47,7 @@
 }
 
 .left-menu .menu-list.active {
-  border-left: 8px solid #1d2baa;
+  border-left: 8px solid #1225c9;
 }
 
 .left-menu .menu-list.active p:after {
@@ -74,12 +74,12 @@
 }
 
 .left-menu .sub-menu .sub-menu-list:active {
-  background: #1d2baa !important;
+  background: #1225c9 !important;
   color: #fff;
 }
 
 .left-menu .sub-menu .sub-menu-list:hover {
-  background: #1d2baa;
+  background: #1225c9;
   color: #fff;
 }
 
@@ -113,7 +113,7 @@
 }
 
 .left-menu .select-section .mode-selection:focus {
-  border: 1px solid #1d2baa;
+  border: 1px solid #1225c9;
   border-radius: 5px;
 }
 
@@ -159,7 +159,7 @@
 }
 
 .header-menu .select-section .mode-selection:focus {
-  border: 1px solid #1d2baa;
+  border: 1px solid #1225c9;
   border-radius: 5px;
 }
 
@@ -178,7 +178,7 @@
   cursor: pointer;
   font-size: 0.85rem;
   position: relative;
-  color: #999;
+  color: #000;
   font-weight: 500;
 }
 
@@ -197,7 +197,7 @@
 }
 
 .header-menu .menu .menu-list:hover:after {
-  background: #1d2baa;
+  background: #1225c9;
   top: 0.75rem;
   height: 18px;
 }
@@ -224,7 +224,7 @@
 .header-menu .menu .sub-menu .sub-menu-list {
   padding: 0.5rem 0 0.5rem 1.25rem;
   border-top: 1px solid #e1e1e9;
-  color: #333;
+  color: #000;
   font-weight: 300;
 }
 
@@ -233,7 +233,7 @@
 }
 
 .header-menu .menu .sub-menu .sub-menu-list:hover {
-  background: #1d2baa;
+  background: #1225c9;
   color: #fff;
 }
 
@@ -336,8 +336,7 @@
 .content-inner {
   width: calc(100% - 2rem);
   height: calc(100% - 2rem);
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
   position: absolute;
   opacity: 0;
   visibility: hidden;

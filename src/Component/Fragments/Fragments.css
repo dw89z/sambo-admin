@@ -1,0 +1,50 @@
+.year-table {
+  width: 100%;
+  text-align-last: left;
+  font-size: 0.8rem;
+}
+
+.year-table .react-bootstrap-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.year-table .react-bootstrap-table table tbody tr {
+  color: #a1a1a9 !important;
+}
+
+.year-table .react-bootstrap-table table tbody tr:hover {
+  color: #1225c9 !important;
+}
+
+.year-table th {
+  padding: 0.5rem 0.8rem;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  color: #1225c9;
+  border: 1px solid #1225c9;
+  border-left: none;
+  border-right: none;
+}
+
+.year-table td {
+  padding: 0.5rem 0.8rem;
+  border-top: 1px solid #a1a1a9;
+}
+
+.year-table tr {
+  cursor: pointer;
+}
+
+.year-table tr th:nth-child(1) {
+  width: 15%;
+}
+
+.year-table tr th:nth-child(2) {
+  width: 15%;
+}
+
+.year-table tr th:nth-child(3) {
+  width: 70%;
+}
+/*# sourceMappingURL=Fragments.css.map */

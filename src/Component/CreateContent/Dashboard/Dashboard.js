@@ -1,11 +1,11 @@
 import React from "react";
-import { Bar, Pie, Doughnut, Line } from "react-chartjs-2";
 import Chart from "react-apexcharts";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import ko from "apexcharts/dist/locales/ko.json";
 import "./Dashboard.css";
 import { postApi } from "../../../api";
 import Loading from "../../Loading";
-import { formatBytes } from "react-dropzone-uploader";
+import Table from "../../Fragments/Table";
 
 export default class extends React.Component {
   state = {
@@ -163,18 +163,19 @@ export default class extends React.Component {
       }
     },
     mainSupplyChart: {
-      series: ["45", "22", "15", "8", "4", "1"],
+      series: [],
       options: {
         chart: {
           width: 380,
           type: "pie",
           animations: {
-            speed: 3000
+            easing: "easeinout",
+            speed: 2000
           }
         },
         plotOptions: {
           pie: {
-            customScale: 0.8
+            customScale: 0.7
           }
         },
         labels: []
@@ -187,7 +188,8 @@ export default class extends React.Component {
           height: 280,
           type: "radialBar",
           animations: {
-            speed: 5000
+            easing: "easeinout",
+            speed: 3500
           }
         },
         colors: ["#20E647"],
@@ -225,7 +227,9 @@ export default class extends React.Component {
         },
         labels: ["Progress"]
       }
-    }
+    },
+    notice: [],
+    dataRoom: []
   };
 
   sortObject(object) {
@@ -287,17 +291,21 @@ export default class extends React.Component {
     return splitValues;
   }
 
+  renameKeys() {}
+
   async componentDidMount() {
     try {
       await postApi("main/maincomp").then(res => {
         const {
           monthlyFailureRate,
           mainSupplyItems,
-          dataRommList,
+          dataRoomList,
           failureRate,
           salesQuantityTurnover,
           notisList
         } = res.data.data;
+
+        console.log(dataRoomList, notisList);
 
         let salesQuantity = this.modifyChartData(salesQuantityTurnover, 3);
         let monthlyFailure = this.modifyChartData(monthlyFailureRate, 3);
@@ -350,7 +358,9 @@ export default class extends React.Component {
             options: {
               ...this.state.failRateChart.options
             }
-          }
+          },
+          notice: notisList,
+          dataRoom: dataRoomList
         });
       });
     } catch (err) {
@@ -368,7 +378,9 @@ export default class extends React.Component {
       salesChart,
       mainSupplyChart,
       monthFailChart,
-      failRateChart
+      failRateChart,
+      dataRoom,
+      notice
     } = this.state;
     return (
       <>
@@ -398,7 +410,7 @@ export default class extends React.Component {
                 />
               </div>
             </div>
-            <div className="chart-wrapper half">
+            <div className="chart-wrapper half right">
               <div className="chart-inner half">
                 <h2>주요 납품품목</h2>
                 <Chart
@@ -406,7 +418,7 @@ export default class extends React.Component {
                   series={mainSupplyChart.series}
                   type="pie"
                   width="100%"
-                  height="200"
+                  height="250"
                   className="chart half"
                 />
               </div>
@@ -417,11 +429,23 @@ export default class extends React.Component {
                   series={failRateChart.series}
                   type="radialBar"
                   width="100%"
-                  height="200"
+                  height="250"
                   className="chart half"
                 />
               </div>
             </div>
+            <Tabs className="chart-wrapper half right bottom table">
+              <TabList>
+                <Tab>공지사항</Tab>
+                <Tab>자료실</Tab>
+              </TabList>
+              <TabPanel className="table-wrapper">
+                <Table data={notice} />
+              </TabPanel>
+              <TabPanel className="table-wrapper">
+                <Table data={dataRoom} />
+              </TabPanel>
+            </Tabs>
           </div>
         )}
       </>
