@@ -3,7 +3,7 @@ import qs from "querystring";
 
 //axios 기본 설정
 export const api = axios.create({
-  baseURL: "http://localhost:8757/"
+  baseURL: "http://125.141.30.222:8757/"
 });
 
 //토큰을 받아오는 함수
