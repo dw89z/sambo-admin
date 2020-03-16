@@ -1,6 +1,6 @@
 @import "../../../scss/Variables.scss";
 
-.chart-section {
+.content-component {
   width: 100%;
   height: 100%;
   margin: 0 auto;
@@ -101,5 +101,4 @@
   &.react-tabs__tab-panel--selected {
     visibility: visible;
   }
-
 }

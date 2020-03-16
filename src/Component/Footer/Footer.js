@@ -1,5 +1,5 @@
 import React from "react";
-import "./Footer.css";
+import "./Footer.scss";
 import cLogo from "../../assets/img/f-logo01.png";
 import pLogo from "../../assets/img/f-logo02.png";
 

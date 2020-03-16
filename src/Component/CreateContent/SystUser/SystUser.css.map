@@ -1,0 +1,10 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "SystUser.scss",
+        "../../../scss/Variables.scss"
+    ],
+    "names": [],
+    "file": "SystUser.css"
+}

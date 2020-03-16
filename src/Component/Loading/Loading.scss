@@ -1,9 +1,6 @@
 @import "../../Scss/Variables.scss";
 
 .loading {
-  top: 0;
-  left: 0;
-  position: fixed;
   width: 100%;
   height: 100%;
   z-index: 99999;
@@ -12,47 +9,131 @@
   justify-content: center;
   align-items: center;
 
-  .lds-ring {
-    display: inline-block;
+  .loading-inner {
+    display: flex;
+    margin-top: -2rem;
+  }
+
+  .bar-01-wrap {
     position: relative;
-    width: 80px;
-    height: 80px;
-    margin-top: -40px;
+    left: 0;
+
+    .bar-01 {
+      position: absolute;
+      width: 13px;
+      height: 30px;
+      background: $gray2;
+      transform-origin: bottom;
+      transform: skewX(-30deg) scaleY(1);
+    }
+
+    .bar-01-anim {
+      background: $pri;
+      transform: skewX(-30deg) scaleY(0.5);
+      animation: bar-01 1s infinite;
+    }
   }
 
-  .lds-ring div {
-    box-sizing: border-box;
-    display: block;
-    position: absolute;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
-    border: 8px solid $pri;
-    border-radius: 50%;
-    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: $pri transparent transparent transparent;
-  }
-
-  .lds-ring div:nth-child(1) {
-    animation-delay: -0.45s;
-  }
-
-  .lds-ring div:nth-child(2) {
-    animation-delay: -0.3s;
-  }
-
-  .lds-ring div:nth-child(3) {
-    animation-delay: -0.15s;
-  }
-
-  @keyframes lds-ring {
+  @keyframes bar-01 {
     0% {
-      transform: rotate(0deg);
+      left: 17px;
+      transform-origin: top;
+      transform: skewX(-30deg) scaleY(0);
     }
-
+    50% {
+      left: 17px;
+      transform-origin: top;
+      transform: skewX(-30deg) scaleY(1);
+    }
+    51% {
+      left: 0;
+      transform-origin: bottom;
+    }
     100% {
-      transform: rotate(360deg);
+      left: 0;
+      transform-origin: bottom;
+      transform: skewX(-30deg) scaleY(0);
     }
   }
 
+  .bar-02-wrap {
+    position: relative;
+    left: 30px;
+
+    .bar-02 {
+      position: absolute;
+      width: 13px;
+      height: 30px;
+      background: $gray2;
+      transform-origin: bottom;
+      transform: scaleY(1);
+    }
+
+    .bar-02-anim {
+      background: $pri;
+      transform: scaleY(0);
+      animation: bar-02 1s infinite;
+      animation-delay: 0.1s;
+    }
+  }
+
+  @keyframes bar-02 {
+    0% {
+      transform-origin: top;
+      transform: scaleY(0);
+    }
+    50% {
+      transform-origin: top;
+      transform: scaleY(1);
+    }
+    51% {
+      transform-origin: bottom;
+    }
+    100% {
+      transform-origin: bottom;
+      transform: scaleY(0);
+    }
+  }
+
+  .bar-03-wrap {
+    position: relative;
+    left: 44px;
+
+    .bar-03 {
+      position: absolute;
+      width: 13px;
+      height: 30px;
+      background: $gray2;
+      transform-origin: top;
+      transform: skewX(30deg) scaleY(1);
+    }
+
+    .bar-03-anim {
+      background: $pri;
+      transform: skewX(30deg) scaleY(1);
+      animation: bar-03 1s infinite;
+      animation-delay: 0.2s;
+    }
+  }
+  @keyframes bar-03 {
+    0% {
+      left: 0px;
+      transform-origin: top;
+      transform: skewX(30deg) scaleY(0);
+    }
+    50% {
+      left: 0px;
+      transform-origin: top;
+      transform: skewX(30deg) scaleY(1);
+    }
+    51% {
+      left: 17px;
+      transform-origin: bottom;
+    }
+    100% {
+      left: 17px;
+      transform-origin: bottom;
+      transform: skewX(30deg) scaleY(0);
+    }
+  }
 }

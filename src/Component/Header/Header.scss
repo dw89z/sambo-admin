@@ -7,8 +7,7 @@
   top: 0;
   left: 0;
   background: $pri;
-  padding-left: 16.5rem;
-  padding-right: 1.5rem;
+  padding-right: 0.3rem;
   display: flex;
   align-items: center;
   font-size: 0.8rem;
@@ -42,7 +41,6 @@
     cursor: pointer;
     margin: 0 0.1rem;
     padding: 0.2rem 0.6rem;
-    border-radius: 5px;
     border: 1px solid $pri;
 
     &:hover {

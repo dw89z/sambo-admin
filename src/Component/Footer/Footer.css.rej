@@ -1,0 +1,12 @@
+diff a/src/Component/Footer/Footer.css b/src/Component/Footer/Footer.css	(rejected hunks)
+@@ -129,8 +129,8 @@
+ }
+ 
+ .footer-info a:hover {
+-  color: #1d2baa;
+-  border-color: #1d2baa;
++  color: #1225c9;
++  border-color: #1225c9;
+ }
+ 
+ .preloading {

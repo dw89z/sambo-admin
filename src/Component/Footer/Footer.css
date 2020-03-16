@@ -13,6 +13,7 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  border-top: 1px solid #c1c1cf;
 }
 
 .footer img {
@@ -26,7 +27,7 @@
 }
 
 .footer-util.left {
-  left: 14.5rem;
+  left: 13.5rem;
 }
 
 .footer-util ul {

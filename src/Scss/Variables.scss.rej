@@ -1,0 +1,8 @@
+diff a/src/Scss/Variables.scss b/src/Scss/Variables.scss	(rejected hunks)
+@@ -4,4 +4,5 @@
+ $gray3: #c1c1cf;
+\ No newline at end of file
+ <<<<<<< HEAD
++$dark: #41414f;
+ =======
+ >>>>>>> c96bf46c4707d55c2d0364565e0eb61ad55fc21e

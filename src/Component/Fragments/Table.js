@@ -1,6 +1,6 @@
 import React from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import "./Fragments.css";
+import "./Fragments.scss";
 
 class Table extends React.Component {
   state = {
