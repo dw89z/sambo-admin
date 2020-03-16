@@ -80,7 +80,7 @@
 }
 
 .footer-util ul li:hover {
-  color: #1d2baa;
+  color: #1225c9;
   background-image: url("../../assets/img/data-on.png");
 }
 
@@ -129,8 +129,8 @@
 }
 
 .footer-info a:hover {
-  color: #1d2baa;
-  border-color: #1d2baa;
+  color: #1225c9;
+  border-color: #1225c9;
 }
 
 .preloading {

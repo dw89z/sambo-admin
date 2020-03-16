@@ -305,8 +305,6 @@ export default class extends React.Component {
           notisList
         } = res.data.data;
 
-        console.log(dataRoomList, notisList);
-
         let salesQuantity = this.modifyChartData(salesQuantityTurnover, 3);
         let monthlyFailure = this.modifyChartData(monthlyFailureRate, 3);
         let mainSupply = this.modifyChartData(mainSupplyItems, 2);

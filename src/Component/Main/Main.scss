@@ -11,7 +11,6 @@
   padding-bottom: 3rem;
   background: #fff;
   z-index: 999;
-  box-shadow: 5px 0px 5px rgba(20, 50, 80, 0.1);
   font-size: 0.8rem;
 
   .menu-list {
@@ -80,38 +79,42 @@
       }
     }
   }
+}
 
-  .select-section {
+.select-section {
+  position: absolute;
+  left: 0;
+
+  img {
+    display: inline-block;
+    width: 8rem;
+    height: auto;
+    margin-top: 0.6rem;
+    margin-left: 1.5rem;
+  }
+
+  .mode-selection {
+    font-size: 0.8rem;
     position: absolute;
-    left: 1rem;
-    top: 1rem;
+    width: 10rem;
+    top: 0rem;
+    left: 0rem;
+    height: 2.5rem;
+    border: none;
+    padding: 0 1rem;
+    font-weight: 600;
+    border-right: 1px solid $gray2;
+    background: #2b4475 url("../../assets/img/arrow-down.png") 90% 45% no-repeat;
+    background-size: 18px;
+    color: #fff;
+    appearance: none;
 
-    img {
-      display: inline-block;
-      width: 8rem;
-      height: auto;
-      margin-top: 0.6rem;
-      margin-left: 1.5rem;
+    option {
+      color: #fff;
     }
 
-    .mode-selection {
-      font-size: 0.7rem;
-      position: absolute;
-      width: 10rem;
-      top: 2.5rem;
-      left: 1rem;
-      height: 1.8rem;
-      margin-top: 0.3rem;
-      border: none;
-      padding: 0 0.5rem;
-      font-weight: 600;
-      border: 1px solid $gray2;
-      border-radius: 5px;
-
-      &:focus {
-        border: 1px solid $pri;
-        border-radius: 5px;
-      }
+    &::-ms-expand {
+      display: none;
     }
   }
 }
@@ -124,43 +127,18 @@
   left: 0rem;
   background: #fff;
   z-index: 999;
-  box-shadow: 0 5px 5px rgba(20, 50, 80, 0.1);
-  padding-left: 20rem;
+  border-bottom: 1px solid #c4b9ae;
 
-  .select-section {
-    position: absolute;
-    left: 0;
-
-    img {
-      display: inline-block;
-      width: 8rem;
-      height: auto;
-      margin-top: 0.6rem;
-      margin-left: 1.5rem;
-    }
-
-    .mode-selection {
-      font-size: 0.7rem;
-      position: absolute;
-      width: 8rem;
-      top: 0;
-      left: 11rem;
-      height: 1.8rem;
-      margin-top: 0.3rem;
-      border: none;
-      padding: 0 0.5rem;
-      font-weight: 600;
-      border: 1px solid $gray2;
-      border-radius: 5px;
-
-      &:focus {
-        border: 1px solid $pri;
-        border-radius: 5px;
-      }
-    }
+  img {
+    width: 8rem;
+    margin-top: 0.65rem;
+    margin-left: 1rem;
   }
 
   .menu {
+    position: absolute;
+    top: 0;
+    left: 10rem;
     display: flex;
     padding-left: 1rem;
 
@@ -209,10 +187,10 @@
       width: 10rem;
       position: absolute;
       left: 0.5rem;
-      top: 2.5rem;
+      top: 2.4rem;
       line-height: 1rem;
       font-size: 0.8rem;
-      box-shadow: 0 2px 6px rgba(20, 50, 80, 0.2);
+      border: 1px solid $gray3;
 
       .sub-menu-list {
         padding: 0.5rem 0 0.5rem 1.25rem;
@@ -233,38 +211,16 @@
   }
 }
 
-.contents {
-  position: absolute;
-  width: calc(100% - 3rem);
-  height: calc(100% - 12.2rem);
-  top: 8.5rem;
-  background: #fff;
-  left: 1.5rem;
-  box-shadow: 0 10px 5px rgba(20, 50, 80, 0.1);
-  border-radius: 8px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  padding: 1rem;
-
-  &.left {
-    width: calc(100% - 17rem);
-    height: calc(100% - 9.2rem);
-    top: 5.8rem;
-    left: 15.5rem;
-  }
-}
-
 .tabs {
   position: absolute;
   display: flex;
-  top: -2rem;
-  left: 0;
+  z-index: 99;
+  top: 5.95rem;
+  left: 1rem;
   width: 100%;
-  overflow-x: scroll;
   overflow-y: hidden;
 
   .tab {
-    border-radius: 8px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     background: #fff;
@@ -273,12 +229,14 @@
     font-weight: 700;
     font-family: "Noto sans KR", sans-serif;
     cursor: pointer;
-    opacity: 0.5;
+    opacity: 0.1;
     position: relative;
     white-space: nowrap;
+    border: 1px solid $gray3;
 
     &.active {
       opacity: 1;
+      border-bottom-color: #fff;
     }
   }
 
@@ -323,6 +281,26 @@
       top: 5px;
       right: 10px;
     }
+  }
+}
+
+.contents {
+  position: absolute;
+  width: calc(100% - 2rem);
+  height: calc(100% - 11rem);
+  top: 8rem;
+  background: #fff;
+  left: 1rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  padding: 1rem;
+  border: 1px solid $gray3;
+
+  &.left {
+    width: calc(100% - 17rem);
+    height: calc(100% - 9.2rem);
+    top: 5.8rem;
+    left: 15.5rem;
   }
 }
 

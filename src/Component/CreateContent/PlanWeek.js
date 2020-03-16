@@ -2,7 +2,7 @@ import React from "react";
 
 class PlanWeek extends React.Component {
   render() {
-    return <></>;
+    return <>week</>;
   }
 }
 
