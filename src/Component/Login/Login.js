@@ -47,12 +47,13 @@ export default class extends React.Component {
     return (
       <>
         <div className="container">
-          <div className="title">
-            <p>삼보모터스 공급망 관리 시스템</p>
-          </div>
           <div className="back-wrap">
+            <div className="title">
+              <p>
+                삼보모터스 <br /> 공급망 관리 <br /> 시스템
+              </p>
+            </div>
             <img src={logo} alt="logo" />
-            <p>NEW FRONTIER SPIRIT</p>
           </div>
           <div className="login-wrap">
             <div className="login-logo">

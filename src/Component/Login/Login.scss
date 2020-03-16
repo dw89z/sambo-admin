@@ -3,78 +3,84 @@
 .container {
   width: 100vw;
   height: 100vh;
-  background: url('../../assets/img/login-back-01.png') center center no-repeat;
+  background: url("../../assets/img/login-back-00.png") center center no-repeat;
   background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.title {
-  position: absolute;
-  top: 8.5rem;
-  left: 27.9%;
-
-  p {
-    font-family: "Black Han Sans", sans-serif;
-    font-size: 3rem;
-    color: $pri;
-  }
-}
 
 .login-logo {
+  width: 10rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 3.5rem;
-  margin-top: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 0;
+  margin-right: auto;
+  margin-left: auto;
   flex-direction: column;
   text-align: center;
 
+  img {
+    width: 5rem;
+  }
+
   p {
-    font-size: 0.85rem;
+    font-size: 0.6rem;
+    color: $gray3;
+
+    strong {
+      color: $gray3;
+    }
   }
 }
 
 form {
-  height: 67%;
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  position: relative;
+  height: 90%;
 }
 
 .back-wrap {
-  margin-top: 3rem;
-  width: 25rem;
-  height: 35rem;
-  background: url('../../assets/img/back.jpg') center center no-repeat;
+  position: relative;
+  margin-top: 1rem;
+  width: 29rem;
+  height: 37rem;
+  background: url("../../assets/img/back.jpg") center center no-repeat;
   background-size: cover;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
   img {
-    margin-top: -2rem;
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
     display: block;
+    width: 4rem;
   }
 
-  p {
-    font-size: 0.5rem;
-    color: #fff;
-    font-weight: 500;
-    letter-spacing: 2px;
+  .title {
+    position: absolute;
+    text-align: right;
+    right: 1.5rem;
+    top: 11rem;
+
+    p {
+      font-family: "Black Han Sans", sans-serif;
+      font-size: 4rem;
+      color: #fff;
+      line-height: 1.1;
+    }
   }
 }
 
 .login-wrap {
-  margin-top: 3rem;
-  width: 25rem;
-  height: 35rem;
+  margin-top: 1rem;
+  width: 29rem;
+  height: 37rem;
   background: #fff;
   left: calc(50% - 13rem);
   top: calc(50% - 15rem);
-  padding: 3rem;
+  padding: 3rem 3.5rem;
 }
 
 .select-lang {}
@@ -96,12 +102,12 @@ form {
     bottom: 0.3rem;
     font-size: 1.5rem;
     font-weight: 500;
-    color: $gray3;
+    color: $dark;
     cursor: text;
 
     &.active {
-      bottom: 2.5rem;
-      font-size: 0.8rem;
+      bottom: 2.3rem;
+      font-size: 0.9rem;
       color: $pri;
     }
   }
@@ -115,13 +121,18 @@ form {
   width: 100%;
   padding: 0.35rem 0;
   padding-left: 2.5rem;
+  margin-top: 2.5rem;
+
+  &#id {
+    margin-top: 1rem;
+  }
 
   &:focus {
     border-bottom: 1px solid $pri;
 
     &+label {
-      bottom: 2.5rem;
-      font-size: 0.8rem;
+      bottom: 2.3rem;
+      font-size: 0.9rem;
       color: $pri;
     }
   }
@@ -129,7 +140,7 @@ form {
 
 .login-submit {
   width: 100%;
-  margin-top: 5rem;
+  margin-top: 10.5rem;
   font-size: 1rem;
   padding: 0.75rem;
   font-weight: 800;
