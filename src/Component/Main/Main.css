@@ -2,14 +2,25 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 14rem;
+  width: 13rem;
   overflow-y: auto;
   height: 100vh;
-  padding-top: 6.5rem;
+  padding-top: 5.5rem;
   padding-bottom: 3rem;
   background: #fff;
   z-index: 999;
   font-size: 0.8rem;
+  border-right: 1px solid #c1c1cf;
+}
+
+.left-menu img {
+  display: inline-block;
+  position: absolute;
+  width: 9rem;
+  top: 3.25rem;
+  left: 50%;
+  -webkit-transform: translateX(-52%);
+          transform: translateX(-52%);
 }
 
 .left-menu .menu-list {
@@ -84,6 +95,12 @@
 .select-section {
   position: absolute;
   left: 0;
+  z-index: 9999;
+  width: 10rem;
+}
+
+.select-section.left {
+  width: 13rem;
 }
 
 .select-section img {
@@ -97,7 +114,7 @@
 .select-section .mode-selection {
   font-size: 0.8rem;
   position: absolute;
-  width: 10rem;
+  width: 100%;
   top: 0rem;
   left: 0rem;
   height: 2.5rem;
@@ -226,6 +243,11 @@
   overflow-y: hidden;
 }
 
+.tabs.left {
+  top: 3.5rem;
+  left: 14rem;
+}
+
 .tabs .tab {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -261,6 +283,10 @@
 
 .tabs .delete-btn.disable:before {
   background: #999;
+}
+
+.tabs .delete-btn.non-delete:after, .tabs .delete-btn.non-delete:before {
+  content: none;
 }
 
 .tabs .delete-btn:after {
@@ -303,10 +329,10 @@
 }
 
 .contents.left {
-  width: calc(100% - 17rem);
-  height: calc(100% - 9.2rem);
-  top: 5.8rem;
-  left: 15.5rem;
+  width: calc(100% - 15rem);
+  height: calc(100% - 8.5rem);
+  top: 5.55rem;
+  left: 14rem;
 }
 
 .content-inner {

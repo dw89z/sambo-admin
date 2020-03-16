@@ -92,7 +92,7 @@ class CreateContent extends React.Component {
       const { menuAxis } = this.props;
       console.log(currentComp, mountedComp);
       return (
-        <ul className={menuAxis ? "tabs left" : "tabs"}>
+        <ul className={menuAxis ? "tabs" : "tabs left"}>
           {mountedComp.map((comps, index) => (
             <li
               key={index}
@@ -108,7 +108,7 @@ class CreateContent extends React.Component {
                   onClick={e => this.uiFunc.deleteComponent(e, comps.index)}
                 ></span>
               ) : (
-                <span className="delete-btn disable"></span>
+                <span className="delete-btn disable non-delete"></span>
               )}
             </li>
           ))}
@@ -127,6 +127,8 @@ class CreateContent extends React.Component {
           "main/menu",
           qs.stringify({ mainid: this.props.currentMode.main_id })
         ).then(res => {
+          console.log(res.data.data);
+
           const {
             data: { data }
           } = res;
@@ -161,7 +163,6 @@ class CreateContent extends React.Component {
         "main/menu",
         qs.stringify({ mainid: this.props.currentMode.main_id })
       ).then(res => {
-        console.log(res.data.data);
         const {
           data: { data }
         } = res;
@@ -246,7 +247,9 @@ class CreateContent extends React.Component {
               </ul>
             </div>
             {uiFunc.createTabs()}
-            <div className="contents">{this.createComp()}</div>
+            <div className={menuAxis ? "contents" : "contents left"}>
+              {this.createComp()}
+            </div>
           </>
         )}
       </>

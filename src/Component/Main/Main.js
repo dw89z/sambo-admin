@@ -69,7 +69,9 @@ export default class extends React.Component {
               user={user}
             />
 
-            <div className="select-section">
+            <div
+              className={menuAxis ? "select-section" : "select-section left"}
+            >
               <select onChange={this.handleMode} className="mode-selection">
                 {mode.map(mode => (
                   <option value={mode.main_id} key={mode.main_id}>
