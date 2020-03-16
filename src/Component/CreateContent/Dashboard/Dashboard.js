@@ -2,7 +2,7 @@ import React from "react";
 import Chart from "react-apexcharts";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import ko from "apexcharts/dist/locales/ko.json";
-import "./Dashboard.css";
+import "./Dashboard.scss";
 import { postApi } from "../../../api";
 import Loading from "../../Loading";
 import Table from "../../Fragments/Table";
@@ -382,70 +382,72 @@ export default class extends React.Component {
     } = this.state;
     return (
       <>
-        {loading ? (
-          <Loading />
-        ) : (
-          <div className="chart-section">
-            <div className="chart-wrapper">
-              <div className="chart-inner">
-                <h2>매출 수량 / 금액 추이</h2>
-                <Chart
-                  options={salesChart.options}
-                  series={salesChart.series}
-                  width="100%"
-                  height="265"
-                  className="chart"
-                />
+        <div className="content-component">
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <div className="chart-wrapper">
+                <div className="chart-inner">
+                  <h2>매출 수량 / 금액 추이</h2>
+                  <Chart
+                    options={salesChart.options}
+                    series={salesChart.series}
+                    width="100%"
+                    height="265"
+                    className="chart"
+                  />
+                </div>
+                <div className="chart-inner bottom">
+                  <h2>불량(PPM) 추이</h2>
+                  <Chart
+                    options={monthFailChart.options}
+                    series={monthFailChart.series}
+                    width="100%"
+                    height="265"
+                    className="chart half"
+                  />
+                </div>
               </div>
-              <div className="chart-inner bottom">
-                <h2>불량(PPM) 추이</h2>
-                <Chart
-                  options={monthFailChart.options}
-                  series={monthFailChart.series}
-                  width="100%"
-                  height="265"
-                  className="chart half"
-                />
+              <div className="chart-wrapper half right">
+                <div className="chart-inner half">
+                  <h2>주요 납품품목</h2>
+                  <Chart
+                    options={mainSupplyChart.options}
+                    series={mainSupplyChart.series}
+                    type="pie"
+                    width="100%"
+                    height="250"
+                    className="chart half"
+                  />
+                </div>
+                <div className="chart-inner half">
+                  <h2>불량률</h2>
+                  <Chart
+                    options={failRateChart.options}
+                    series={failRateChart.series}
+                    type="radialBar"
+                    width="100%"
+                    height="250"
+                    className="chart half"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="chart-wrapper half right">
-              <div className="chart-inner half">
-                <h2>주요 납품품목</h2>
-                <Chart
-                  options={mainSupplyChart.options}
-                  series={mainSupplyChart.series}
-                  type="pie"
-                  width="100%"
-                  height="250"
-                  className="chart half"
-                />
-              </div>
-              <div className="chart-inner half">
-                <h2>불량률</h2>
-                <Chart
-                  options={failRateChart.options}
-                  series={failRateChart.series}
-                  type="radialBar"
-                  width="100%"
-                  height="250"
-                  className="chart half"
-                />
-              </div>
-            </div>
-            <Tabs className="chart-wrapper half right bottom table">
-              <TabList>
-                <Tab>공지사항</Tab>
-                <Tab>자료실</Tab>
-              </TabList>
-              <TabPanel className="table-wrapper">
-                <Table data={notice} />
-              </TabPanel>
-              <TabPanel className="table-wrapper">
-                <Table data={dataRoom} />
-              </TabPanel>
-            </Tabs>
-          </div>
-        )}
+              <Tabs className="chart-wrapper half right bottom table">
+                <TabList>
+                  <Tab>공지사항</Tab>
+                  <Tab>자료실</Tab>
+                </TabList>
+                <TabPanel className="table-wrapper">
+                  <Table data={notice} />
+                </TabPanel>
+                <TabPanel className="table-wrapper">
+                  <Table data={dataRoom} />
+                </TabPanel>
+              </Tabs>
+            </>
+          )}
+        </div>
       </>
     );
   }

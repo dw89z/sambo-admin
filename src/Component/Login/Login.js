@@ -1,5 +1,5 @@
 import React from "react";
-import "./Login.css";
+import "./Login.scss";
 import userIcon from "../../assets/img/login-user.svg";
 import passwordIcon from "../../assets/img/password.svg";
 import logo from "../../assets/img/login-logo.svg";

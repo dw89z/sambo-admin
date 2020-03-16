@@ -13,15 +13,15 @@ class CreateContent extends React.Component {
     currentMode: this.props.currentMode,
     mountedComp: [
       {
-        index: 0,
-        window_name: "대시보드",
-        window_id: "Dashboard"
+        index: 1,
+        window_name: "사용자 등록",
+        window_id: "SystUser"
       }
     ],
     currentComp: {
-      index: 0,
-      window_name: "대시보드",
-      window_id: "Dashboard"
+      index: 1,
+      window_name: "사용자 등록",
+      window_id: "SystUser"
     }
   };
 
@@ -65,7 +65,6 @@ class CreateContent extends React.Component {
           currentComp: newComp
         });
       }
-      // this.uiFunc.createTabs(window_id, index);
     },
 
     deleteComponent: (e, index) => {
@@ -136,15 +135,15 @@ class CreateContent extends React.Component {
             currentMenu: data,
             mountedComp: [
               {
-                index: 0,
-                window_name: "대시보드",
-                window_id: "Dashboard"
+                index: 1,
+                window_name: "사용자 등록",
+                window_id: "SystUser"
               }
             ],
             currentComp: {
-              index: 0,
-              window_name: "대시보드",
-              window_id: "Dashboard"
+              index: 1,
+              window_name: "사용자 등록",
+              window_id: "SystUser"
             }
           });
         });

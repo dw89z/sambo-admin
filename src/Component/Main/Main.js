@@ -1,5 +1,5 @@
 import React from "react";
-import "./Main.css";
+import "./Main.scss";
 import Footer from "component/Footer";
 import Header from "component/Header";
 import Loading from "component/Loading";
@@ -13,7 +13,7 @@ export default class extends React.Component {
     currentMode: {},
     mode: [],
     currentMenu: [],
-    menuAxis: true,
+    menuAxis: false,
     loading: true
   };
 
@@ -44,7 +44,7 @@ export default class extends React.Component {
       this.setState({
         user,
         mode,
-        currentMode: mode[0]
+        currentMode: mode[1]
       });
     } catch {
     } finally {

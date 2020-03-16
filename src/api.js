@@ -1,9 +1,11 @@
 import axios from "axios";
 import qs from "querystring";
 
+const BASE_URL = "http://125.141.30.222:8757/";
+
 //axios 기본 설정
 export const api = axios.create({
-  baseURL: "http://125.141.30.222:8757/"
+  baseURL: BASE_URL
 });
 
 //토큰을 받아오는 함수

@@ -16,8 +16,8 @@
 .left-menu img {
   display: inline-block;
   position: absolute;
-  width: 9rem;
-  top: 3.25rem;
+  width: 8rem;
+  top: 3.35rem;
   left: 50%;
   -webkit-transform: translateX(-52%);
           transform: translateX(-52%);
@@ -26,6 +26,10 @@
 .left-menu .menu-list {
   border-top: 1px solid #e1e1e9;
   border-left: 8px solid transparent;
+}
+
+.left-menu .menu-list.active p:after {
+  border-color: #1225c9;
 }
 
 .left-menu .menu-list p {
@@ -347,5 +351,12 @@
 .content-inner.active {
   visibility: visible;
   opacity: 1;
+}
+
+.content-component {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
 }
 /*# sourceMappingURL=Main.css.map */
