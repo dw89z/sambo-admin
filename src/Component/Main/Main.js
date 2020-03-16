@@ -23,14 +23,14 @@ export default class extends React.Component {
     mountedComp: [
       {
         index: 0,
-        window_name: "대시보드",
-        window_id: "Dashboard"
+        window_name: "년간 생산 계획 현황",
+        window_id: "PlanYear"
       }
     ],
     currentComp: {
       index: 0,
-      window_name: "대시보드",
-      window_id: "Dashboard"
+      window_name: "년간 생산 계획 현황",
+      window_id: "PlanYear"
     },
     loading: true
   };
