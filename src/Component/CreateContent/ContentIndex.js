@@ -1,6 +1,6 @@
 let Components = {};
 
-Components["Dashboard"] = require("./Dashboard/index/index").default;
+Components["Dashboard"] = require("./Dashboard/index").default;
 Components["StckAllList"] = require("./StckAllList/index").default;
 Components["StckCurrent"] = require("./StckCurrent/index").default;
 Components["StckFailRequest"] = require("./StckFailRequest/index").default;
@@ -17,7 +17,7 @@ Components["SendCancel"] = require("./SendCancel/index").default;
 Components["PlanYear"] = require("./PlanYear/index").default;
 Components["PlanMonth"] = require("./PlanMonth/index").default;
 Components["PlanWeek"] = require("./PlanWeek/index").default;
-Components["SystUser"] = require("./SystUser/index/index").default;
+Components["SystUser"] = require("./SystUser/index").default;
 Components["SystPgm"] = require("./SystPgm/index").default;
 Components["SystAuth"] = require("./SystAuth/index").default;
 Components["SystNotify"] = require("./SystNotify/index").default;

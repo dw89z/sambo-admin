@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import InfoRule from "./InfoRule";
 
-export default CreateContent;
+export default InfoRule;

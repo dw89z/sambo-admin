@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import SendLoprint from "./SendLoprint";
 
-export default CreateContent;
+export default SendLoprint;

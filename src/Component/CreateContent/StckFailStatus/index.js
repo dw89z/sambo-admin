@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import StckFailStatus from "./StckFailStatus";
 
-export default CreateContent;
+export default StckFailStatus;

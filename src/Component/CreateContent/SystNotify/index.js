@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import SystNotify from "./SystNotify";
 
-export default CreateContent;
+export default SystNotify;

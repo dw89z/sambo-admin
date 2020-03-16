@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import ConfList from "./ConfList";
 
-export default CreateContent;
+export default ConfList;

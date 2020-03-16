@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import PlanMonth from "./PlanMonth";
 
-export default CreateContent;
+export default PlanMonth;

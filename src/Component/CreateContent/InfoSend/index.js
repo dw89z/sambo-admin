@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import InfoSend from "./InfoSend";
 
-export default CreateContent;
+export default InfoSend;

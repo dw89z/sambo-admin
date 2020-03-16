@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import SendLogistc from "./SendLogistc";
 
-export default CreateContent;
+export default SendLogistc;

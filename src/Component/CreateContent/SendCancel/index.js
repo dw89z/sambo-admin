@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import SendCancel from "./SendCancel";
 
-export default CreateContent;
+export default SendCancel;

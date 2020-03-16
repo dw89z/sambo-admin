@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import InfoItemas from "./InfoItemas";
 
-export default CreateContent;
+export default InfoItemas;

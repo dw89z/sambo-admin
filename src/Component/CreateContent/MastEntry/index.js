@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import MastEntry from "./MastEntry";
 
-export default CreateContent;
+export default MastEntry;

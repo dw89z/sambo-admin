@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import ConfException from "./ConfException";
 
-export default CreateContent;
+export default ConfException;

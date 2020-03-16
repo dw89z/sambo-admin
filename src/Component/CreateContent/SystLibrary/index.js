@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import SystLibrary from "./SystLibrary";
 
-export default CreateContent;
+export default SystLibrary;

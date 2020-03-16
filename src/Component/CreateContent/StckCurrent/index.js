@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import StckCurrent from "./StckCurrent";
 
-export default CreateContent;
+export default StckCurrent;

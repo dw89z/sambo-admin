@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import PlanWeek from "./PlanWeek";
 
-export default CreateContent;
+export default PlanWeek;

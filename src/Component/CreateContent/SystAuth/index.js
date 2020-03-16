@@ -1,3 +1,3 @@
-import CreateContent from "./CreateContent";
+import SystAuth from "./SystAuth";
 
-export default CreateContent;
+export default SystAuth;
