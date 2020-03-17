@@ -1,5 +1,4 @@
 import axios from "axios";
-import qs from "querystring";
 
 const BASE_URL = "http://125.141.30.222:8757/";
 
@@ -19,7 +18,7 @@ api.interceptors.request.use(
     config.headers = {
       ...config.headers,
       Authorization: getAuthToken(),
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/json"
     };
     return config;
   },
@@ -34,7 +33,7 @@ export const loginApi = (id, password) => {
     logid: id,
     passwd: password
   };
-  return api.post("/auth/login", qs.stringify(data));
+  return api.post("/auth/login", JSON.stringify(data));
 };
 
 //post요청 공용 api

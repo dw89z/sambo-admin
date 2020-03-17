@@ -1,1 +1,85 @@
 @import "../../../scss/Variables.scss";
+
+.form {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.5rem 0.8rem;
+    padding-left: 0;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+
+    form {
+        display: flex;
+        align-items: center;
+    }
+
+
+    span {
+        font-weight: 600;
+    }
+
+    .user-search {
+        width: 15rem;
+        border: 1px solid $gray3;
+        padding: 0.2rem 0.5rem;
+        margin-left: 1rem;
+        height: 1.6rem;
+
+        &::placeholder {
+            color: #c1c1c9;
+            font-size: 0.7rem;
+        }
+
+        &:focus {
+            border-color: $pri;
+        }
+    }
+
+    button {
+        cursor: pointer;
+        width: 1.6rem;
+        height: 1.6rem;
+        background: $pri url('../../../assets/img/search.svg') center center no-repeat;
+        background-size: 80%;
+        padding-top: 0.2rem;
+
+        &:hover,
+        &:active {
+            opacity: 0.75;
+        }
+    }
+}
+
+.table {
+    width: 100%;
+
+    .user-table {
+        height: 500px;
+        overflow-y: scroll;
+    }
+
+    table {
+        width: 100%;
+        font-size: 0.75rem;
+        text-align: left;
+        border: 1px solid #000;
+    }
+
+    th,
+    td {
+        border: 1px solid $gray3;
+        padding: 0.55rem 0.45rem;
+    }
+
+    th {
+        border: 1px solid #333;
+        border-top: none !important;
+        background: $gray;
+
+        &.sortable {
+            cursor: pointer;
+            background: $gray url('../../../assets/img/sort.svg') right 4px center no-repeat;
+            background-size: 0.85rem;
+        }
+    }
+}

@@ -71,7 +71,7 @@ export default class extends React.Component {
                   type="text"
                   name="id"
                   value={id}
-                  onChange={this.handleUpdate}
+                  onChange={e => this.setState({ id: e.target.value })}
                 />
                 <label htmlFor="id" className={id ? "active" : ""}>
                   ID
@@ -85,7 +85,7 @@ export default class extends React.Component {
                   type="password"
                   name="password"
                   value={password}
-                  onChange={this.handleUpdate}
+                  onChange={e => this.setState({ password: e.target.value })}
                 />
                 <label htmlFor="password" className={password ? "active" : ""}>
                   PASSWORD

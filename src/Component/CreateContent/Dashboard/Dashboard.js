@@ -5,7 +5,7 @@ import ko from "apexcharts/dist/locales/ko.json";
 import "./Dashboard.scss";
 import { postApi } from "../../../api";
 import Loading from "../../Loading";
-import Table from "../../Fragments/Table";
+import Table from "../../Fragments/TableDash";
 
 export default class extends React.Component {
   state = {

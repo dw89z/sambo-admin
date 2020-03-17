@@ -1,5 +1,4 @@
 import React from "react";
-import qs from "querystring";
 import "../Main/Main.css";
 import MountContentIndex from "./ContentIndex";
 import { postApi } from "../../api";
@@ -89,7 +88,6 @@ class CreateContent extends React.Component {
     createTabs: () => {
       const { currentComp, mountedComp } = this.state;
       const { menuAxis } = this.props;
-      console.log(currentComp, mountedComp);
       return (
         <ul className={menuAxis ? "tabs" : "tabs left"}>
           {mountedComp.map((comps, index) => (
@@ -124,7 +122,7 @@ class CreateContent extends React.Component {
       try {
         await postApi(
           "main/menu",
-          qs.stringify({ mainid: this.props.currentMode.main_id })
+          JSON.stringify({ mainid: this.props.currentMode.main_id })
         ).then(res => {
           console.log(res.data.data);
 
@@ -160,7 +158,7 @@ class CreateContent extends React.Component {
     try {
       await postApi(
         "main/menu",
-        qs.stringify({ mainid: this.props.currentMode.main_id })
+        JSON.stringify({ mainid: this.props.currentMode.main_id })
       ).then(res => {
         const {
           data: { data }
@@ -192,7 +190,7 @@ class CreateContent extends React.Component {
           }
           key={index}
         >
-          <CurrentComp key={index} />
+          <CurrentComp key={index} title={currentComp.window_name} />
         </div>
       );
     });
