@@ -11,7 +11,7 @@ export default class extends React.Component {
     return (
       <>
         <div className="content-component">
-          {loading ? <Loading /> : <div>asdfas</div>}
+          {/* {loading ? <Loading /> : <div>asdfas</div>} */}
         </div>
       </>
     );
