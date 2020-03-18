@@ -1,46 +1,83 @@
 @import "../../../scss/Variables.scss";
 
+input {
+    width: 15rem;
+    border: 1px solid $gray3;
+    padding: 0.2rem 0.5rem;
+    height: 2rem;
+
+    &::placeholder {
+        color: #c1c1c9;
+        font-size: 0.7rem;
+    }
+
+    &:focus {
+        border-color: $pri;
+    }
+}
+
 .form {
     width: 100%;
     margin-top: 1rem;
-    padding: 0.5rem 0.8rem;
     padding-left: 0;
     font-size: 0.8rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+
+    .label {
+        margin-right: 1.15rem;
+    }
+
+    .utils {
+        display: flex;
+        margin-left: 0.55rem;
+
+        p {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            height: 2rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            margin: 0 0.25rem;
+            border: 1px solid $gray2;
+            opacity: 0.85;
+
+            &:hover {
+                opacity: 1;
+                border-color: $pri;
+
+                span {
+                    color: $pri;
+                }
+            }
+
+            img {
+                width: 1.1rem;
+            }
+
+            span {
+                font-weight: 500;
+                padding-left: 0.25rem;
+            }
+        }
+    }
 
     form {
         display: flex;
         align-items: center;
     }
 
-
     span {
         font-weight: 600;
     }
 
-    .user-search {
-        width: 15rem;
-        border: 1px solid $gray3;
-        padding: 0.2rem 0.5rem;
-        margin-left: 1rem;
-        height: 1.6rem;
-
-        &::placeholder {
-            color: #c1c1c9;
-            font-size: 0.7rem;
-        }
-
-        &:focus {
-            border-color: $pri;
-        }
-    }
-
     button {
         cursor: pointer;
-        width: 1.6rem;
-        height: 1.6rem;
-        background: $pri url('../../../assets/img/search.svg') center center no-repeat;
-        background-size: 80%;
+        width: 2rem;
+        height: 2rem;
+        background: $pri url("../../../assets/img/search.svg") center center no-repeat;
+        background-size: 70%;
         padding-top: 0.2rem;
 
         &:hover,
@@ -52,34 +89,110 @@
 
 .table {
     width: 100%;
+    position: relative;
+
+    .error {
+        visibility: hidden;
+        position: absolute;
+        top: 10rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: $gray3;
+
+        &.active {
+            visibility: visible;
+        }
+    }
 
     .user-table {
-        height: 500px;
+        height: 38rem;
         overflow-y: scroll;
+        border: 1px solid #333;
     }
 
     table {
         width: 100%;
         font-size: 0.75rem;
         text-align: left;
-        border: 1px solid #000;
     }
 
     th,
     td {
         border: 1px solid $gray3;
         padding: 0.55rem 0.45rem;
+        border-left: none;
     }
 
-    th {
-        border: 1px solid #333;
-        border-top: none !important;
-        background: $gray;
+    thead {
+        th {
+            border-top: none;
+            background: $gray;
+            position: sticky;
+            top: 0;
 
-        &.sortable {
-            cursor: pointer;
-            background: $gray url('../../../assets/img/sort.svg') right 4px center no-repeat;
-            background-size: 0.85rem;
+            &.sortable {
+                cursor: pointer;
+                background: $gray url("../../../assets/img/sort.svg") right 4px center no-repeat;
+                background-size: 0.85rem;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            &:last-child {
+                display: none;
+            }
+
+            .edit {
+                width: 3rem;
+                cursor: pointer;
+                background: url("../../../assets/img/edit.svg") center center no-repeat;
+                background-size: 1.2rem;
+            }
+
+            .delete {
+                width: 3rem;
+                cursor: pointer;
+                background: url("../../../assets/img/trash.svg") center center no-repeat;
+                background-size: 1.2rem;
+            }
+        }
+    }
+}
+
+.right-panel {
+    position: fixed;
+    top: 5.5rem;
+    right: 0;
+    width: 40rem;
+    background: #fff;
+    height: 49rem;
+    border: 1px solid #333;
+    z-index: 99;
+    transform: translateX(45rem);
+    transition: transform 0.3s;
+    box-shadow: -10px 0 60px rgba(30, 60, 90, 0.2);
+    padding: 2rem;
+
+    &.active {
+        transform: translateX(0);
+    }
+
+    .input-div {
+        margin-top: 1rem;
+
+        p {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        input {
+            width: 50%;
+            border: 1px solid $gray3;
+            padding: 0.25rem 0.4rem;
         }
     }
 }

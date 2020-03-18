@@ -52,7 +52,6 @@ class CreateContent extends React.Component {
         window_id
       };
 
-      console.log(newComp);
       let isMounted = mountedComp.some(comp => comp.index === index);
       if (isMounted) {
         this.setState({
@@ -123,28 +122,30 @@ class CreateContent extends React.Component {
         await postApi(
           "main/menu",
           JSON.stringify({ mainid: this.props.currentMode.main_id })
-        ).then(res => {
-          console.log(res.data.data);
-
-          const {
-            data: { data }
-          } = res;
-          this.setState({
-            currentMenu: data,
-            mountedComp: [
-              {
+        )
+          .then(res => {
+            const {
+              data: { data }
+            } = res;
+            this.setState({
+              currentMenu: data,
+              mountedComp: [
+                {
+                  index: 1,
+                  window_name: "사용자 등록",
+                  window_id: "SystUser"
+                }
+              ],
+              currentComp: {
                 index: 1,
                 window_name: "사용자 등록",
                 window_id: "SystUser"
               }
-            ],
-            currentComp: {
-              index: 1,
-              window_name: "사용자 등록",
-              window_id: "SystUser"
-            }
+            });
+          })
+          .catch(err => {
+            console.log(err);
           });
-        });
       } catch (err) {
       } finally {
         this.setState({
