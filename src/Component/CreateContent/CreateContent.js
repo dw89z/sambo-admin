@@ -191,7 +191,11 @@ class CreateContent extends React.Component {
           }
           key={index}
         >
-          <CurrentComp key={index} title={currentComp.window_name} />
+          <CurrentComp
+            key={index}
+            title={currentComp.window_name}
+            menuAxis={this.props.menuAxis}
+          />
         </div>
       );
     });

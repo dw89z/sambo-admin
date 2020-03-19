@@ -40,6 +40,32 @@
 form {
   position: relative;
   height: 90%;
+
+  .login-input {
+    border: none;
+    width: 100%;
+    border-bottom: 1px solid $gray3;
+    transition: all 0.2s;
+    font-size: 1.5rem;
+    width: 100%;
+    padding: 0.35rem 0;
+    padding-left: 2.5rem;
+    margin-top: 2.5rem;
+
+    &#id {
+      margin-top: 1rem;
+    }
+
+    &:focus {
+      border-bottom: 1px solid $pri;
+
+      &+label {
+        bottom: 2.3rem;
+        font-size: 0.9rem;
+        color: $pri;
+      }
+    }
+  }
 }
 
 .back-wrap {
@@ -106,31 +132,6 @@ form {
     cursor: text;
 
     &.active {
-      bottom: 2.3rem;
-      font-size: 0.9rem;
-      color: $pri;
-    }
-  }
-}
-
-.login-input {
-  width: 100%;
-  border-bottom: 1px solid $gray3;
-  transition: all 0.2s;
-  font-size: 1.5rem;
-  width: 100%;
-  padding: 0.35rem 0;
-  padding-left: 2.5rem;
-  margin-top: 2.5rem;
-
-  &#id {
-    margin-top: 1rem;
-  }
-
-  &:focus {
-    border-bottom: 1px solid $pri;
-
-    &+label {
       bottom: 2.3rem;
       font-size: 0.9rem;
       color: $pri;

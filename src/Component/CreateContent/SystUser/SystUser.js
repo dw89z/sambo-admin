@@ -6,6 +6,7 @@ import addUser from "../../../assets/img/add.svg";
 import trash from "../../../assets/img/trash.svg";
 import { postApi } from "../../../api";
 import "./SystUser.scss";
+import RightPanel from "./RightPanel";
 
 export default class extends React.Component {
   state = {
@@ -121,15 +122,7 @@ export default class extends React.Component {
         hidden: true
       }
     ],
-    logid: "",
-    passwd: "",
-    cvnas: "",
-    cvcod: "",
-    gubn: "",
-    hphone: "",
-    email: "",
-    telno: "",
-    auth: ""
+    rightPanel: "사용자 등록"
   };
 
   getRowData = {
@@ -205,6 +198,12 @@ export default class extends React.Component {
     }
   }
 
+  inputUpdate = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
   editMode = () => {
     const { columns, editMode } = this.state;
     const addEdit = {
@@ -278,13 +277,8 @@ export default class extends React.Component {
   addMode = () => {
     const { addMode } = this.state;
     this.setState({
-      addMode: !addMode
-    });
-  };
-
-  inputUpdate = e => {
-    this.setState({
-      [e.target.name]: e.target.value
+      addMode: !addMode,
+      rightPanel: "사용자 등록"
     });
   };
 
@@ -346,90 +340,13 @@ export default class extends React.Component {
                   rowEvents={this.getRowData}
                 />
               </div>
-              <div className={addMode ? "right-panel active" : "right-panel"}>
-                <form>
-                  <div className="input-div">
-                    <p>로그인ID</p>
-                    <input
-                      type="text"
-                      placeholder="ID를 입력해 주세요"
-                      name="logid"
-                      spellCheck="false"
-                      onChange={this.inputUpdate}
-                      required
-                    />
-                  </div>
-                  <div className="input-div">
-                    <p>비밀번호</p>
-                    <input
-                      type="text"
-                      placeholder="비밀번호를 입력해 주세요"
-                      name="passwd"
-                      spellCheck="false"
-                      onChange={this.inputUpdate}
-                      required
-                    />
-                  </div>
-                  <div className="input-div">
-                    <p>거래처명</p>
-                    <input
-                      type="text"
-                      placeholder="거래처명을 입력해 주세요"
-                      name="cvnas"
-                      spellCheck="false"
-                      onChange={this.inputUpdate}
-                      required
-                    />
-                  </div>
-                  <div className="input-div">
-                    <p>거래처코드</p>
-                    <input
-                      type="text"
-                      placeholder="ID를 입력해 주세요"
-                      name="cvcod"
-                      spellCheck="false"
-                      onChange={this.inputUpdate}
-                      required
-                    />
-                  </div>
-                  <div className="input-div">
-                    <p>권한구분</p>
-                  </div>
-                  <div className="input-div">
-                    <p>거래처구분</p>
-                  </div>
-                  <div className="input-div">
-                    <p>핸드폰</p>
-                    <input
-                      type="tel"
-                      placeholder="ID를 입력해 주세요"
-                      name="hphone"
-                      spellCheck="false"
-                      onChange={this.inputUpdate}
-                    />
-                  </div>
-                  <div className="input-div">
-                    <p>회사전화</p>
-                    <input
-                      type="tel"
-                      placeholder="ID를 입력해 주세요"
-                      name="telno"
-                      spellCheck="false"
-                      onChange={this.inputUpdate}
-                    />
-                  </div>
-                  <div className="input-div">
-                    <p>이메일</p>
-                    <input
-                      type="email"
-                      placeholder="이메일을 입력해 주세요"
-                      name="email"
-                      spellCheck="false"
-                      onChange={this.inputUpdate}
-                    />
-                  </div>
-                </form>
-              </div>
+              <RightPanel
+                addMode={addMode}
+                title={rightPanel}
+                openAddMode={this.addMode}
+                selectedRow={selectedRow}
+                menuAxis={this.props.menuAxis}
+              />
             </>
           )}
         </div>

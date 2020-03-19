@@ -40,3 +40,8 @@ export const loginApi = (id, password) => {
 export const postApi = (url, params, config) => {
   return api.post(url, params, config);
 };
+
+//post요청 공용 api
+export const getApi = url => {
+  return api.get(url);
+};
