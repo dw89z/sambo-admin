@@ -41,7 +41,18 @@ export const postApi = (url, params, config) => {
   return api.post(url, params, config);
 };
 
-//post요청 공용 api
+//get요청 공용 api
 export const getApi = url => {
   return api.get(url);
+};
+
+//delete요청 공용 api
+export const deleteApi = (url, param) => {
+  console.log(url, param);
+  return api.delete(`${url}/${param}`);
+};
+
+//put요청 공용 api
+export const putApi = (url, params, config) => {
+  return api.put(url, params, config);
 };

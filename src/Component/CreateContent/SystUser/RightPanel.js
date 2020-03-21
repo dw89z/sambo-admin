@@ -1,13 +1,11 @@
 import React from "react";
 import close from "../../../assets/img/close.svg";
-import { postApi } from "../../../api";
+import { postApi, putApi } from "../../../api";
 
 class RightPanel extends React.Component {
   state = {
     typing: false,
     typingTimeout: 0,
-    addMode: this.props.addMode,
-    title: this.props.title,
     user: {
       logid: "",
       passwd: "",
@@ -48,6 +46,7 @@ class RightPanel extends React.Component {
   };
 
   inputUpdateId = e => {
+    const { addMode, openEdit } = this.props;
     const data = {
       userid: e.target.value.trim()
     };
@@ -150,8 +149,7 @@ class RightPanel extends React.Component {
                     error: false,
                     message: ""
                   }
-                },
-                cvcodpass: true
+                }
               });
             } else if (data.status === "Fail") {
               this.setState({
@@ -174,6 +172,7 @@ class RightPanel extends React.Component {
 
   submitUser = async e => {
     e.preventDefault();
+    const { addMode, openEdit } = this.props;
     const data = {
       logid: this.state.user.logid,
       passwd: this.state.user.passwd,
@@ -185,7 +184,23 @@ class RightPanel extends React.Component {
       gubn: this.state.user.gubn,
       hphone: this.state.user.hphone
     };
-    await postApi("admin/um/user", JSON.stringify(data)).then(res => {});
+    if (addMode) {
+      await postApi("admin/um/user", JSON.stringify(data)).then(res => {
+        console.log(res);
+        const { data } = res;
+        if (!data.errorCode) {
+          this.props.closeAllMode();
+        }
+      });
+    } else if (openEdit) {
+      await putApi("admin/um/user", JSON.stringify(data)).then(res => {
+        console.log(res);
+        const { data } = res;
+        if (!data.errorCode) {
+          this.props.closeAllMode();
+        }
+      });
+    }
   };
 
   setCvcod = e => {
@@ -200,20 +215,49 @@ class RightPanel extends React.Component {
       },
       cvcodList: {
         visible: false
-      }
+      },
+      cvcodpass: true
     });
   };
 
+  componentDidUpdate(props) {
+    if (props.openEdit !== this.props.openEdit) {
+      this.setState({
+        user: this.props.selectedRow
+      });
+    }
+    if (props.addMode !== this.props.addMode) {
+      this.setState({
+        user: {
+          logid: "",
+          passwd: "",
+          cvnas: "",
+          cvcod: "",
+          gubn: "",
+          hphone: "",
+          email: "",
+          telno: "",
+          auth: ""
+        }
+      });
+    }
+  }
+
   render() {
-    const { title, user, idpass, cvcodpass, error, cvcodList } = this.state;
+    const { user, idpass, cvcodpass, error, cvcodList } = this.state;
+    console.log(user);
 
     return (
       <>
         <div
-          className={this.props.addMode ? "right-panel active" : "right-panel"}
+          className={
+            this.props.addMode || this.props.openEdit
+              ? "right-panel active"
+              : "right-panel"
+          }
         >
-          <h3>{title}</h3>
-          <div className="close-btn" onClick={this.props.openAddMode}>
+          <h3>{this.props.title}</h3>
+          <div className="close-btn" onClick={this.props.closeAllMode}>
             <img src={close} alt="" />
           </div>
           <form onSubmit={this.submitUser}>
@@ -305,6 +349,7 @@ class RightPanel extends React.Component {
                     name="auth"
                     id="normal"
                     value="0"
+                    checked={user.auth === "0"}
                     onChange={this.inputUpdate}
                     required
                   />
@@ -316,6 +361,7 @@ class RightPanel extends React.Component {
                     name="auth"
                     id="admin"
                     value="1"
+                    checked={user.auth === "1"}
                     onChange={this.inputUpdate}
                     required
                   />
@@ -327,6 +373,7 @@ class RightPanel extends React.Component {
                     name="auth"
                     id="corop"
                     value="2"
+                    checked={user.auth === "2"}
                     onChange={this.inputUpdate}
                     required
                   />
@@ -344,6 +391,7 @@ class RightPanel extends React.Component {
                     name="gubn"
                     id="outer"
                     value="0"
+                    checked={user.gubn === "0"}
                     onChange={this.inputUpdate}
                     required
                   />
@@ -355,6 +403,7 @@ class RightPanel extends React.Component {
                     name="gubn"
                     id="buyer"
                     value="1"
+                    checked={user.gubn === "1"}
                     onChange={this.inputUpdate}
                     required
                   />

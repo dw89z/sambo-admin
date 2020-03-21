@@ -4,7 +4,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import edit from "../../../assets/img/edit.svg";
 import addUser from "../../../assets/img/add.svg";
 import trash from "../../../assets/img/trash.svg";
-import { postApi } from "../../../api";
+import { postApi, deleteApi } from "../../../api";
 import "./SystUser.scss";
 import RightPanel from "./RightPanel";
 
@@ -17,11 +17,8 @@ export default class extends React.Component {
     selectedRow: {},
     editMode: false,
     deleteMode: false,
-    addMode: true,
-    selectRow: {
-      mode: "checkbox",
-      clickToSelect: true
-    },
+    addMode: false,
+    openEdit: false,
     columns: [
       {
         dataField: "logid",
@@ -99,7 +96,7 @@ export default class extends React.Component {
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
             this.setState({
-              selectRow: row
+              selectedRow: row
             });
           }
         },
@@ -113,7 +110,7 @@ export default class extends React.Component {
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
             this.setState({
-              selectRow: row
+              selectedRow: row
             });
           }
         },
@@ -123,14 +120,6 @@ export default class extends React.Component {
       }
     ],
     rightPanel: "사용자 등록"
-  };
-
-  getRowData = {
-    onClick: (row, rowIndex) => {
-      this.setState({
-        selectedRow: rowIndex
-      });
-    }
   };
 
   noneFormatter(cell, row, rowIndex, formatExtraData) {
@@ -151,7 +140,7 @@ export default class extends React.Component {
 
       if (data.length !== 0) {
         this.setState({
-          users: [...data, { edit: "edit" }],
+          users: [...data],
           errorSearch: false
         });
       } else {
@@ -165,7 +154,7 @@ export default class extends React.Component {
 
   async componentDidMount() {
     const params = {
-      searchKeyword: "null"
+      searchKeyword: "test"
     };
     try {
       this.setState({
@@ -205,14 +194,17 @@ export default class extends React.Component {
   };
 
   editMode = () => {
-    const { columns, editMode } = this.state;
+    const { columns, editMode, openEdit } = this.state;
     const addEdit = {
       dataField: "",
       text: "수정",
       events: {
         onClick: (e, column, columnIndex, row, rowIndex) => {
           this.setState({
-            selectRow: row
+            selectedRow: row,
+            openEdit: !openEdit,
+            addMode: false,
+            rightPanel: "사용자 수정"
           });
         }
       },
@@ -246,9 +238,36 @@ export default class extends React.Component {
       text: "삭제",
       events: {
         onClick: (e, column, columnIndex, row, rowIndex) => {
-          this.setState({
-            selectRow: row
-          });
+          try {
+            console.log(row.logid);
+            deleteApi("admin/um/user", row.logid).then(res => {
+              console.log(res.data);
+            });
+          } catch (error) {
+            console.log(error);
+          } finally {
+            const data = {
+              searchKeyword: this.state.userSearch
+            };
+            postApi("admin/um/searchusers", JSON.stringify(data)).then(res => {
+              const {
+                data: { data }
+              } = res;
+              console.log("search", data);
+
+              if (data.length !== 0) {
+                this.setState({
+                  users: [...data],
+                  errorSearch: false
+                });
+              } else {
+                this.setState({
+                  users: [],
+                  errorSearch: true
+                });
+              }
+            });
+          }
         }
       },
       headerAlign: (column, colIndex) => "center",
@@ -274,11 +293,30 @@ export default class extends React.Component {
     }
   };
 
-  addMode = () => {
+  openAddMode = () => {
     const { addMode } = this.state;
     this.setState({
       addMode: !addMode,
+      openMode: false,
       rightPanel: "사용자 등록"
+    });
+  };
+
+  closeAllMode = () => {
+    this.setState({
+      addMode: false,
+      openEdit: false,
+      editMode: false,
+      selectedRow: {}
+    });
+  };
+
+  openEditMode = () => {
+    const { openEdit } = this.state;
+    this.setState({
+      openEdit: !openEdit,
+      addMode: false,
+      rightPanel: "사용자 수정"
     });
   };
 
@@ -290,6 +328,7 @@ export default class extends React.Component {
       loading,
       selectedRow,
       addMode,
+      openEdit,
       rightPanel
     } = this.state;
 
@@ -314,7 +353,7 @@ export default class extends React.Component {
                   <button></button>
                 </form>
                 <div className="utils">
-                  <p onClick={this.addMode}>
+                  <p onClick={this.openAddMode}>
                     <img src={addUser} alt="add" />
                     <span>등록</span>
                   </p>
@@ -337,15 +376,16 @@ export default class extends React.Component {
                   keyField="id"
                   data={users}
                   columns={columns}
-                  rowEvents={this.getRowData}
                 />
               </div>
               <RightPanel
                 addMode={addMode}
+                openEdit={openEdit}
                 title={rightPanel}
-                openAddMode={this.addMode}
+                closeAllMode={this.closeAllMode}
                 selectedRow={selectedRow}
                 menuAxis={this.props.menuAxis}
+                user={selectedRow}
               />
             </>
           )}
