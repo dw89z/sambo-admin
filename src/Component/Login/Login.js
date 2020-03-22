@@ -4,7 +4,6 @@ import userIcon from "../../assets/img/login-user.svg";
 import passwordIcon from "../../assets/img/password.svg";
 import logo from "../../assets/img/login-logo.svg";
 import mainlogo from "../../assets/img/login-main-logo.svg";
-
 import auth from "../auth";
 
 export default class extends React.Component {

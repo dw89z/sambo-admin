@@ -12,15 +12,15 @@ class CreateContent extends React.Component {
     currentMode: this.props.currentMode,
     mountedComp: [
       {
-        index: 1,
-        window_name: "사용자 등록",
-        window_id: "SystUser"
+        index: 3,
+        window_name: "사용자 권한 등록",
+        window_id: "SystAuth"
       }
     ],
     currentComp: {
-      index: 1,
-      window_name: "사용자 등록",
-      window_id: "SystUser"
+      index: 3,
+      window_name: "사용자 권한 등록",
+      window_id: "SystAuth"
     }
   };
 
@@ -131,15 +131,15 @@ class CreateContent extends React.Component {
               currentMenu: data,
               mountedComp: [
                 {
-                  index: 1,
-                  window_name: "사용자 등록",
-                  window_id: "SystUser"
+                  index: 3,
+                  window_name: "사용자 권한 등록",
+                  window_id: "SystAuth"
                 }
               ],
               currentComp: {
-                index: 1,
-                window_name: "사용자 등록",
-                window_id: "SystUser"
+                index: 3,
+                window_name: "사용자 권한 등록",
+                window_id: "SystAuth"
               }
             });
           })

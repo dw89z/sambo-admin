@@ -48,7 +48,6 @@ export const getApi = url => {
 
 //delete요청 공용 api
 export const deleteApi = (url, param) => {
-  console.log(url, param);
   return api.delete(`${url}/${param}`);
 };
 

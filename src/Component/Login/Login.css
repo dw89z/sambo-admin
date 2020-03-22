@@ -54,6 +54,33 @@ form {
   height: 90%;
 }
 
+form .login-input {
+  border: none;
+  width: 100%;
+  border-bottom: 1px solid #c1c1cf;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  font-size: 1.5rem;
+  width: 100%;
+  padding: 0.35rem 0;
+  padding-left: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+form .login-input#id {
+  margin-top: 1rem;
+}
+
+form .login-input:focus {
+  border-bottom: 1px solid #1225c9;
+}
+
+form .login-input:focus + label {
+  bottom: 2.3rem;
+  font-size: 0.9rem;
+  color: #1225c9;
+}
+
 .back-wrap {
   position: relative;
   margin-top: 1rem;
@@ -118,32 +145,6 @@ form {
 }
 
 .login-inner label.active {
-  bottom: 2.3rem;
-  font-size: 0.9rem;
-  color: #1225c9;
-}
-
-.login-input {
-  width: 100%;
-  border-bottom: 1px solid #c1c1cf;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-  font-size: 1.5rem;
-  width: 100%;
-  padding: 0.35rem 0;
-  padding-left: 2.5rem;
-  margin-top: 2.5rem;
-}
-
-.login-input#id {
-  margin-top: 1rem;
-}
-
-.login-input:focus {
-  border-bottom: 1px solid #1225c9;
-}
-
-.login-input:focus + label {
   bottom: 2.3rem;
   font-size: 0.9rem;
   color: #1225c9;

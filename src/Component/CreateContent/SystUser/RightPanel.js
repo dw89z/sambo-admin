@@ -238,6 +238,18 @@ class RightPanel extends React.Component {
           email: "",
           telno: "",
           auth: ""
+        },
+        idpass: false,
+        cvcodpass: false,
+        error: {
+          id: {
+            error: false,
+            message: ""
+          },
+          cvcod: {
+            error: false,
+            message: ""
+          }
         }
       });
     }
@@ -245,7 +257,6 @@ class RightPanel extends React.Component {
 
   render() {
     const { user, idpass, cvcodpass, error, cvcodList } = this.state;
-    console.log(user);
 
     return (
       <>

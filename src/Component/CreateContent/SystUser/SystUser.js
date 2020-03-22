@@ -1,6 +1,7 @@
 import React from "react";
 import Loading from "../../Loading";
 import BootstrapTable from "react-bootstrap-table-next";
+import ToolkitProvider, { CSVExport } from "react-bootstrap-table2-toolkit";
 import edit from "../../../assets/img/edit.svg";
 import addUser from "../../../assets/img/add.svg";
 import trash from "../../../assets/img/trash.svg";
@@ -17,6 +18,7 @@ export default class extends React.Component {
     selectedRow: {},
     editMode: false,
     deleteMode: false,
+    toDelete: "",
     addMode: false,
     openEdit: false,
     columns: [
@@ -133,23 +135,35 @@ export default class extends React.Component {
   userSearch = async e => {
     e.preventDefault();
     const params = { searchKeyword: this.state.userSearch };
-    await postApi("admin/um/searchusers", JSON.stringify(params)).then(res => {
-      const {
-        data: { data }
-      } = res;
+    try {
+      this.setState({
+        loading: true
+      });
+      await postApi("admin/um/searchusers", JSON.stringify(params)).then(
+        res => {
+          const {
+            data: { data }
+          } = res;
 
-      if (data.length !== 0) {
-        this.setState({
-          users: [...data],
-          errorSearch: false
-        });
-      } else {
-        this.setState({
-          users: [],
-          errorSearch: true
-        });
-      }
-    });
+          if (data.length !== 0) {
+            this.setState({
+              users: [...data],
+              errorSearch: false
+            });
+          } else {
+            this.setState({
+              users: [],
+              errorSearch: true
+            });
+          }
+        }
+      );
+    } catch {
+    } finally {
+      this.setState({
+        loading: false
+      });
+    }
   };
 
   async componentDidMount() {
@@ -237,36 +251,35 @@ export default class extends React.Component {
       dataField: "",
       text: "삭제",
       events: {
-        onClick: (e, column, columnIndex, row, rowIndex) => {
+        onClick: async (e, column, columnIndex, row, rowIndex) => {
           try {
             console.log(row.logid);
-            deleteApi("admin/um/user", row.logid).then(res => {
+            await deleteApi("admin/um/user", row.logid).then(res => {
               console.log(res.data);
             });
           } catch (error) {
             console.log(error);
           } finally {
-            const data = {
-              searchKeyword: this.state.userSearch
-            };
-            postApi("admin/um/searchusers", JSON.stringify(data)).then(res => {
-              const {
-                data: { data }
-              } = res;
-              console.log("search", data);
-
-              if (data.length !== 0) {
-                this.setState({
-                  users: [...data],
-                  errorSearch: false
-                });
-              } else {
-                this.setState({
-                  users: [],
-                  errorSearch: true
-                });
-              }
-            });
+            // const data = {
+            //   searchKeyword: this.state.userSearch
+            // };
+            // postApi("admin/um/searchusers", JSON.stringify(data)).then(res => {
+            //   const {
+            //     data: { data }
+            //   } = res;
+            //   console.log("search", data);
+            //   if (data.length !== 0) {
+            //     this.setState({
+            //       users: [...data],
+            //       errorSearch: false
+            //     });
+            //   } else {
+            //     this.setState({
+            //       users: [],
+            //       errorSearch: true
+            //     });
+            //   }
+            // });
           }
         }
       },
@@ -331,6 +344,7 @@ export default class extends React.Component {
       openEdit,
       rightPanel
     } = this.state;
+    const { ExportCSVButton } = CSVExport;
 
     return (
       <>
@@ -346,7 +360,7 @@ export default class extends React.Component {
                   <input
                     name="userSearch"
                     placeholder="로그인ID 및 거래처명으로 검색"
-                    className="user-search"
+                    className="user-search main-search"
                     type="text"
                     onChange={this.inputUpdate}
                   />
@@ -372,11 +386,33 @@ export default class extends React.Component {
                   검색된 데이터가 없습니다
                 </div>
                 <BootstrapTable
-                  wrapperClasses="user-table"
+                  wrapperClasses={
+                    this.props.menuAxis ? "user-table" : "user-table left"
+                  }
                   keyField="id"
                   data={users}
                   columns={columns}
                 />
+                {/* <ToolkitProvider
+                  wrapperClasses="user-table"
+                  keyField="id"
+                  data={users}
+                  columns={columns}
+                  exportCSV={{
+                    noAutoBOM: false,
+                    blobType: "data:text/csv;charset=utf-8,%EF%BB%BF"
+                  }}
+                >
+                  {props => (
+                    <div>
+                      <ExportCSVButton {...props.csvProps}>
+                        Export CSV!!
+                      </ExportCSVButton>
+                      <hr />
+                      <BootstrapTable {...props.baseProps} />
+                    </div>
+                  )}
+                </ToolkitProvider> */}
               </div>
               <RightPanel
                 addMode={addMode}

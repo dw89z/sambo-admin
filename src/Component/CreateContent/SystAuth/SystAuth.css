@@ -1,0 +1,109 @@
+.form .user-info {
+  margin-left: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 2rem;
+}
+
+.form .info-cvnas {
+  margin-left: 0.7rem;
+  font-weight: 400;
+  font-size: 1rem;
+  color: #c1c1cf;
+}
+
+.form .user-list {
+  width: 14rem;
+  position: absolute;
+  background: #fff;
+  border: 1px solid #1225c9;
+  border-top: none;
+  z-index: 99;
+  top: 2rem;
+  left: 5.01rem;
+  font-size: 0.7rem;
+  height: 15rem;
+  overflow-y: scroll;
+}
+
+.form .user-list li {
+  cursor: pointer;
+  width: 100%;
+  padding: 0.25rem;
+  padding-left: 0;
+  border-top: 1px solid #e1e1ef;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.form .user-list li:hover {
+  background: #f1f1ff;
+}
+
+.form .user-list li span {
+  margin-left: 0.5rem;
+  font-weight: 500;
+}
+
+.form .user-list li span:last-child {
+  border-left: 1px solid #333;
+  padding-left: 0.5rem;
+}
+
+.table {
+  width: 100%;
+  position: relative;
+}
+
+.table .error {
+  visibility: hidden;
+  position: absolute;
+  top: 10rem;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #c1c1cf;
+}
+
+.table .error.active {
+  visibility: visible;
+}
+
+.table .auth-table {
+  height: 37.25rem;
+  overflow-y: scroll;
+  border: 1px solid #333;
+}
+
+.table .auth-table.left {
+  height: 39rem;
+}
+
+.table table {
+  width: 100%;
+  font-size: 0.75rem;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  border: 1px solid #c1c1cf;
+  padding: 0.55rem 0.45rem;
+  border-left: none;
+}
+
+.table thead th {
+  border-top: none;
+  background: #f1f1ff;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+/*# sourceMappingURL=SystAuth.css.map */

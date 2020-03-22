@@ -1,13 +1,13 @@
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #fff;
+  background: #e1e1ef;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e0e0e0;
+  background: #1225c9;
 }
 
 * {
@@ -23,18 +23,24 @@ a {
   color: inherit;
 }
 
-input,
-button {
-  border: none;
-  padding: 0;
-  margin: 0;
+input {
   outline: none;
 }
 
-input:focus,
-button:focus {
+input:focus {
+  outline: none;
+  border-color: #1225c9;
+}
+
+button {
+  cursor: pointer;
   border: none;
   outline: none;
+}
+
+button:focus {
+  outline: none;
+  border: none;
 }
 
 table {
