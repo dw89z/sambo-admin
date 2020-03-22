@@ -260,26 +260,33 @@ export default class extends React.Component {
           } catch (error) {
             console.log(error);
           } finally {
-            // const data = {
-            //   searchKeyword: this.state.userSearch
-            // };
-            // postApi("admin/um/searchusers", JSON.stringify(data)).then(res => {
-            //   const {
-            //     data: { data }
-            //   } = res;
-            //   console.log("search", data);
-            //   if (data.length !== 0) {
-            //     this.setState({
-            //       users: [...data],
-            //       errorSearch: false
-            //     });
-            //   } else {
-            //     this.setState({
-            //       users: [],
-            //       errorSearch: true
-            //     });
-            //   }
-            // });
+            const data = {
+              searchKeyword: this.state.userSearch
+            };
+            this.setState({
+              loading: true
+            });
+            await postApi("admin/um/searchusers", JSON.stringify(data)).then(
+              res => {
+                const {
+                  data: { data }
+                } = res;
+                console.log("search", data);
+                if (data.length !== 0) {
+                  this.setState({
+                    users: [...data],
+                    errorSearch: false,
+                    loading: false
+                  });
+                } else {
+                  this.setState({
+                    users: [],
+                    errorSearch: true,
+                    loading: false
+                  });
+                }
+              }
+            );
           }
         }
       },

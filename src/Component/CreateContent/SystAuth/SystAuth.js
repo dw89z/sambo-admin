@@ -2,7 +2,7 @@ import React from "react";
 import Loading from "../../Loading";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory, { Type } from "react-bootstrap-table2-editor";
-import { postApi, deleteApi, getApi } from "../../../api";
+import { postApi, deleteApi, getApi, putApi } from "../../../api";
 import "./SystAuth.scss";
 
 export default class extends React.Component {
@@ -63,7 +63,8 @@ export default class extends React.Component {
     userList: {
       visible: false,
       list: []
-    }
+    },
+    toDeleteList: []
   };
 
   inputUpdate = e => {
