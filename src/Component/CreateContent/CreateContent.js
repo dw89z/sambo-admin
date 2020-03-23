@@ -131,15 +131,15 @@ class CreateContent extends React.Component {
               currentMenu: data,
               mountedComp: [
                 {
-                  index: 3,
-                  window_name: "사용자 권한 등록",
-                  window_id: "SystAuth"
+                  index: 0,
+                  window_name: "대시보드",
+                  window_id: "Dashboard"
                 }
               ],
               currentComp: {
-                index: 3,
-                window_name: "사용자 권한 등록",
-                window_id: "SystAuth"
+                index: 0,
+                window_name: "대시보드",
+                window_id: "Dashboard"
               }
             });
           })

@@ -58,6 +58,10 @@
   width: 100%;
   position: relative;
 
+  tr:nth-child(2n) {
+    background: #fafaff;
+  }
+
   .error {
     visibility: hidden;
     position: absolute;
@@ -74,12 +78,12 @@
   }
 
   .auth-table {
-    height: 37.25rem;
+    height: 35rem;
     overflow-y: scroll;
     border: 1px solid #333;
 
     &.left {
-      height: 39rem;
+      height: 37.5rem;
     }
   }
 

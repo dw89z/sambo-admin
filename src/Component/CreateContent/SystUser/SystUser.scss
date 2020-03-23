@@ -110,12 +110,12 @@
   }
 
   .react-bootstrap-table {
-    height: 37.25rem;
+    height: 35rem;
     overflow-y: scroll;
     border: 1px solid #333;
 
     &.left {
-      height: 39.7rem;
+      height: 37.5rem;
     }
   }
 
@@ -141,7 +141,7 @@
 
       &.sortable {
         cursor: pointer;
-        background: $gray url("../../../assets/img/sort.svg") right 4px center
+        background: $gray2 url("../../../assets/img/sort.svg") right 4px center
           no-repeat;
         background-size: 0.85rem;
       }

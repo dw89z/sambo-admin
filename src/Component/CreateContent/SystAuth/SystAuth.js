@@ -1,13 +1,12 @@
 import React from "react";
 import Loading from "../../Loading";
 import BootstrapTable from "react-bootstrap-table-next";
-import cellEditFactory, { Type } from "react-bootstrap-table2-editor";
-import { postApi, deleteApi, getApi, putApi } from "../../../api";
+import { postApi, getApi } from "../../../api";
 import "./SystAuth.scss";
 
 export default class extends React.Component {
   state = {
-    loading: false,
+    loading: true,
     typing: false,
     typingTimeout: 0,
     userId: "",
@@ -17,19 +16,9 @@ export default class extends React.Component {
     columns: [
       {
         dataField: "useyn",
-        text: "거래처명",
+        text: "사용여부",
         sort: true,
-        editor: {
-          type: Type.CHECKBOX,
-          value: "Y:N"
-        },
-        formatter: (cell, row, rowIndex, formatExtraData) => {
-          return <span>{formatExtraData[cell]}</span>;
-        },
-        formatExtraData: {
-          Y: "사용",
-          N: "미사용"
-        }
+        hidden: true
       },
       {
         dataField: "window_name",
@@ -64,7 +53,9 @@ export default class extends React.Component {
       visible: false,
       list: []
     },
-    toDeleteList: []
+    toDeleteList: [],
+    checkedList: [],
+    selected: []
   };
 
   inputUpdate = e => {
@@ -116,18 +107,25 @@ export default class extends React.Component {
 
   setSearchId = async e => {
     const userId = e.currentTarget.getAttribute("data-logid");
+    this.setState({
+      loading: true
+    });
 
     await postApi(`admin/uam/programofuser/${userId}`, {})
       .then(res => {
         const {
           data: { data }
         } = res;
-        this.setState({
-          authList: data,
-          userList: {
-            visible: false
-          }
-        });
+        if (!res.data.errorMessage) {
+          this.detectCheck(data);
+          this.setState({
+            authList: data,
+            userList: {
+              visible: false
+            },
+            loading: false
+          });
+        }
       })
       .catch(err => console.log(err));
     await getApi(`admin/um/user/${userId}`).then(res => {
@@ -144,18 +142,56 @@ export default class extends React.Component {
     });
   };
 
+  toDeleteList = row => {
+    const { authList, toDeleteList } = this.state;
+    const diffVal = authList.map(list => {
+      return list.useyn;
+    });
+    const diffList = authList.some((useyn, index) => {
+      return diffVal.indexOf(index) !== index;
+    });
+    console.log(diffList);
+  };
+
+  detectCheck = array => {
+    const useyn = array.map((list, index) => {
+      if (list.useyn === "Y") {
+        return index;
+      }
+    });
+    const checkedList = useyn.filter(list => list !== undefined);
+    this.setState({
+      checkedList
+    });
+  };
+
   async componentDidMount() {
-    await postApi(`admin/uam/programofuser/test`, {})
+    await postApi(`admin/uam/programofuser/system`, {})
       .then(res => {
+        const {
+          data: { data }
+        } = res;
+        this.detectCheck(data);
         this.setState({
-          authList: res.data.data
+          authList: data,
+          loading: false,
+          userId: "system",
+          cvnas: "(주)삼보모토스"
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => {});
   }
 
   render() {
-    const { loading, errorSearch, authList, columns, userList } = this.state;
+    const {
+      loading,
+      errorSearch,
+      authList,
+      columns,
+      userList,
+      checkedList,
+      selectRow
+    } = this.state;
 
     return (
       <>
@@ -198,24 +234,33 @@ export default class extends React.Component {
                 </div>
               </div>
               <div className="table">
-                <div className={errorSearch ? "error active" : "error"}>
-                  검색된 데이터가 없습니다
-                </div>
-                <BootstrapTable
-                  wrapperClasses={
-                    this.props.menuAxis ? "auth-table" : "auth-table left"
-                  }
-                  keyField="window_name"
-                  data={authList}
-                  columns={columns}
-                  cellEdit={cellEditFactory({
-                    mode: "click",
-                    blurToSave: true,
-                    afterSaveCell: (oldValue, newValue, row, column) => {
-                      console.log(row);
+                {loading ? (
+                  <Loading />
+                ) : (
+                  <BootstrapTable
+                    bootstrap4
+                    wrapperClasses={
+                      this.props.menuAxis ? "auth-table" : "auth-table left"
                     }
-                  })}
-                />
+                    keyField="index"
+                    data={authList}
+                    columns={columns}
+                    selectRow={{
+                      mode: "checkbox",
+                      clickToSelect: true,
+                      selected: checkedList,
+                      onSelect: (row, isSelect, rowIndex, e) => {
+                        if (row.useyn === "Y") {
+                          row.useyn = "N";
+                          this.toDeleteList(row);
+                        } else if (row.useyn === "N") {
+                          row.useyn = "Y";
+                          this.toDeleteList(row);
+                        }
+                      }
+                    }}
+                  />
+                )}
               </div>
             </>
           )}

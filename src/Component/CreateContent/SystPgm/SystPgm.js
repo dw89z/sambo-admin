@@ -3,7 +3,7 @@ import Loading from "../../Loading";
 
 export default class extends React.Component {
   state = {
-    loading: true
+    loading: false
   };
   render() {
     const { loading } = this.state;

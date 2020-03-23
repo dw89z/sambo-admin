@@ -433,7 +433,7 @@ export default class extends React.Component {
                   />
                 </div>
               </div>
-              <Tabs className="chart-wrapper half right bottom table">
+              <Tabs className="chart-wrapper half right bottom dash-table">
                 <TabList>
                   <Tab>공지사항</Tab>
                   <Tab>자료실</Tab>
