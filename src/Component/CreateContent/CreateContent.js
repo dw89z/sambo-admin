@@ -13,14 +13,14 @@ class CreateContent extends React.Component {
     mountedComp: [
       {
         index: 3,
-        window_name: "사용자 권한 등록",
-        window_id: "SystAuth"
+        window_name: "프로그램 등록",
+        window_id: "SystPgm"
       }
     ],
     currentComp: {
       index: 3,
-      window_name: "사용자 권한 등록",
-      window_id: "SystAuth"
+      window_name: "프로그램 등록",
+      window_id: "SystPgm"
     }
   };
 
@@ -119,10 +119,7 @@ class CreateContent extends React.Component {
         loading: true
       });
       try {
-        await postApi(
-          "main/menu",
-          JSON.stringify({ mainid: this.props.currentMode.main_id })
-        )
+        await postApi("main/menu", { mainid: this.props.currentMode.main_id })
           .then(res => {
             const {
               data: { data }
@@ -132,14 +129,14 @@ class CreateContent extends React.Component {
               mountedComp: [
                 {
                   index: 0,
-                  window_name: "대시보드",
-                  window_id: "Dashboard"
+                  window_name: "프로그램 등록",
+                  window_id: "SystPgm"
                 }
               ],
               currentComp: {
                 index: 0,
-                window_name: "대시보드",
-                window_id: "Dashboard"
+                window_name: "프로그램 등록",
+                window_id: "SystPgm"
               }
             });
           })
@@ -157,10 +154,9 @@ class CreateContent extends React.Component {
 
   async componentDidMount() {
     try {
-      await postApi(
-        "main/menu",
-        JSON.stringify({ mainid: this.props.currentMode.main_id })
-      ).then(res => {
+      await postApi("main/menu", {
+        mainid: this.props.currentMode.main_id
+      }).then(res => {
         const {
           data: { data }
         } = res;

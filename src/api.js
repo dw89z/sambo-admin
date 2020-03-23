@@ -17,8 +17,9 @@ api.interceptors.request.use(
   function(config) {
     config.headers = {
       ...config.headers,
-      Authorization: getAuthToken(),
-      "Content-Type": "application/json"
+      "Content-Type": "application/json; charset=utf8",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: getAuthToken()
     };
     return config;
   },
@@ -38,7 +39,7 @@ export const loginApi = (id, password) => {
 
 //post요청 공용 api
 export const postApi = (url, params, config) => {
-  return api.post(url, params, config);
+  return api.post(url, JSON.stringify(params), config);
 };
 
 //get요청 공용 api

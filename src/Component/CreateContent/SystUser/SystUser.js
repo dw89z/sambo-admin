@@ -1,7 +1,6 @@
 import React from "react";
 import Loading from "../../Loading";
 import BootstrapTable from "react-bootstrap-table-next";
-import ToolkitProvider, { CSVExport } from "react-bootstrap-table2-toolkit";
 import edit from "../../../assets/img/edit.svg";
 import addUser from "../../../assets/img/add.svg";
 import trash from "../../../assets/img/trash.svg";
@@ -139,25 +138,23 @@ export default class extends React.Component {
       this.setState({
         loading: true
       });
-      await postApi("admin/um/searchusers", JSON.stringify(params)).then(
-        res => {
-          const {
-            data: { data }
-          } = res;
+      await postApi("admin/um/searchusers", params).then(res => {
+        const {
+          data: { data }
+        } = res;
 
-          if (data.length !== 0) {
-            this.setState({
-              users: [...data],
-              errorSearch: false
-            });
-          } else {
-            this.setState({
-              users: [],
-              errorSearch: true
-            });
-          }
+        if (data.length !== 0) {
+          this.setState({
+            users: [...data],
+            errorSearch: false
+          });
+        } else {
+          this.setState({
+            users: [],
+            errorSearch: true
+          });
         }
-      );
+      });
     } catch {
     } finally {
       this.setState({
@@ -174,25 +171,23 @@ export default class extends React.Component {
       this.setState({
         loading: true
       });
-      await postApi("admin/um/searchusers", JSON.stringify(params)).then(
-        res => {
-          const {
-            data: { data }
-          } = res;
+      await postApi("admin/um/searchusers", params).then(res => {
+        const {
+          data: { data }
+        } = res;
 
-          if (data.length !== 0) {
-            this.setState({
-              users: [...data],
-              errorSearch: false
-            });
-          } else {
-            this.setState({
-              users: [],
-              errorSearch: true
-            });
-          }
+        if (data.length !== 0) {
+          this.setState({
+            users: [...data],
+            errorSearch: false
+          });
+        } else {
+          this.setState({
+            users: [],
+            errorSearch: true
+          });
         }
-      );
+      });
     } catch {
     } finally {
       this.setState({
@@ -266,27 +261,25 @@ export default class extends React.Component {
             this.setState({
               loading: true
             });
-            await postApi("admin/um/searchusers", JSON.stringify(data)).then(
-              res => {
-                const {
-                  data: { data }
-                } = res;
-                console.log("search", data);
-                if (data.length !== 0) {
-                  this.setState({
-                    users: [...data],
-                    errorSearch: false,
-                    loading: false
-                  });
-                } else {
-                  this.setState({
-                    users: [],
-                    errorSearch: true,
-                    loading: false
-                  });
-                }
+            await postApi("admin/um/searchusers", data).then(res => {
+              const {
+                data: { data }
+              } = res;
+              console.log("search", data);
+              if (data.length !== 0) {
+                this.setState({
+                  users: [...data],
+                  errorSearch: false,
+                  loading: false
+                });
+              } else {
+                this.setState({
+                  users: [],
+                  errorSearch: true,
+                  loading: false
+                });
               }
-            );
+            });
           }
         }
       },
@@ -351,11 +344,10 @@ export default class extends React.Component {
       openEdit,
       rightPanel
     } = this.state;
-    const { ExportCSVButton } = CSVExport;
 
     return (
       <>
-        <div className="content-component">
+        <div className="content-component syst-user">
           <h2>{this.props.title}</h2>
           {loading ? (
             <Loading />

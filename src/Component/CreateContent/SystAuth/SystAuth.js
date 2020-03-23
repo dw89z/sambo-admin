@@ -80,19 +80,17 @@ export default class extends React.Component {
           const userId = {
             searchKeyword: value.trim()
           };
-          await postApi("admin/um/searchusers", JSON.stringify(userId)).then(
-            res => {
-              const {
-                data: { data }
-              } = res;
-              this.setState({
-                userList: {
-                  visible: true,
-                  list: data
-                }
-              });
-            }
-          );
+          await postApi("admin/um/searchusers", userId).then(res => {
+            const {
+              data: { data }
+            } = res;
+            this.setState({
+              userList: {
+                visible: true,
+                list: data
+              }
+            });
+          });
         } else if (value === "") {
           this.setState({
             userList: {
@@ -195,7 +193,7 @@ export default class extends React.Component {
 
     return (
       <>
-        <div className="content-component">
+        <div className="content-component syst-auth">
           <h2>{this.props.title}</h2>
           {loading ? (
             <Loading />
