@@ -12,15 +12,15 @@ class CreateContent extends React.Component {
     currentMode: this.props.currentMode,
     mountedComp: [
       {
-        index: 3,
-        window_name: "프로그램 등록",
-        window_id: "SystPgm"
+        index: 4,
+        window_name: "공지사항 등록",
+        window_id: "SystNotify"
       }
     ],
     currentComp: {
-      index: 3,
-      window_name: "프로그램 등록",
-      window_id: "SystPgm"
+      index: 4,
+      window_name: "공지사항 등록",
+      window_id: "SystNotify"
     }
   };
 
@@ -128,15 +128,15 @@ class CreateContent extends React.Component {
               currentMenu: data,
               mountedComp: [
                 {
-                  index: 0,
-                  window_name: "프로그램 등록",
-                  window_id: "SystPgm"
+                  index: 4,
+                  window_name: "공지사항 등록",
+                  window_id: "SystNotify"
                 }
               ],
               currentComp: {
-                index: 0,
-                window_name: "프로그램 등록",
-                window_id: "SystPgm"
+                index: 4,
+                window_name: "공지사항 등록",
+                window_id: "SystNotify"
               }
             });
           })
@@ -191,6 +191,7 @@ class CreateContent extends React.Component {
             key={index}
             title={currentComp.window_name}
             menuAxis={this.props.menuAxis}
+            user={this.props.user}
           />
         </div>
       );

@@ -16,7 +16,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: #333;
 }
 
 a {
@@ -37,6 +36,7 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
+  background: none;
 
   &:focus {
     outline: none;

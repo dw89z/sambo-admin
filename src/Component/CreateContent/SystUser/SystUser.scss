@@ -78,7 +78,8 @@
     cursor: pointer;
     width: 2rem;
     height: 2rem;
-    background: $pri url("../../../assets/img/search.svg") center center no-repeat;
+    background: $pri url("../../../assets/img/search.svg") center center
+      no-repeat;
     background-size: 70%;
     padding-top: 0.2rem;
 
@@ -140,7 +141,8 @@
 
       &.sortable {
         cursor: pointer;
-        background: $gray2 url("../../../assets/img/sort.svg") right 4px center no-repeat;
+        background: $gray2 url("../../../assets/img/sort.svg") right 4px center
+          no-repeat;
         background-size: 0.85rem;
       }
     }

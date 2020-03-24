@@ -81,7 +81,11 @@ export default class extends React.Component {
               </select>
             </div>
 
-            <CreateContent currentMode={currentMode} menuAxis={menuAxis} />
+            <CreateContent
+              currentMode={currentMode}
+              menuAxis={menuAxis}
+              user={user}
+            />
 
             <Footer axis={menuAxis} />
           </>

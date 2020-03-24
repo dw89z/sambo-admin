@@ -45,7 +45,9 @@ export default class extends React.Component {
         dataField: "auth",
         text: "권한구분",
         sort: true,
-        formatter: this.formatter,
+        formatter: (cell, row, rowIndex, formatExtraData) => {
+          return <span>{formatExtraData[cell]}</span>;
+        },
         formatExtraData: {
           0: "일반",
           1: "관리자",
