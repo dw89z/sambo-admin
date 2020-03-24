@@ -14,13 +14,13 @@ class CreateContent extends React.Component {
       {
         index: 4,
         window_name: "공지사항 등록",
-        window_id: "SystNotify"
+        window_id: "SystPgm"
       }
     ],
     currentComp: {
       index: 4,
       window_name: "공지사항 등록",
-      window_id: "SystNotify"
+      window_id: "SystPgm"
     }
   };
 
@@ -130,13 +130,13 @@ class CreateContent extends React.Component {
                 {
                   index: 4,
                   window_name: "공지사항 등록",
-                  window_id: "SystNotify"
+                  window_id: "SystPgm"
                 }
               ],
               currentComp: {
                 index: 4,
                 window_name: "공지사항 등록",
-                window_id: "SystNotify"
+                window_id: "SystPgm"
               }
             });
           })
