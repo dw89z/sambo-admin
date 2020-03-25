@@ -1,3 +1,155 @@
 @import "../../../scss/Variables.scss";
 
-.syst-pgm {}
+.syst-pgm {
+  .section-wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .title {
+    margin-top: 2rem;
+    position: absolute;
+  }
+
+  .tree-section {
+    margin-top: 3.5rem;
+    width: 65%;
+    height: 36rem;
+    border: 1px solid $dark;
+    padding: 0.8rem;
+    padding-bottom: 5rem;
+    font-size: 0.9rem;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    ul {
+      display: inline-block;
+      padding: 0.15rem 0;
+      cursor: pointer;
+
+      p {
+        padding: 0.15rem 0 0.15rem 2.7rem;
+      }
+
+      li {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        filter: grayscale(100%);
+
+        &:hover {
+          filter: grayscale(0%);
+          p {
+            color: $pri;
+          }
+        }
+      }
+    }
+
+    .main-depth {
+      display: block;
+      height: auto;
+
+      &:before {
+        content: "";
+        display: block;
+        width: 26px;
+        height: 26px;
+        background: url("../../../assets/img/depth-01.png") center center
+          no-repeat;
+        background-size: cover;
+        position: absolute;
+        left: 15px;
+        top: 2px;
+      }
+
+      &:after {
+        content: "+";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 2px;
+      }
+    }
+
+    .main-depth,
+    .sub-depth,
+    .last-depth {
+      position: relative;
+    }
+
+    .sub-depth {
+      max-height: 0;
+      overflow: hidden;
+      left: 1.5rem;
+      transition: all 0.15s;
+
+      li:after {
+        content: "+";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 2px;
+      }
+
+      li:before {
+        content: "";
+        display: block;
+        width: 26px;
+        height: 26px;
+        background: url("../../../assets/img/depth-02.png") center center
+          no-repeat;
+        background-size: cover;
+        position: absolute;
+        left: 15px;
+        top: 2px;
+      }
+    }
+
+    .last-depth {
+      position: relative;
+      left: 2rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.15s;
+
+      li:after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-left: 1px solid $dark;
+        border-bottom: 1px solid $dark;
+        left: 0;
+        top: 40%;
+      }
+
+      li:before {
+        content: "";
+        display: block;
+        width: 26px;
+        height: 26px;
+        background: url("../../../assets/img/depth-03.png") center center
+          no-repeat;
+        background-size: cover;
+        position: absolute;
+        left: 15px;
+        top: 2px;
+      }
+    }
+  }
+  .panel {
+    margin-left: 1rem;
+    width: 100%;
+    margin-top: 3.5rem;
+    height: 36rem;
+    border: 1px solid $dark;
+    padding: 1rem 2rem;
+
+    .title {
+      top: 2.25rem;
+      transform: translateX(-2rem);
+    }
+  }
+}

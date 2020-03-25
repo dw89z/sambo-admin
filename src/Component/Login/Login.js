@@ -7,19 +7,13 @@ import mainlogo from "../../assets/img/login-main-logo.svg";
 import auth from "../auth";
 
 export default class extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleUpdate = this.handleUpdate.bind(this);
-    this.detectLoginFail = this.detectLoginFail.bind(this);
-  }
-
   state = {
     id: "",
     password: "",
     loginFailed: auth.isAuthenticated()
   };
 
-  detectLoginFail(e) {
+  detectLoginFail = e => {
     e.preventDefault();
     setTimeout(() => {
       this.setState({
@@ -32,13 +26,13 @@ export default class extends React.Component {
         loginFailed: false
       });
     }, 1700);
-  }
+  };
 
-  handleUpdate(e) {
+  handleUpdate = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
-  }
+  };
 
   render() {
     const { loginFailed, id, password } = this.state;

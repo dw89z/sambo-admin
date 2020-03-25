@@ -46,7 +46,7 @@ class RightPanel extends React.Component {
   };
 
   inputUpdateId = e => {
-    const { addMode, openEdit } = this.props;
+    const { addMode } = this.props;
     const data = {
       userid: e.target.value.trim()
     };
@@ -66,34 +66,32 @@ class RightPanel extends React.Component {
         const userid = this.state.user.logid.trim();
         const error = this.state.error;
         if (userid !== "") {
-          await postApi("admin/um/checkuser", JSON.stringify(data)).then(
-            res => {
-              const { data } = res;
-              if (data.data.result) {
-                this.setState({
-                  error: {
-                    ...error,
-                    id: {
-                      error: false,
-                      message: data.errorMessage
-                    }
-                  },
-                  idpass: true
-                });
-              } else {
-                this.setState({
-                  error: {
-                    ...error,
-                    id: {
-                      error: true,
-                      message: data.errorMessage
-                    }
-                  },
-                  idpass: false
-                });
-              }
+          await postApi("admin/um/checkuser", data).then(res => {
+            const { data } = res;
+            if (data.data.result) {
+              this.setState({
+                error: {
+                  ...error,
+                  id: {
+                    error: false,
+                    message: data.errorMessage
+                  }
+                },
+                idpass: true
+              });
+            } else {
+              this.setState({
+                error: {
+                  ...error,
+                  id: {
+                    error: true,
+                    message: data.errorMessage
+                  }
+                },
+                idpass: true
+              });
             }
-          );
+          });
         } else {
           this.setState({
             error: {
@@ -131,10 +129,7 @@ class RightPanel extends React.Component {
         const usercvcod = this.state.user.cvcod.trim();
         const error = this.state.error;
         if (usercvcod !== "") {
-          await postApi(
-            "admin/um/searchconnections",
-            JSON.stringify(data)
-          ).then(res => {
+          await postApi("admin/um/searchconnections", data).then(res => {
             const { data } = res;
 
             if (data.data) {
@@ -149,7 +144,8 @@ class RightPanel extends React.Component {
                     error: false,
                     message: ""
                   }
-                }
+                },
+                cvcodpass: true
               });
             } else if (data.status === "Fail") {
               this.setState({
@@ -185,16 +181,16 @@ class RightPanel extends React.Component {
       hphone: this.state.user.hphone
     };
     if (addMode) {
-      await postApi("admin/um/user", JSON.stringify(data)).then(res => {
-        console.log(res);
+      await postApi("admin/um/user", data).then(res => {
+        console.log("regist", res);
         const { data } = res;
         if (!data.errorCode) {
           this.props.closeAllMode();
         }
       });
     } else if (openEdit) {
-      await putApi("admin/um/user", JSON.stringify(data)).then(res => {
-        console.log(res);
+      await putApi("admin/um/user", data).then(res => {
+        console.log("edit", res);
         const { data } = res;
         if (!data.errorCode) {
           this.props.closeAllMode();

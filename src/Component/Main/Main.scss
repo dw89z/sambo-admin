@@ -286,7 +286,6 @@
     }
 
     &.non-delete {
-
       &:after,
       &:before {
         content: none;
@@ -346,8 +345,10 @@
   position: absolute;
   opacity: 0;
   visibility: hidden;
+  display: none;
 
   &.active {
+    display: block;
     visibility: visible;
     opacity: 1;
   }
