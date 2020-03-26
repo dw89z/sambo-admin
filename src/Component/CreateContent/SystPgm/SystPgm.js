@@ -1,26 +1,26 @@
 import React from "react";
 import Loading from "../../Loading";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { postApi, putApi, getApi } from "../../../api";
+import { postApi, getApi } from "../../../api";
 import "./SystPgm.scss";
-import { SubmitButton } from "react-dropzone-uploader";
 
 export default class extends React.Component {
   state = {
     loading: false,
+    innerLoading: false,
     regexp: /^[0-9\b]+$/,
     data: [],
     programdetail: {
-      main_id: 10,
-      sub1_id: 0,
-      sub2_id: 0,
+      main_id: "10",
+      sub1_id: "0",
+      sub2_id: "0",
       io_gubun: "M",
       sub2_name: "SCM",
       window_name: "",
       delyn: "N"
     },
     tabIndex: 0,
-    innerTabIndex: 1,
+    innerTabIndex: 2,
     maxMainId: "",
     maxSub1Id: "",
     maxSub2Id: "",
@@ -29,7 +29,10 @@ export default class extends React.Component {
       sub1id: false,
       sub2id: false
     },
-    disable: true
+    disable: true,
+    mainSelect: 10,
+    sub1Select: [],
+    sub2Select: []
   };
 
   tree = {
@@ -38,8 +41,13 @@ export default class extends React.Component {
         const {
           data: { data }
         } = res;
+        const sub1Select = data[0].sublist.map(sub => sub.program);
+        const sub1SubList = data[0].sublist.map(sub => sub.sublist);
+        const sub2Select = sub1SubList[0].map(sub2 => sub2);
         this.setState({
-          data: data
+          data: data,
+          sub1Select,
+          sub2Select
         });
       });
     },
@@ -124,20 +132,6 @@ export default class extends React.Component {
   };
 
   inputs = {
-    init: e => {
-      this.setState({
-        programdetail: {
-          main_id: 10,
-          sub1_id: "",
-          sub2_id: "",
-          io_gubun: "M",
-          sub2_name: "SCM",
-          window_name: "",
-          delyn: "N"
-        }
-      });
-    },
-
     inputUpdate: e => {
       const programdetail = this.state.programdetail;
       this.setState({
@@ -174,6 +168,48 @@ export default class extends React.Component {
           ...programdetail,
           [e.target.name]: e.target.value
         }
+      });
+    },
+
+    inputChangeSub1Handle: e => {
+      const programdetail = this.state.programdetail;
+      const data = this.state.data;
+      const mainid = e.target.value;
+      const selected = data.filter(main => {
+        return main.program.main_id === mainid;
+      });
+      const sub1Select = selected[0].sublist.map(sub => sub.program);
+      const sub2Arr = selected[0].sublist.map(sub => sub.sublist);
+      const sub2Select = sub2Arr[0];
+
+      this.setState({
+        programdetail: {
+          ...programdetail,
+          [e.target.name]: e.target.value
+        },
+        sub1Select,
+        sub2Select,
+        mainSelect: mainid
+      });
+    },
+
+    inputChangeSub2Handle: e => {
+      const programdetail = this.state.programdetail;
+      const data = this.state.data;
+      const mainid = this.state.mainSelect;
+      const selected = data.filter(main => {
+        return parseInt(main.program.main_id) === parseInt(mainid);
+      });
+      const sub1Select = selected[0].sublist.filter(sub => {
+        return parseInt(sub.program.sub1_id) === parseInt(e.target.value);
+      });
+      const sub2Select = sub1Select[0].sublist.map(sub2 => sub2);
+      this.setState({
+        programdetail: {
+          ...programdetail,
+          [e.target.name]: e.target.value
+        },
+        sub2Select
       });
     },
 
@@ -214,77 +250,129 @@ export default class extends React.Component {
       }
     },
 
-    // inputSub1: e => {
-    //   const sub1id = e.target.value;
-    //   const invalid = this.state.invalid;
-    //   const programdetail = this.state.programdetail;
-    //   const data = this.state.data;
-
-    //   const selected = data.filter(main => {
-    //     console.log(programdetail.main_id);
-    //     return parseInt(main.program.main_id) === programdetail.main_id;
-    //   });
-    //   console.log(data);
-
-    //   const sublist = selected.map(selected => selected.sublist);
-    //   const subArr = sublist[0];
-    //   const limit = subArr[subArr.length - 1].program.sub1_id;
-    // },
-
     inputSub1: e => {
       const sub1id = e.target.value;
       const invalid = this.state.invalid;
       const programdetail = this.state.programdetail;
       const data = this.state.data;
       const selected = data.filter(main => {
-        console.log(main.program.main_id, programdetail.main_id);
-        return parseInt(main.program.main_id) === programdetail.main_id;
+        return (
+          parseInt(main.program.main_id) === parseInt(programdetail.main_id)
+        );
       });
-      console.log(selected);
       const sublist = selected.map(selected => selected.sublist);
       const subArr = sublist[0];
-      let limit;
-      // if (subArr.length) {
-      //   limit = subArr[subArr.length - 1].program.sub1_id;
-      //   this.setState({
-      //     maxSub1Id: limit
-      //   });
-      // } else {
-      //   this.setState({
-      //     maxSub1Id: ""
-      //   });
-      // }
 
-      if (sub1id === "" || this.state.regexp.test(sub1id)) {
+      if (subArr.length) {
+        const limit = subArr[subArr.length - 1].program.sub1_id;
+        this.setState({
+          maxSub1Id: limit
+        });
+
+        if (sub1id === "" || this.state.regexp.test(sub1id)) {
+          this.setState({
+            programdetail: {
+              ...programdetail,
+              sub1_id: sub1id
+            }
+          });
+          if (sub1id > limit) {
+            this.setState({
+              invalid: {
+                ...invalid,
+                sub1id: false
+              },
+              disable: false
+            });
+          } else {
+            this.setState({
+              invalid: {
+                ...invalid,
+                sub1id: true
+              },
+              disable: true
+            });
+          }
+        }
+      } else {
         this.setState({
           programdetail: {
             ...programdetail,
             sub1_id: sub1id
-          }
+          },
+          invalid: {
+            ...invalid,
+            sub1id: false
+          },
+          disable: false
         });
-        if (sub1id > limit) {
-          this.setState({
-            invalid: {
-              ...invalid,
-              sub1id: false
-            },
-            disable: false
-          });
-        } else {
-          this.setState({
-            invalid: {
-              ...invalid,
-              sub1id: true
-            },
-            disable: true
-          });
-        }
       }
+    },
+
+    inputSub2: e => {
+      const programdetail = this.state.programdetail;
+      const sub2Select = this.state.sub2Select;
+      const sub2id = e.target.value;
+      const invalid = this.state.invalid;
+      if (sub2Select.length) {
+        const limit = sub2Select[sub2Select.length - 1].sub2_id;
+        this.setState({
+          maxSub2Id: limit
+        });
+
+        if (sub2id === "" || this.state.regexp.test(sub2id)) {
+          this.setState({
+            programdetail: {
+              ...programdetail,
+              sub2_id: sub2id
+            }
+          });
+          if (sub2id > limit) {
+            this.setState({
+              invalid: {
+                ...invalid,
+                sub2id: false
+              },
+              disable: false
+            });
+          } else {
+            this.setState({
+              invalid: {
+                ...invalid,
+                sub2id: true
+              },
+              disable: true
+            });
+          }
+        }
+      } else {
+        this.setState({
+          programdetail: {
+            ...programdetail,
+            sub1_id: sub2id
+          },
+          invalid: {
+            ...invalid,
+            sub2id: false
+          },
+          disable: false
+        });
+      }
+    },
+
+    inputInOut: e => {
+      const programdetail = this.state.programdetail;
+      this.setState({
+        programdetail: {
+          ...programdetail,
+          [e.target.name]: e.target.value
+        }
+      });
     }
   };
 
   submits = {
-    mainSubmit: async e => {
+    registSubmit: async e => {
       e.preventDefault();
       const programdetail = this.state.programdetail;
       if (programdetail.window_name === "") {
@@ -295,11 +383,23 @@ export default class extends React.Component {
           }
         });
       }
-      await postApi("admin/pm/registprogram", {
-        programdetail: programdetail
-      }).then(res => {
-        console.log(res);
-      });
+      try {
+        this.setState({
+          innerLoading: true
+        });
+        await postApi("admin/pm/registprogram", {
+          programdetail: programdetail
+        }).then(res => {
+          console.log(res);
+        });
+      } catch (error) {
+        alert(error);
+      } finally {
+        await this.tree.getTreeData();
+        this.setState({
+          innerLoading: false
+        });
+      }
     }
   };
 
@@ -322,17 +422,21 @@ export default class extends React.Component {
   render() {
     const {
       loading,
+      innerLoading,
       data,
       programdetail,
       invalid,
       maxMainId,
       maxSub1Id,
+      sub1Select,
+      sub2Select,
       maxSub2Id,
       innerTabIndex
     } = this.state;
     const tree = this.tree;
     const inputs = this.inputs;
     const submits = this.submits;
+    console.log(programdetail);
 
     return (
       <>
@@ -344,7 +448,9 @@ export default class extends React.Component {
             <>
               <div className="section-wrapper">
                 <h5 className="title">프로그램 목록</h5>
-                <div className="tree-section">{tree.treeStr(data)}</div>
+                <div className="tree-section">
+                  {innerLoading ? <Loading /> : tree.treeStr(data)}
+                </div>
                 <div className="panel">
                   <Tabs
                     className="pgm-tab"
@@ -370,8 +476,8 @@ export default class extends React.Component {
                               this.setState({
                                 programdetail: {
                                   main_id: "",
-                                  sub1_id: 0,
-                                  sub2_id: 0,
+                                  sub1_id: "0",
+                                  sub2_id: "0",
                                   io_gubun: "M",
                                   sub2_name: "",
                                   window_name: "",
@@ -382,15 +488,45 @@ export default class extends React.Component {
                           >
                             업무메뉴
                           </Tab>
-                          <Tab className="inner-tab" onClick={inputs.init}>
+                          <Tab
+                            className="inner-tab"
+                            onClick={() => {
+                              this.setState({
+                                programdetail: {
+                                  main_id: "10",
+                                  sub1_id: "",
+                                  sub2_id: "0",
+                                  io_gubun: "S",
+                                  sub2_name: "",
+                                  window_name: "",
+                                  delyn: "N"
+                                }
+                              });
+                            }}
+                          >
                             중분류
                           </Tab>
-                          <Tab className="inner-tab" onClick={inputs.init}>
+                          <Tab
+                            className="inner-tab"
+                            onClick={() => {
+                              this.setState({
+                                programdetail: {
+                                  main_id: "10",
+                                  sub1_id: "10",
+                                  sub2_id: "",
+                                  io_gubun: "",
+                                  sub2_name: "",
+                                  window_name: "",
+                                  delyn: "N"
+                                }
+                              });
+                            }}
+                          >
                             프로그램
                           </Tab>
                         </TabList>
                         <TabPanel>
-                          <form onSubmit={submits.mainSubmit}>
+                          <form onSubmit={submits.registSubmit}>
                             <div className="input-div">
                               <p>대분류 코드</p>
                               <input
@@ -447,7 +583,7 @@ export default class extends React.Component {
                           </form>
                         </TabPanel>
                         <TabPanel className="tab-panel">
-                          <form>
+                          <form onSubmit={submits.registSubmit}>
                             <div className="input-div">
                               <p>대분류 코드</p>
                               <select
@@ -492,10 +628,11 @@ export default class extends React.Component {
                               <input
                                 type="text"
                                 placeholder="프로그램명을 입력해 주세요"
-                                name="cvnas"
+                                name="sub2_name"
                                 spellCheck="false"
                                 autoComplete="off"
-                                onChange={this.inputUpdate}
+                                value={programdetail.sub2_name}
+                                onChange={inputs.inputUpdate}
                                 required
                               />
                             </div>
@@ -504,11 +641,11 @@ export default class extends React.Component {
                               <p>프로그램 사용여부</p>
                               <input
                                 type="checkbox"
-                                placeholder="프로그램명을 입력해 주세요"
-                                name="cvnas"
-                                spellCheck="false"
-                                autoComplete="off"
-                                onChange={this.inputUpdate}
+                                name="delyn"
+                                checked={
+                                  programdetail.delyn === "N" ? true : false
+                                }
+                                onChange={inputs.inputCheck}
                                 required
                               />
                             </div>
@@ -521,123 +658,141 @@ export default class extends React.Component {
                           </form>
                         </TabPanel>
                         <TabPanel className="tab-panel">
-                          <div className="input-div">
-                            <p>대분류 코드</p>
-                            <select
-                              name="main_id"
-                              id="main_id"
-                              onChange={inputs.inputChange}
-                            >
-                              {data.map((main, index) => (
-                                <option
-                                  value={main.program.main_id}
-                                  key={index}
-                                >
-                                  {main.program.window_name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+                          <form>
+                            <div className="input-div">
+                              <p>대분류 코드</p>
+                              <select
+                                name="main_id"
+                                id="main_id"
+                                onChange={inputs.inputChangeSub1Handle}
+                              >
+                                {data.map((main, index) => (
+                                  <option
+                                    value={main.program.main_id}
+                                    key={index}
+                                  >
+                                    {main.program.window_name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
 
-                          <div className="input-div">
-                            <p>중분류 코드</p>
-                            <input
-                              type="text"
-                              placeholder="중분류 코드를 입력해 주세요"
-                              name="cvcod"
-                              spellCheck="false"
-                              autoComplete="off"
-                              onChange={this.inputUpdateCod}
-                              required
-                            />
-                          </div>
+                            <div className="input-div">
+                              <p>중분류 코드</p>
+                              <select
+                                name="sub1_id"
+                                id="sub1_id"
+                                onChange={inputs.inputChangeSub2Handle}
+                              >
+                                {sub1Select.map((sub, index) => (
+                                  <option value={sub.sub1_id} key={index}>
+                                    {sub.window_name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
 
-                          <div className="input-div">
-                            <p>소분류 코드</p>
-                            <input
-                              type="text"
-                              placeholder="소분류 코드를 입력해 주세요"
-                              name="cvnas"
-                              spellCheck="false"
-                              autoComplete="off"
-                              onChange={this.inputUpdate}
-                              required
-                            />
-                          </div>
+                            <div className="input-div">
+                              <p>소분류 코드</p>
+                              <input
+                                type="num"
+                                placeholder="소분류 코드를 입력해 주세요 (숫자)"
+                                name="sub2_id"
+                                spellCheck="false"
+                                autoComplete="off"
+                                onChange={inputs.inputSub2}
+                                required
+                              />
+                              <span
+                                className={
+                                  invalid.sub2id ? "error" : "error none"
+                                }
+                              >
+                                중분류 코드는 {maxSub2Id}보다 커야합니다.
+                              </span>
+                            </div>
 
-                          <div className="input-div">
-                            <p>프로그램명</p>
-                            <input
-                              type="text"
-                              placeholder="프로그램명을 입력해 주세요"
-                              name="cvnas"
-                              spellCheck="false"
-                              autoComplete="off"
-                              onChange={this.inputUpdate}
-                              required
-                            />
-                          </div>
+                            <div className="input-div">
+                              <p>프로그램명</p>
+                              <input
+                                type="text"
+                                placeholder="프로그램명을 입력해 주세요"
+                                name="sub2_name"
+                                spellCheck="false"
+                                autoComplete="off"
+                                onChange={inputs.inputInOut}
+                                required
+                              />
+                            </div>
 
-                          <div className="input-div">
-                            <p>WINDOW-ID</p>
-                            <input
-                              type="tel"
-                              placeholder="핸드폰 번호를 입력해 주세요"
-                              name="hphone"
-                              spellCheck="false"
-                              onChange={this.inputUpdate}
-                            />
-                          </div>
-                          <div className="input-div">
-                            <p>입출력 구분</p>
-                            <div className="radio-section">
-                              <div className="radio">
-                                <input
-                                  type="radio"
-                                  name="auth"
-                                  id="normal"
-                                  value="0"
-                                  onChange={this.inputUpdate}
-                                  required
-                                />
-                                <label htmlFor="normal">입력</label>
-                              </div>
-                              <div className="radio">
-                                <input
-                                  type="radio"
-                                  name="auth"
-                                  id="admin"
-                                  value="1"
-                                  onChange={this.inputUpdate}
-                                  required
-                                />
-                                <label htmlFor="admin">조회</label>
-                              </div>
-                              <div className="radio">
-                                <input
-                                  type="radio"
-                                  name="auth"
-                                  id="corop"
-                                  value="2"
-                                  onChange={this.inputUpdate}
-                                  required
-                                />
-                                <label htmlFor="corop">출력</label>
+                            <div className="input-div">
+                              <p>WINDOW-ID</p>
+                              <input
+                                type="text"
+                                placeholder="프로그램 아이디를 입력해 주세요"
+                                name="window_id"
+                                spellCheck="false"
+                                onChange={inputs.inputInOut}
+                                required
+                              />
+                            </div>
+                            <div className="input-div">
+                              <p>입출력 구분</p>
+                              <div className="radio-section">
+                                <div className="radio">
+                                  <input
+                                    type="radio"
+                                    name="io_gubun"
+                                    id="input"
+                                    value="I"
+                                    onChange={inputs.inputInOut}
+                                    required
+                                  />
+                                  <label htmlFor="input">입력</label>
+                                </div>
+                                <div className="radio">
+                                  <input
+                                    type="radio"
+                                    name="io_gubun"
+                                    id="lookup"
+                                    value="Q"
+                                    onChange={inputs.inputInOut}
+                                    required
+                                  />
+                                  <label htmlFor="lookup">조회</label>
+                                </div>
+                                <div className="radio">
+                                  <input
+                                    type="radio"
+                                    name="io_gubun"
+                                    id="output"
+                                    value="P"
+                                    onChange={inputs.inputInOut}
+                                    required
+                                  />
+                                  <label htmlFor="output">출력</label>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="input-div">
-                            <p>프로그램 사용여부</p>
-                            <input
-                              type="checkbox"
-                              placeholder="프로그램명을 입력해 주세요"
-                              name="cvnas"
-                              spellCheck="false"
-                              autoComplete="off"
-                              onChange={this.inputUpdate}
-                              required
-                            />
-                          </div>
+                            <div className="input-div">
+                              <p>프로그램 사용여부</p>
+                              <input
+                                type="checkbox"
+                                name="delyn"
+                                checked={
+                                  programdetail.delyn === "N" ? true : false
+                                }
+                                onChange={inputs.inputCheck}
+                                required
+                              />
+                            </div>
+                            <button
+                              className="save"
+                              disabled={this.state.disable}
+                            >
+                              저장
+                            </button>
+                          </form>
                         </TabPanel>
                       </Tabs>
                     </TabPanel>
