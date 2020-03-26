@@ -1,5 +1,5 @@
 import React from "react";
-import "../Main/Main.css";
+import "../Main/Main.scss";
 import MountContentIndex from "./ContentIndex";
 import { postApi } from "../../api";
 import logo from "../../assets/img/logo.png";

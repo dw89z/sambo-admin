@@ -13,12 +13,12 @@
 
   .tree-section {
     margin-top: 3.5rem;
-    width: 65%;
+    width: 60%;
     height: 36rem;
     border: 1px solid $dark;
-    padding: 0.8rem;
+    padding: 1rem;
     padding-bottom: 5rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
     overflow: hidden;
     overflow-y: scroll;
 
@@ -28,7 +28,7 @@
       cursor: pointer;
 
       p {
-        padding: 0.15rem 0 0.15rem 2.7rem;
+        padding: 0.15rem 0 0.15rem 2.9rem;
       }
 
       li {
@@ -36,6 +36,12 @@
         display: flex;
         flex-direction: column;
         filter: grayscale(100%);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 
         &:hover {
           filter: grayscale(0%);
@@ -60,7 +66,7 @@
         background-size: cover;
         position: absolute;
         left: 15px;
-        top: 2px;
+        top: 4px;
       }
 
       &:after {
@@ -68,7 +74,7 @@
         display: block;
         position: absolute;
         left: 0;
-        top: 2px;
+        top: 4px;
       }
     }
 
@@ -145,11 +151,103 @@
     margin-top: 3.5rem;
     height: 36rem;
     border: 1px solid $dark;
-    padding: 1rem 2rem;
+    padding: 1.5rem 2rem;
 
     .title {
       top: 2.25rem;
       transform: translateX(-2rem);
     }
+  }
+}
+
+.pgm-tab {
+  width: 100%;
+  position: relative;
+
+  .tab-list {
+    display: flex;
+    position: absolute;
+    top: -54px;
+    left: calc(-2rem - 1px);
+    width: 100%;
+    height: 20px;
+    align-items: center;
+
+    .tab {
+      font-size: 0.85rem;
+      font-weight: 500;
+      width: 5rem;
+      padding: 0.4rem;
+      text-align: center;
+      border: 1px solid $gray4;
+      border-bottom: 1px solid $dark;
+      color: $gray4;
+      background: $gray;
+      cursor: pointer;
+
+      &.react-tabs__tab--selected {
+        border-color: $pri;
+        font-weight: 600;
+        color: $pri;
+        background: #fff;
+        border-bottom: 1px solid #fff;
+      }
+    }
+  }
+
+  .inner-tab-list {
+    display: flex;
+
+    .inner-tab {
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.25rem 1rem 0.35rem 1rem;
+      text-align: center;
+      border: 1px solid $gray4;
+      border-radius: 10rem;
+      color: $gray4;
+      cursor: pointer;
+      margin: 0 0.5rem;
+      margin-bottom: 1rem;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &.react-tabs__tab--selected {
+        border-color: $pri;
+        background: $pri;
+        color: #fff;
+      }
+    }
+  }
+
+  .input-div {
+    select {
+      width: 40%;
+      padding: 0.25rem 0;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    input {
+      width: 40%;
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    input[type="radio"] {
+      width: auto;
+    }
+
+    input[type="checkbox"] {
+      margin-top: 0.5rem;
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+
+  .save {
+    margin-top: 1.5rem;
   }
 }

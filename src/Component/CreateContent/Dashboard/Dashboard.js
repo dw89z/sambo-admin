@@ -382,7 +382,7 @@ export default class extends React.Component {
     } = this.state;
     return (
       <>
-        <div className="content-component">
+        <div className="content-component dashboard">
           {loading ? (
             <Loading />
           ) : (
