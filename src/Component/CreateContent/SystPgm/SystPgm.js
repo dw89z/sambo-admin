@@ -19,8 +19,13 @@ export default class extends React.Component {
       window_name: "",
       delyn: "N"
     },
-    tabIndex: 0,
-    innerTabIndex: 2,
+    placeholder: {
+      main_id: "-",
+      sub1_id: "-",
+      sub2_id: "-"
+    },
+    tabIndex: 1,
+    innerTabIndex: 0,
     maxMainId: "",
     maxSub1Id: "",
     maxSub2Id: "",
@@ -32,7 +37,8 @@ export default class extends React.Component {
     disable: true,
     mainSelect: 10,
     sub1Select: [],
-    sub2Select: []
+    sub2Select: [],
+    radioVisible: false
   };
 
   tree = {
@@ -65,7 +71,13 @@ export default class extends React.Component {
                   data-sub1id={main.program.sub1_id}
                   data-sub2id={main.program.sub2_id}
                 >
-                  <p onClick={this.tree.toggleClass}>
+                  <p
+                    className="top-tree"
+                    onClick={e => {
+                      this.tree.lookupProgram(e);
+                      this.tree.toggleClass(e);
+                    }}
+                  >
                     {main.program.window_name}
                   </p>
                   <ul className="sub-depth">
@@ -78,7 +90,12 @@ export default class extends React.Component {
                           data-sub1id={sublist.program.sub1_id}
                           data-sub2id={sublist.program.sub2_id}
                         >
-                          <p onClick={this.tree.toggleSubClass}>
+                          <p
+                            onClick={e => {
+                              this.tree.lookupProgram(e);
+                              this.tree.toggleSubClass(e);
+                            }}
+                          >
                             {sublist.program.window_name}
                           </p>
                           <ul className="last-depth">
@@ -91,7 +108,13 @@ export default class extends React.Component {
                                   data-sub1id={last.sub1_id}
                                   data-sub2id={last.sub2_id}
                                 >
-                                  <p>{last.window_name}</p>
+                                  <p
+                                    onClick={e => {
+                                      this.tree.lookupProgram(e);
+                                    }}
+                                  >
+                                    {last.window_name}
+                                  </p>
                                 </li>
                               );
                             })}
@@ -128,6 +151,60 @@ export default class extends React.Component {
         let subMenuHeight = parseInt(subMenu.style.maxHeight);
         parent.style.maxHeight = parentHeight + subMenuHeight + "px";
       }
+    },
+
+    lookupProgram: async e => {
+      this.setState({
+        tabIndex: 1
+      });
+      const parent = e.currentTarget.parentNode;
+      const data = {
+        programdetail: {
+          main_id: parent.dataset.mainid,
+          sub1_id: parent.dataset.sub1id,
+          sub2_id: parent.dataset.sub2id
+        }
+      };
+      const lvlno = parent.dataset.lvlno;
+      await postApi("admin/pm/getprogram", data).then(res => {
+        const {
+          data: {
+            data: { program }
+          }
+        } = res;
+        const placeholder = this.state.placeholder;
+        if (program.window_name === null) {
+          program.window_name = "";
+        }
+
+        if (lvlno === "0") {
+          this.setState({
+            placeholder: {
+              main_id: `${program.sub2_name} (${program.main_id})`
+            },
+            programdetail: program,
+            radioVisible: false
+          });
+        } else if (lvlno === "1") {
+          this.setState({
+            placeholder: {
+              ...placeholder,
+              sub1_id: `${program.sub2_name} (${program.sub1_id})`
+            },
+            programdetail: program,
+            radioVisible: false
+          });
+        } else if (lvlno === "2") {
+          this.setState({
+            placeholder: {
+              ...placeholder,
+              sub2_id: `${program.sub2_name} (${program.sub2_id})`
+            },
+            programdetail: program,
+            radioVisible: true
+          });
+        }
+      });
     }
   };
 
@@ -349,7 +426,7 @@ export default class extends React.Component {
         this.setState({
           programdetail: {
             ...programdetail,
-            sub1_id: sub2id
+            sub2_id: sub2id
           },
           invalid: {
             ...invalid,
@@ -400,23 +477,69 @@ export default class extends React.Component {
           innerLoading: false
         });
       }
-    }
-  };
+    },
 
-  lookupProgram = e => {
-    const data = {
-      programdetail: {
-        main_id: 10,
-        sub1_id: 0,
-        sub2_id: 0
+    updateSubmit: async e => {
+      e.preventDefault();
+      const programdetail = this.state.programdetail;
+      if (programdetail.window_name === "") {
+        this.setState({
+          programdetail: {
+            ...programdetail,
+            window_name: null
+          }
+        });
       }
-    };
-    postApi("admin/pm/getprogram", data).then();
+      try {
+        this.setState({
+          innerLoading: true
+        });
+        await postApi("admin/pm/updateprogram", {
+          programdetail: programdetail
+        }).then(res => {
+          console.log(res);
+        });
+      } catch (error) {
+        alert(error);
+      } finally {
+        await this.tree.getTreeData();
+        this.setState({
+          innerLoading: false
+        });
+      }
+    },
+
+    deleteSubmit: async e => {
+      e.preventDefault();
+      const programdetail = this.state.programdetail;
+      const data = {
+        programdetail: {
+          main_id: programdetail.main_id,
+          sub1_id: programdetail.sub1_id,
+          sub2_id: programdetail.sub2_id
+        }
+      };
+
+      try {
+        this.setState({
+          innerLoading: true
+        });
+        await postApi("admin/pm/deleteprogram", data).then(res => {
+          console.log(res);
+        });
+      } catch (error) {
+        alert(error);
+      } finally {
+        await this.tree.getTreeData();
+        this.setState({
+          innerLoading: false
+        });
+      }
+    }
   };
 
   async componentDidMount() {
     this.tree.getTreeData();
-    this.lookupProgram();
   }
 
   render() {
@@ -429,9 +552,9 @@ export default class extends React.Component {
       maxMainId,
       maxSub1Id,
       sub1Select,
-      sub2Select,
       maxSub2Id,
-      innerTabIndex
+      placeholder,
+      radioVisible
     } = this.state;
     const tree = this.tree;
     const inputs = this.inputs;
@@ -458,8 +581,42 @@ export default class extends React.Component {
                     onSelect={tabIndex => this.setState({ tabIndex })}
                   >
                     <TabList className="tab-list">
-                      <Tab className="tab">신규</Tab>
-                      <Tab className="tab">수정</Tab>
+                      <Tab
+                        className="tab"
+                        onClick={() => {
+                          this.setState({
+                            programdetail: {
+                              main_id: "",
+                              sub1_id: "0",
+                              sub2_id: "0",
+                              io_gubun: "M",
+                              sub2_name: "",
+                              window_name: "",
+                              delyn: "N"
+                            }
+                          });
+                        }}
+                      >
+                        신규
+                      </Tab>
+                      <Tab
+                        className="tab"
+                        onClick={() => {
+                          this.setState({
+                            programdetail: {
+                              main_id: "",
+                              sub1_id: "0",
+                              sub2_id: "0",
+                              io_gubun: "M",
+                              sub2_name: "",
+                              window_name: "",
+                              delyn: "N"
+                            }
+                          });
+                        }}
+                      >
+                        수정
+                      </Tab>
                     </TabList>
 
                     <TabPanel className="tab-panel">
@@ -658,7 +815,7 @@ export default class extends React.Component {
                           </form>
                         </TabPanel>
                         <TabPanel className="tab-panel">
-                          <form>
+                          <form onSubmit={submits.registSubmit}>
                             <div className="input-div">
                               <p>대분류 코드</p>
                               <select
@@ -708,7 +865,7 @@ export default class extends React.Component {
                                   invalid.sub2id ? "error" : "error none"
                                 }
                               >
-                                중분류 코드는 {maxSub2Id}보다 커야합니다.
+                                소분류 코드는 {maxSub2Id}보다 커야합니다.
                               </span>
                             </div>
 
@@ -720,7 +877,7 @@ export default class extends React.Component {
                                 name="sub2_name"
                                 spellCheck="false"
                                 autoComplete="off"
-                                onChange={inputs.inputInOut}
+                                onChange={inputs.inputUpdate}
                                 required
                               />
                             </div>
@@ -730,9 +887,9 @@ export default class extends React.Component {
                               <input
                                 type="text"
                                 placeholder="프로그램 아이디를 입력해 주세요"
-                                name="window_id"
+                                name="window_name"
                                 spellCheck="false"
-                                onChange={inputs.inputInOut}
+                                onChange={inputs.inputUpdate}
                                 required
                               />
                             </div>
@@ -745,6 +902,7 @@ export default class extends React.Component {
                                     name="io_gubun"
                                     id="input"
                                     value="I"
+                                    checked={programdetail.io_gubun === "I"}
                                     onChange={inputs.inputInOut}
                                     required
                                   />
@@ -756,6 +914,7 @@ export default class extends React.Component {
                                     name="io_gubun"
                                     id="lookup"
                                     value="Q"
+                                    checked={programdetail.io_gubun === "Q"}
                                     onChange={inputs.inputInOut}
                                     required
                                   />
@@ -767,6 +926,7 @@ export default class extends React.Component {
                                     name="io_gubun"
                                     id="output"
                                     value="P"
+                                    checked={programdetail.io_gubun === "P"}
                                     onChange={inputs.inputInOut}
                                     required
                                   />
@@ -797,118 +957,139 @@ export default class extends React.Component {
                       </Tabs>
                     </TabPanel>
                     <TabPanel className="tab-panel">
-                      <div className="input-div">
-                        <p>대분류 코드</p>
-                        <input
-                          type="num"
-                          placeholder="대분류 코드를 입력해 주세요 (숫자)"
-                          name="passwd"
-                          spellCheck="false"
-                          autoComplete="off"
-                          onChange={this.inputUpdate}
-                          required
-                        />
-                      </div>
-
-                      <div className="input-div">
-                        <p>중분류 코드</p>
-                        <input
-                          type="text"
-                          placeholder="중분류 코드를 입력해 주세요"
-                          name="cvcod"
-                          spellCheck="false"
-                          autoComplete="off"
-                          onChange={this.inputUpdateCod}
-                          required
-                        />
-                      </div>
-
-                      <div className="input-div">
-                        <p>소분류 코드</p>
-                        <input
-                          type="text"
-                          placeholder="소분류 코드를 입력해 주세요"
-                          name="cvnas"
-                          spellCheck="false"
-                          autoComplete="off"
-                          onChange={this.inputUpdate}
-                          required
-                        />
-                      </div>
-
-                      <div className="input-div">
-                        <p>프로그램명</p>
-                        <input
-                          type="text"
-                          placeholder="프로그램명을 입력해 주세요"
-                          name="cvnas"
-                          spellCheck="false"
-                          autoComplete="off"
-                          onChange={this.inputUpdate}
-                          required
-                        />
-                      </div>
-
-                      <div className="input-div">
-                        <p>WINDOW-ID</p>
-                        <input
-                          type="tel"
-                          placeholder="핸드폰 번호를 입력해 주세요"
-                          name="hphone"
-                          spellCheck="false"
-                          onChange={this.inputUpdate}
-                        />
-                      </div>
-                      <div className="input-div">
-                        <p>입출력 구분</p>
-                        <div className="radio-section">
-                          <div className="radio">
-                            <input
-                              type="radio"
-                              name="auth"
-                              id="normal"
-                              value="0"
-                              onChange={this.inputUpdate}
-                              required
-                            />
-                            <label htmlFor="normal">입력</label>
-                          </div>
-                          <div className="radio">
-                            <input
-                              type="radio"
-                              name="auth"
-                              id="admin"
-                              value="1"
-                              onChange={this.inputUpdate}
-                              required
-                            />
-                            <label htmlFor="admin">조회</label>
-                          </div>
-                          <div className="radio">
-                            <input
-                              type="radio"
-                              name="auth"
-                              id="corop"
-                              value="2"
-                              onChange={this.inputUpdate}
-                              required
-                            />
-                            <label htmlFor="corop">출력</label>
-                          </div>
+                      <form onSubmit={submits.updateSubmit}>
+                        <div className="input-div">
+                          <p>대분류 코드</p>
+                          <input
+                            type="num"
+                            placeholder="-"
+                            value={placeholder.main_id}
+                            name="main_id"
+                            spellCheck="false"
+                            autoComplete="off"
+                            onChange={this.inputUpdate}
+                            required
+                            readOnly
+                          />
                         </div>
-                      </div>
-                      <div className="input-div">
-                        <p>프로그램 사용여부</p>
-                        <input
-                          type="checkbox"
-                          placeholder="프로그램명을 입력해 주세요"
-                          name="cvnas"
-                          spellCheck="false"
-                          autoComplete="off"
-                          onChange={this.inputUpdate}
-                          required
-                        />
-                      </div>
+
+                        <div className="input-div">
+                          <p>중분류 코드</p>
+                          <input
+                            type="text"
+                            placeholder="-"
+                            name="sub1_id"
+                            value={placeholder.sub1_id}
+                            spellCheck="false"
+                            required
+                            readOnly
+                          />
+                        </div>
+
+                        <div className="input-div">
+                          <p>소분류 코드</p>
+                          <input
+                            type="text"
+                            placeholder="-"
+                            name="sub2_id"
+                            value={placeholder.sub2_id}
+                            spellCheck="false"
+                            required
+                            readOnly
+                          />
+                        </div>
+
+                        <div className="input-div">
+                          <p>프로그램명</p>
+                          <input
+                            type="text"
+                            placeholder="프로그램명을 수정할 수 있습니다"
+                            name="sub2_name"
+                            value={programdetail.sub2_name}
+                            onChange={inputs.inputUpdate}
+                            spellCheck="false"
+                            required
+                          />
+                        </div>
+
+                        <div
+                          className={
+                            radioVisible ? "input-div" : "input-div hidden"
+                          }
+                        >
+                          <p>WINDOW-ID</p>
+                          <input
+                            type="text"
+                            placeholder="프로그램 아이디를 수정할 수 있습니다"
+                            name="window_name"
+                            value={programdetail.window_name}
+                            spellCheck="false"
+                            onChange={inputs.inputUpdate}
+                          />
+                        </div>
+
+                        {radioVisible ? (
+                          <div className="input-div">
+                            <p>입출력 구분</p>
+                            <div className="radio-section">
+                              <div className="radio">
+                                <input
+                                  type="radio"
+                                  name="io_gubun"
+                                  id="input"
+                                  value="I"
+                                  checked={programdetail.io_gubun === "I"}
+                                  onChange={inputs.inputInOut}
+                                  required
+                                />
+                                <label htmlFor="input">입력</label>
+                              </div>
+                              <div className="radio">
+                                <input
+                                  type="radio"
+                                  name="io_gubun"
+                                  id="lookup"
+                                  value="Q"
+                                  checked={programdetail.io_gubun === "Q"}
+                                  onChange={inputs.inputInOut}
+                                  required
+                                />
+                                <label htmlFor="lookup">조회</label>
+                              </div>
+                              <div className="radio">
+                                <input
+                                  type="radio"
+                                  name="io_gubun"
+                                  id="output"
+                                  value="P"
+                                  checked={programdetail.io_gubun === "P"}
+                                  onChange={inputs.inputInOut}
+                                  required
+                                />
+                                <label htmlFor="output">출력</label>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+
+                        <div className="input-div">
+                          <p>프로그램 사용여부</p>
+                          <input
+                            type="checkbox"
+                            name="delyn"
+                            checked={programdetail.delyn === "N" ? true : false}
+                            onChange={inputs.inputCheck}
+                            required
+                          />
+                        </div>
+                        <button className="save">저장</button>
+                        <button
+                          className="save delete"
+                          onClick={submits.deleteSubmit}
+                        >
+                          삭제
+                        </button>
+                      </form>
                     </TabPanel>
                   </Tabs>
                 </div>

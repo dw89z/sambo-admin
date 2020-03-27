@@ -14,11 +14,11 @@
   .tree-section {
     margin-top: 3.5rem;
     width: 60%;
-    height: 36rem;
+    height: 37rem;
     border: 1px solid $dark;
     padding: 1rem;
     padding-bottom: 5rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
     overflow: hidden;
     overflow-y: scroll;
 
@@ -28,7 +28,7 @@
       cursor: pointer;
 
       p {
-        padding: 0.15rem 0 0.15rem 2.9rem;
+        padding: 0.15rem 0 0.15rem 2.7rem;
       }
 
       li {
@@ -45,6 +45,7 @@
 
         &:hover {
           filter: grayscale(0%);
+
           p {
             color: $pri;
           }
@@ -56,13 +57,16 @@
       display: block;
       height: auto;
 
+      .top-tree {
+        font-weight: 600;
+      }
+
       &:before {
         content: "";
         display: block;
         width: 26px;
         height: 26px;
-        background: url("../../../assets/img/depth-01.png") center center
-          no-repeat;
+        background: url("../../../assets/img/depth-01.png") center center no-repeat;
         background-size: cover;
         position: absolute;
         left: 15px;
@@ -103,8 +107,7 @@
         display: block;
         width: 26px;
         height: 26px;
-        background: url("../../../assets/img/depth-02.png") center center
-          no-repeat;
+        background: url("../../../assets/img/depth-02.png") center center no-repeat;
         background-size: cover;
         position: absolute;
         left: 15px;
@@ -136,8 +139,7 @@
         display: block;
         width: 26px;
         height: 26px;
-        background: url("../../../assets/img/depth-03.png") center center
-          no-repeat;
+        background: url("../../../assets/img/depth-03.png") center center no-repeat;
         background-size: cover;
         position: absolute;
         left: 15px;
@@ -145,11 +147,12 @@
       }
     }
   }
+
   .panel {
     margin-left: 1rem;
     width: 100%;
     margin-top: 3.5rem;
-    height: 36rem;
+    height: 37rem;
     border: 1px solid $dark;
     padding: 1.5rem 2rem;
 
@@ -236,6 +239,13 @@
       margin-top: 0.25rem;
     }
 
+
+    input:read-only {
+      background: $gray;
+      color: $dark;
+      cursor: default;
+    }
+
     input[type="radio"] {
       width: auto;
     }
@@ -248,6 +258,11 @@
   }
 
   .save {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
+
+    &.delete {
+      margin-left: 0.5rem;
+      background: $red;
+    }
   }
 }
