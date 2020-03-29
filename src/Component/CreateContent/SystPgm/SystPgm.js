@@ -24,7 +24,7 @@ export default class extends React.Component {
       sub1_id: "-",
       sub2_id: "-"
     },
-    tabIndex: 1,
+    tabIndex: 0,
     innerTabIndex: 0,
     maxMainId: "",
     maxSub1Id: "",

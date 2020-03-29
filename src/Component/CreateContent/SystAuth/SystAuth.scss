@@ -53,6 +53,15 @@
       }
     }
   }
+
+  .save {
+    margin: 0;
+    position: absolute;
+    right: 0;
+    width: auto;
+    padding: 0.25rem 0.8rem;
+    background: $pri;
+  }
 }
 
 .table {
