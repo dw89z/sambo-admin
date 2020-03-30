@@ -1,6 +1,7 @@
 import React from "react";
 import "../Main/Main.scss";
 import MountContentIndex from "./ContentIndex";
+import Done from "./common/Done";
 import { postApi } from "../../api";
 import logo from "../../assets/img/logo.png";
 import Loading from "component/Loading";
@@ -12,16 +13,18 @@ class CreateContent extends React.Component {
     currentMode: this.props.currentMode,
     mountedComp: [
       {
-        index: 0,
-        window_name: "대시보드",
-        window_id: "SystAuth"
+        index: 1,
+        window_name: "사용자 등록",
+        window_id: "SystPgm"
       }
     ],
     currentComp: {
-      index: 0,
-      window_name: "대시보드",
-      window_id: "SystAuth"
-    }
+      index: 1,
+      window_name: "사용자 등록",
+      window_id: "SystPgm"
+    },
+    doneMsg: "",
+    errorMsg: ""
   };
 
   uiFunc = {
@@ -114,6 +117,30 @@ class CreateContent extends React.Component {
     }
   };
 
+  msg = {
+    done: msg => {
+      this.setState({
+        doneMsg: msg
+      });
+      setTimeout(() => {
+        this.setState({
+          doneMsg: ""
+        });
+      }, 3500);
+    },
+
+    error: msg => {
+      this.setState({
+        errorMsg: msg
+      });
+      setTimeout(() => {
+        this.setState({
+          errorMsg: ""
+        });
+      }, 3500);
+    }
+  };
+
   async componentDidUpdate(prevProps) {
     if (this.props.currentMode !== prevProps.currentMode) {
       this.setState({
@@ -142,7 +169,7 @@ class CreateContent extends React.Component {
             });
           })
           .catch(err => {
-            console.log(err);
+            alert(err);
           });
       } catch (err) {
       } finally {
@@ -175,6 +202,7 @@ class CreateContent extends React.Component {
 
   createComp() {
     const { mountedComp, currentComp } = this.state;
+    const msg = this.msg;
     const mountedCompRender = mountedComp.map((comp, index) => {
       let component = comp.window_id;
       let CurrentComp = MountContentIndex[component];
@@ -193,6 +221,8 @@ class CreateContent extends React.Component {
             title={currentComp.window_name}
             menuAxis={this.props.menuAxis}
             user={this.props.user}
+            done={msg.done}
+            error={msg.error}
           />
         </div>
       );
@@ -203,7 +233,7 @@ class CreateContent extends React.Component {
 
   render() {
     const { menuAxis } = this.props;
-    const { currentMenu, loading } = this.state;
+    const { currentMenu, loading, doneMsg, errorMsg } = this.state;
     const uiFunc = this.uiFunc;
 
     return (
@@ -212,6 +242,9 @@ class CreateContent extends React.Component {
           <Loading />
         ) : (
           <>
+            {doneMsg || errorMsg ? (
+              <Done done={doneMsg} error={errorMsg} />
+            ) : null}
             <div className={menuAxis ? "header-menu" : "left-menu"}>
               <img src={logo} alt="logo" />
               <ul className="menu">

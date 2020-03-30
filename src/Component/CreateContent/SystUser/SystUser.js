@@ -12,7 +12,7 @@ export default class extends React.Component {
   state = {
     errorSearch: false,
     loading: true,
-    userSearch: "",
+    userSearch: "test",
     users: [],
     selectedRow: {},
     editMode: false,
@@ -94,7 +94,7 @@ export default class extends React.Component {
         }
       },
       {
-        dataField: "",
+        dataField: "edit",
         text: "수정",
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
@@ -108,7 +108,7 @@ export default class extends React.Component {
         hidden: true
       },
       {
-        dataField: "",
+        dataField: "delete",
         text: "삭제",
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
@@ -165,39 +165,6 @@ export default class extends React.Component {
     }
   };
 
-  async componentDidMount() {
-    const params = {
-      searchKeyword: "test"
-    };
-    try {
-      this.setState({
-        loading: true
-      });
-      await postApi("admin/um/searchusers", params).then(res => {
-        const {
-          data: { data }
-        } = res;
-
-        if (data.length !== 0) {
-          this.setState({
-            users: [...data],
-            errorSearch: false
-          });
-        } else {
-          this.setState({
-            users: [],
-            errorSearch: true
-          });
-        }
-      });
-    } catch {
-    } finally {
-      this.setState({
-        loading: false
-      });
-    }
-  }
-
   inputUpdate = e => {
     this.setState({
       [e.target.name]: e.target.value
@@ -207,7 +174,7 @@ export default class extends React.Component {
   editMode = () => {
     const { columns, editMode, openEdit } = this.state;
     const addEdit = {
-      dataField: "",
+      dataField: "edit",
       text: "수정",
       events: {
         onClick: (e, column, columnIndex, row, rowIndex) => {
@@ -245,7 +212,7 @@ export default class extends React.Component {
   deleteMode = () => {
     const { columns, deleteMode } = this.state;
     const addDelete = {
-      dataField: "",
+      dataField: "delete",
       text: "삭제",
       events: {
         onClick: async (e, column, columnIndex, row, rowIndex) => {
@@ -255,7 +222,7 @@ export default class extends React.Component {
               console.log(res.data);
             });
           } catch (error) {
-            console.log(error);
+            alert(error);
           } finally {
             const data = {
               searchKeyword: this.state.userSearch
@@ -267,7 +234,6 @@ export default class extends React.Component {
               const {
                 data: { data }
               } = res;
-              console.log("search", data);
               if (data.length !== 0) {
                 this.setState({
                   users: [...data],
@@ -335,6 +301,39 @@ export default class extends React.Component {
     });
   };
 
+  async componentDidMount() {
+    const params = {
+      searchKeyword: "test"
+    };
+    try {
+      this.setState({
+        loading: true
+      });
+      await postApi("admin/um/searchusers", params).then(res => {
+        const {
+          data: { data }
+        } = res;
+
+        if (data.length !== 0) {
+          this.setState({
+            users: [...data],
+            errorSearch: false
+          });
+        } else {
+          this.setState({
+            users: [],
+            errorSearch: true
+          });
+        }
+      });
+    } catch {
+    } finally {
+      this.setState({
+        loading: false
+      });
+    }
+  }
+
   render() {
     const {
       users,
@@ -344,7 +343,8 @@ export default class extends React.Component {
       selectedRow,
       addMode,
       openEdit,
-      rightPanel
+      rightPanel,
+      userSearch
     } = this.state;
 
     return (
@@ -363,6 +363,7 @@ export default class extends React.Component {
                     placeholder="로그인ID 및 거래처명으로 검색"
                     className="user-search main-search"
                     type="text"
+                    value={userSearch}
                     onChange={this.inputUpdate}
                   />
                   <button></button>
@@ -394,26 +395,6 @@ export default class extends React.Component {
                   data={users}
                   columns={columns}
                 />
-                {/* <ToolkitProvider
-                  wrapperClasses="user-table"
-                  keyField="id"
-                  data={users}
-                  columns={columns}
-                  exportCSV={{
-                    noAutoBOM: false,
-                    blobType: "data:text/csv;charset=utf-8,%EF%BB%BF"
-                  }}
-                >
-                  {props => (
-                    <div>
-                      <ExportCSVButton {...props.csvProps}>
-                        Export CSV!!
-                      </ExportCSVButton>
-                      <hr />
-                      <BootstrapTable {...props.baseProps} />
-                    </div>
-                  )}
-                </ToolkitProvider> */}
               </div>
               <RightPanel
                 addMode={addMode}
@@ -423,6 +404,8 @@ export default class extends React.Component {
                 selectedRow={selectedRow}
                 menuAxis={this.props.menuAxis}
                 user={selectedRow}
+                done={this.props.done}
+                error={this.props.error}
               />
             </>
           )}

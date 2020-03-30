@@ -1,20 +1,33 @@
 @import "../../../scss/Variables.scss";
 
+.contents {
+  &.left {
+    .tree-section {
+      height: 38rem;
+    }
+
+    .pgm-panel {
+      height: 38rem;
+    }
+  }
+}
+
 .syst-pgm {
+  .tree-title {
+    margin-top: 2rem;
+    position: absolute;
+    font-size: 0.8rem;
+  }
+
   .section-wrapper {
     display: flex;
     flex-direction: row;
   }
 
-  .title {
-    margin-top: 2rem;
-    position: absolute;
-  }
-
   .tree-section {
     margin-top: 3.5rem;
     width: 60%;
-    height: 37rem;
+    height: 35.5rem;
     border: 1px solid $dark;
     padding: 1rem;
     padding-bottom: 5rem;
@@ -58,7 +71,7 @@
       height: auto;
 
       .top-tree {
-        font-weight: 600;
+        font-weight: 500;
       }
 
       &:before {
@@ -66,7 +79,8 @@
         display: block;
         width: 26px;
         height: 26px;
-        background: url("../../../assets/img/depth-01.png") center center no-repeat;
+        background: url("../../../assets/img/depth-01.png") center center
+          no-repeat;
         background-size: cover;
         position: absolute;
         left: 15px;
@@ -107,7 +121,8 @@
         display: block;
         width: 26px;
         height: 26px;
-        background: url("../../../assets/img/depth-02.png") center center no-repeat;
+        background: url("../../../assets/img/depth-02.png") center center
+          no-repeat;
         background-size: cover;
         position: absolute;
         left: 15px;
@@ -139,7 +154,8 @@
         display: block;
         width: 26px;
         height: 26px;
-        background: url("../../../assets/img/depth-03.png") center center no-repeat;
+        background: url("../../../assets/img/depth-03.png") center center
+          no-repeat;
         background-size: cover;
         position: absolute;
         left: 15px;
@@ -148,121 +164,138 @@
     }
   }
 
-  .panel {
+  .pgm-panel {
     margin-left: 1rem;
     width: 100%;
     margin-top: 3.5rem;
-    height: 37rem;
+    height: 35.5rem;
     border: 1px solid $dark;
-    padding: 1.5rem 2rem;
+    padding: 2rem 2.5rem;
 
     .title {
       top: 2.25rem;
       transform: translateX(-2rem);
     }
   }
-}
 
-.pgm-tab {
-  width: 100%;
-  position: relative;
-
-  .tab-list {
-    display: flex;
-    position: absolute;
-    top: -54px;
-    left: calc(-2rem - 1px);
+  .pgm-tab {
     width: 100%;
-    height: 20px;
-    align-items: center;
-
-    .tab {
-      font-size: 0.85rem;
-      font-weight: 500;
-      width: 5rem;
-      padding: 0.4rem;
-      text-align: center;
-      border: 1px solid $gray4;
-      border-bottom: 1px solid $dark;
-      color: $gray4;
-      background: $gray;
-      cursor: pointer;
-
-      &.react-tabs__tab--selected {
-        border-color: $pri;
-        font-weight: 600;
-        color: $pri;
-        background: #fff;
-        border-bottom: 1px solid #fff;
-      }
-    }
-  }
-
-  .inner-tab-list {
+    position: relative;
     display: flex;
 
-    .inner-tab {
-      font-size: 0.8rem;
-      font-weight: 500;
-      padding: 0.25rem 1rem 0.35rem 1rem;
-      text-align: center;
-      border: 1px solid $gray4;
-      border-radius: 10rem;
-      color: $gray4;
-      cursor: pointer;
-      margin: 0 0.5rem;
-      margin-bottom: 1rem;
+    .react-tabs__tab-panel--selected {
+      display: block !important;
+    }
 
-      &:first-child {
-        margin-left: 0;
-      }
+    .tab-panel {
+      width: calc(100% - 8rem);
+      display: none;
 
-      &.react-tabs__tab--selected {
-        border-color: $pri;
-        background: $pri;
-        color: #fff;
+      .react-tabs {
+        display: flex;
+        width: 100%;
       }
     }
-  }
 
-  .input-div {
-    select {
-      width: 40%;
-      padding: 0.25rem 0;
-      font-size: 0.9rem;
-      margin-top: 0.5rem;
+    .tab-list {
+      display: flex;
+      position: absolute;
+      top: -62px;
+      left: calc(-2.5rem - 1px);
+      width: 100%;
+      height: 20px;
+      align-items: center;
+
+      .tab {
+        font-size: 0.85rem;
+        font-weight: 500;
+        width: 5rem;
+        padding: 0.4rem;
+        text-align: center;
+        border: 1px solid $gray4;
+        border-bottom: 1px solid $dark;
+        color: $gray4;
+        background: $gray;
+        cursor: pointer;
+
+        &.react-tabs__tab--selected {
+          border-color: $pri;
+          font-weight: 600;
+          color: $pri;
+          background: #fff;
+          border-bottom: 1px solid #fff;
+        }
+      }
     }
 
-    input {
-      width: 40%;
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
+    .inner-tab-list {
+      display: flex;
+      flex-direction: column;
+      margin-right: 2rem;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      .inner-tab {
+        box-sizing: initial;
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 0.25rem 0;
+        text-align: left;
+        border-bottom: 4px solid #fff;
+        color: $gray4;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        margin-right: 2.5rem;
+
+        &.react-tabs__tab--selected {
+          border-color: $pri;
+          color: $pri;
+        }
+      }
     }
 
+    .input-div {
+      select {
+        width: 60%;
+        padding: 0.25rem 0;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
 
-    input:read-only {
-      background: $gray;
-      color: $dark;
-      cursor: default;
+      input {
+        width: 60%;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+      }
+
+      input:read-only {
+        background: $gray;
+        color: $dark;
+        cursor: default;
+      }
+
+      input[type="radio"] {
+        width: auto;
+      }
+
+      input[type="checkbox"] {
+        margin-top: 0.5rem;
+        width: 1.2rem;
+        height: 1.2rem;
+      }
     }
 
-    input[type="radio"] {
-      width: auto;
-    }
+    .save {
+      margin-top: 1rem;
 
-    input[type="checkbox"] {
-      margin-top: 0.5rem;
-      width: 1.2rem;
-      height: 1.2rem;
-    }
-  }
-
-  .save {
-    margin-top: 1rem;
-
-    &.delete {
-      margin-left: 0.5rem;
-      background: $red;
+      &.delete {
+        margin-left: 0.5rem;
+        background: $red;
+      }
     }
   }
 }

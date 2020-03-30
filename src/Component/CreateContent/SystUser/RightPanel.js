@@ -46,7 +46,6 @@ class RightPanel extends React.Component {
   };
 
   inputUpdateId = e => {
-    const { addMode } = this.props;
     const data = {
       userid: e.target.value.trim()
     };
@@ -183,17 +182,21 @@ class RightPanel extends React.Component {
     if (addMode) {
       await postApi("admin/um/user", data).then(res => {
         console.log("regist", res);
-        const { data } = res;
-        if (!data.errorCode) {
+        if (!res.data.errorCode) {
+          this.props.done(res.data.data.message);
           this.props.closeAllMode();
+        } else {
+          this.props.error(res.data.errorMessage);
         }
       });
     } else if (openEdit) {
       await putApi("admin/um/user", data).then(res => {
         console.log("edit", res);
-        const { data } = res;
-        if (!data.errorCode) {
+        if (!res.data.errorCode) {
+          this.props.done(res.data.data.message);
           this.props.closeAllMode();
+        } else {
+          this.props.error(res.data.errorMessage);
         }
       });
     }
@@ -219,7 +222,9 @@ class RightPanel extends React.Component {
   componentDidUpdate(props) {
     if (props.openEdit !== this.props.openEdit) {
       this.setState({
-        user: this.props.selectedRow
+        user: this.props.selectedRow,
+        idpass: true,
+        cvcodpass: true
       });
     }
     if (props.addMode !== this.props.addMode) {
@@ -263,8 +268,16 @@ class RightPanel extends React.Component {
               : "right-panel"
           }
         >
-          <h3>{this.props.title}</h3>
-          <div className="close-btn" onClick={this.props.closeAllMode}>
+          <h3 className="title">{this.props.title}</h3>
+          <div
+            className="close-btn"
+            onClick={() => {
+              this.setState({
+                cvcodList: []
+              });
+              this.props.closeAllMode();
+            }}
+          >
             <img src={close} alt="" />
           </div>
           <form onSubmit={this.submitUser}>
@@ -278,6 +291,7 @@ class RightPanel extends React.Component {
                 onChange={this.inputUpdateId}
                 value={user.logid}
                 autoComplete="off"
+                readOnly={this.props.openEdit}
                 required
               />
               <span className={error.id.error ? "error" : "error none"}>

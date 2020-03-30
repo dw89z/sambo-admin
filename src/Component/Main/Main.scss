@@ -148,7 +148,7 @@
   top: 2.5rem;
   left: 0rem;
   background: #fff;
-  z-index: 999;
+  z-index: 99;
   border-bottom: 1px solid #c4b9ae;
 
   img {
@@ -236,7 +236,7 @@
 .tabs {
   position: absolute;
   display: flex;
-  z-index: 99;
+  z-index: 50;
   top: 5.95rem;
   left: 1rem;
   width: 100%;
@@ -329,11 +329,12 @@
   border-top-right-radius: 0;
   padding: 1rem;
   border: 1px solid $gray3;
+  overflow-y: scroll;
 
   &.left {
     width: calc(100% - 15rem);
     height: calc(100% - 8.5rem);
-    top: 5.55rem;
+    top: 5.65rem;
     left: 14rem;
   }
 }
@@ -341,7 +342,6 @@
 .content-inner {
   width: calc(100% - 2rem);
   height: calc(100% - 2rem);
-  overflow: hidden;
   position: absolute;
   opacity: 0;
   visibility: hidden;

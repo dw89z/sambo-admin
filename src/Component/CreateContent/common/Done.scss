@@ -1,0 +1,33 @@
+@import "../../../scss/Variables.scss";
+
+.common {
+  visibility: hidden;
+
+  &.active {
+    visibility: visible;
+  }
+}
+.msg {
+  font-size: 0.9rem;
+  position: fixed;
+  z-index: 1000;
+  bottom: 25%;
+  left: 50%;
+  transform: translate3d(-50%, 2rem, 0);
+  background: $pri;
+  color: #fff;
+  padding: 0.35rem 1.5rem 0.45rem;
+  border-radius: 5rem;
+  box-shadow: 0 0 30px rgba(20, 30, 50, 0.3);
+  transition: all 0.5s;
+  opacity: 0;
+
+  &.error {
+    background: $red;
+  }
+
+  &.active {
+    transform: translate3d(-50%, 0, 0);
+    opacity: 1;
+  }
+}

@@ -56,7 +56,8 @@ export default class extends React.Component {
     },
     toDeleteList: [],
     checkedList: [],
-    selected: []
+    selected: [],
+    done: "정상적으로 처리를 완료하였습니다."
   };
 
   inputUpdate = e => {
@@ -188,6 +189,11 @@ export default class extends React.Component {
           this.setState({
             result
           });
+          if (!res.data.errorCode) {
+            this.props.done(this.state.done);
+          } else {
+            this.props.error(res.data.errorMessage);
+          }
         })
         .catch(err => {});
     } catch (error) {
@@ -219,7 +225,7 @@ export default class extends React.Component {
   }
 
   render() {
-    const { loading, errorSearch, authList, columns, userList } = this.state;
+    const { loading, authList, columns, userList } = this.state;
 
     return (
       <>

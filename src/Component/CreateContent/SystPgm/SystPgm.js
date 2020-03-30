@@ -11,13 +11,13 @@ export default class extends React.Component {
     regexp: /^[0-9\b]+$/,
     data: [],
     programdetail: {
-      main_id: "10",
+      main_id: "",
       sub1_id: "0",
       sub2_id: "0",
       io_gubun: "M",
-      sub2_name: "SCM",
+      sub2_name: "",
       window_name: "",
-      delyn: "N"
+      delyn: "Y"
     },
     placeholder: {
       main_id: "-",
@@ -25,14 +25,13 @@ export default class extends React.Component {
       sub2_id: "-"
     },
     tabIndex: 0,
-    innerTabIndex: 0,
-    maxMainId: "",
+    innerTabIndex: 1,
     maxSub1Id: "",
     maxSub2Id: "",
     invalid: {
-      mainid: false,
-      sub1id: false,
-      sub2id: false
+      main_id: false,
+      sub1_id: false,
+      sub2_id: false
     },
     disable: true,
     mainSelect: 10,
@@ -219,6 +218,16 @@ export default class extends React.Component {
       });
     },
 
+    inputSelect: e => {
+      const programdetail = this.state.programdetail;
+      this.setState({
+        programdetail: {
+          ...programdetail,
+          [e.target.name]: e.target.value
+        }
+      });
+    },
+
     inputCheck: e => {
       const programdetail = this.state.programdetail;
       if (e.target.checked === true) {
@@ -238,151 +247,73 @@ export default class extends React.Component {
       }
     },
 
-    inputChange: e => {
+    inputVali: (e, id, list) => {
       const programdetail = this.state.programdetail;
-      this.setState({
-        programdetail: {
-          ...programdetail,
-          [e.target.name]: e.target.value
-        }
-      });
-    },
-
-    inputChangeSub1Handle: e => {
-      const programdetail = this.state.programdetail;
-      const data = this.state.data;
-      const mainid = e.target.value;
-      const selected = data.filter(main => {
-        return main.program.main_id === mainid;
-      });
-      const sub1Select = selected[0].sublist.map(sub => sub.program);
-      const sub2Arr = selected[0].sublist.map(sub => sub.sublist);
-      const sub2Select = sub2Arr[0];
-
-      this.setState({
-        programdetail: {
-          ...programdetail,
-          [e.target.name]: e.target.value
-        },
-        sub1Select,
-        sub2Select,
-        mainSelect: mainid
-      });
-    },
-
-    inputChangeSub2Handle: e => {
-      const programdetail = this.state.programdetail;
-      const data = this.state.data;
-      const mainid = this.state.mainSelect;
-      const selected = data.filter(main => {
-        return parseInt(main.program.main_id) === parseInt(mainid);
-      });
-      const sub1Select = selected[0].sublist.filter(sub => {
-        return parseInt(sub.program.sub1_id) === parseInt(e.target.value);
-      });
-      const sub2Select = sub1Select[0].sublist.map(sub2 => sub2);
-      this.setState({
-        programdetail: {
-          ...programdetail,
-          [e.target.name]: e.target.value
-        },
-        sub2Select
-      });
-    },
-
-    inputMain: e => {
-      const mainid = e.target.value;
-      const data = this.state.data;
       const invalid = this.state.invalid;
-      const limit = data[data.length - 1].program.main_id;
-      const programdetail = this.state.programdetail;
-      this.setState({
-        maxMainId: limit
-      });
-
-      if (mainid === "" || this.state.regexp.test(mainid)) {
+      if (id === "" || this.state.regexp.test(id)) {
         this.setState({
           programdetail: {
             ...programdetail,
-            main_id: mainid
+            [e.target.name]: id
           }
         });
-        if (mainid > limit) {
+        if (list.includes(id)) {
           this.setState({
             invalid: {
               ...invalid,
-              mainid: false
+              [e.target.name]: true
             },
-            disable: false
+            disable: true
           });
         } else {
           this.setState({
             invalid: {
               ...invalid,
-              mainid: true
+              [e.target.name]: false
             },
-            disable: true
+            disable: false
           });
-        }
-      }
-    },
-
-    inputSub1: e => {
-      const sub1id = e.target.value;
-      const invalid = this.state.invalid;
-      const programdetail = this.state.programdetail;
-      const data = this.state.data;
-      const selected = data.filter(main => {
-        return (
-          parseInt(main.program.main_id) === parseInt(programdetail.main_id)
-        );
-      });
-      const sublist = selected.map(selected => selected.sublist);
-      const subArr = sublist[0];
-
-      if (subArr.length) {
-        const limit = subArr[subArr.length - 1].program.sub1_id;
-        this.setState({
-          maxSub1Id: limit
-        });
-
-        if (sub1id === "" || this.state.regexp.test(sub1id)) {
-          this.setState({
-            programdetail: {
-              ...programdetail,
-              sub1_id: sub1id
-            }
-          });
-          if (sub1id > limit) {
-            this.setState({
-              invalid: {
-                ...invalid,
-                sub1id: false
-              },
-              disable: false
-            });
-          } else {
-            this.setState({
-              invalid: {
-                ...invalid,
-                sub1id: true
-              },
-              disable: true
-            });
-          }
         }
       } else {
         this.setState({
           programdetail: {
             ...programdetail,
-            sub1_id: sub1id
-          },
-          invalid: {
-            ...invalid,
-            sub1id: false
-          },
-          disable: false
+            [e.target.name]: ""
+          }
         });
+      }
+    },
+
+    inputMain: e => {
+      const programdetail = this.state.programdetail;
+      const data = this.state.data;
+      const id = parseInt(e.target.value);
+      const list = data.map(list => parseInt(list.program.main_id));
+
+      if (e.target.name === "main_id") {
+        this.inputs.inputVali(e, id, list);
+      } else if (e.target.name === "sub1_id") {
+        const selected = data.filter(main => {
+          return (
+            parseInt(main.program.main_id) === parseInt(programdetail.main_id)
+          );
+        });
+        const sub1Arr = selected.map(selected => selected.sublist);
+        const sub1listPop = sub1Arr.pop();
+        const sub1list = sub1listPop.map(sub => parseInt(sub.program.sub1_id));
+        console.log(sub1list);
+        this.inputs.inputVali(e, id, sub1list);
+      } else if (e.target.name === "sub2_id") {
+        const selected = data.filter(main => {
+          return (
+            parseInt(main.program.main_id) === parseInt(programdetail.main_id)
+          );
+        });
+        const sub1Arr = selected.map(selected => selected.sublist);
+        const sub1listPop = sub1Arr.pop();
+        const sub1list = sub1listPop.map(sub => parseInt(sub.program.sub1_id));
+        console.log(sub1list);
+        this.inputs.inputVali(e, id, sub1list);
       }
     },
 
@@ -391,6 +322,7 @@ export default class extends React.Component {
       const sub2Select = this.state.sub2Select;
       const sub2id = e.target.value;
       const invalid = this.state.invalid;
+
       if (sub2Select.length) {
         const limit = sub2Select[sub2Select.length - 1].sub2_id;
         this.setState({
@@ -404,7 +336,8 @@ export default class extends React.Component {
               sub2_id: sub2id
             }
           });
-          if (sub2id > limit) {
+
+          if (parseInt(sub2id) === parseInt(limit)) {
             this.setState({
               invalid: {
                 ...invalid,
@@ -422,7 +355,7 @@ export default class extends React.Component {
             });
           }
         }
-      } else {
+      } else if (this.state.regexp.test(sub2id)) {
         this.setState({
           programdetail: {
             ...programdetail,
@@ -434,17 +367,14 @@ export default class extends React.Component {
           },
           disable: false
         });
+      } else {
+        this.setState({
+          programdetail: {
+            ...programdetail,
+            sub2_id: ""
+          }
+        });
       }
-    },
-
-    inputInOut: e => {
-      const programdetail = this.state.programdetail;
-      this.setState({
-        programdetail: {
-          ...programdetail,
-          [e.target.name]: e.target.value
-        }
-      });
     }
   };
 
@@ -467,7 +397,11 @@ export default class extends React.Component {
         await postApi("admin/pm/registprogram", {
           programdetail: programdetail
         }).then(res => {
-          console.log(res);
+          if (!res.data.errorCode) {
+            this.props.done(res.data.data.message);
+          } else {
+            this.props.error(res.data.errorMessage);
+          }
         });
       } catch (error) {
         alert(error);
@@ -497,7 +431,11 @@ export default class extends React.Component {
         await postApi("admin/pm/updateprogram", {
           programdetail: programdetail
         }).then(res => {
-          console.log(res);
+          if (!res.data.errorCode) {
+            this.props.done(res.data.data.message);
+          } else {
+            this.props.error(res.data.errorMessage);
+          }
         });
       } catch (error) {
         alert(error);
@@ -525,7 +463,11 @@ export default class extends React.Component {
           innerLoading: true
         });
         await postApi("admin/pm/deleteprogram", data).then(res => {
-          console.log(res);
+          if (!res.data.errorCode) {
+            this.props.done(res.data.data.message);
+          } else {
+            this.props.error(res.data.errorMessage);
+          }
         });
       } catch (error) {
         alert(error);
@@ -539,6 +481,9 @@ export default class extends React.Component {
   };
 
   async componentDidMount() {
+    this.setState({
+      tabIndex: 0
+    });
     this.tree.getTreeData();
   }
 
@@ -549,17 +494,13 @@ export default class extends React.Component {
       data,
       programdetail,
       invalid,
-      maxMainId,
-      maxSub1Id,
       sub1Select,
-      maxSub2Id,
       placeholder,
       radioVisible
     } = this.state;
     const tree = this.tree;
     const inputs = this.inputs;
     const submits = this.submits;
-    console.log(programdetail);
 
     return (
       <>
@@ -570,11 +511,11 @@ export default class extends React.Component {
           ) : (
             <>
               <div className="section-wrapper">
-                <h5 className="title">프로그램 목록</h5>
+                <h5 className="tree-title">프로그램 목록</h5>
                 <div className="tree-section">
                   {innerLoading ? <Loading /> : tree.treeStr(data)}
                 </div>
-                <div className="panel">
+                <div className="pgm-panel">
                   <Tabs
                     className="pgm-tab"
                     selectedIndex={this.state.tabIndex}
@@ -682,14 +623,14 @@ export default class extends React.Component {
                             프로그램
                           </Tab>
                         </TabList>
-                        <TabPanel>
+                        <TabPanel className="tab-panel">
                           <form onSubmit={submits.registSubmit}>
                             <div className="input-div">
                               <p>대분류 코드</p>
                               <input
                                 type="num"
                                 placeholder="대분류 코드를 입력해 주세요 (숫자)"
-                                name="mainid"
+                                name="main_id"
                                 spellCheck="false"
                                 autoComplete="off"
                                 onChange={inputs.inputMain}
@@ -698,10 +639,10 @@ export default class extends React.Component {
                               />
                               <span
                                 className={
-                                  invalid.mainid ? "error" : "error none"
+                                  invalid.main_id ? "error" : "error none"
                                 }
                               >
-                                대분류 코드는 {maxMainId}보다 커야합니다.
+                                이미 존재하는 코드입니다
                               </span>
                             </div>
 
@@ -728,7 +669,6 @@ export default class extends React.Component {
                                   programdetail.delyn === "N" ? true : false
                                 }
                                 onChange={inputs.inputCheck}
-                                required
                               />
                             </div>
                             <button
@@ -746,7 +686,7 @@ export default class extends React.Component {
                               <select
                                 name="main_id"
                                 id="main_id"
-                                onChange={inputs.inputChange}
+                                onChange={inputs.inputUpdate}
                               >
                                 {data.map((main, index) => (
                                   <option
@@ -762,21 +702,21 @@ export default class extends React.Component {
                             <div className="input-div">
                               <p>중분류 코드</p>
                               <input
-                                type="text"
+                                type="num"
                                 placeholder="중분류 코드를 입력해 주세요 (숫자)"
                                 name="sub1_id"
                                 spellCheck="false"
                                 autoComplete="off"
                                 value={programdetail.sub1_id}
-                                onChange={inputs.inputSub1}
+                                onChange={inputs.inputMain}
                                 required
                               />
                               <span
                                 className={
-                                  invalid.sub1id ? "error" : "error none"
+                                  invalid.sub1_id ? "error" : "error none"
                                 }
                               >
-                                중분류 코드는 {maxSub1Id}보다 커야합니다.
+                                이미 존재하는 코드입니다
                               </span>
                             </div>
 
@@ -803,7 +743,6 @@ export default class extends React.Component {
                                   programdetail.delyn === "N" ? true : false
                                 }
                                 onChange={inputs.inputCheck}
-                                required
                               />
                             </div>
                             <button
@@ -821,7 +760,7 @@ export default class extends React.Component {
                               <select
                                 name="main_id"
                                 id="main_id"
-                                onChange={inputs.inputChangeSub1Handle}
+                                onChange={inputs.inputUpdate}
                               >
                                 {data.map((main, index) => (
                                   <option
@@ -857,6 +796,7 @@ export default class extends React.Component {
                                 name="sub2_id"
                                 spellCheck="false"
                                 autoComplete="off"
+                                value={programdetail.sub2_id}
                                 onChange={inputs.inputSub2}
                                 required
                               />
@@ -865,7 +805,7 @@ export default class extends React.Component {
                                   invalid.sub2id ? "error" : "error none"
                                 }
                               >
-                                소분류 코드는 {maxSub2Id}보다 커야합니다.
+                                이미 존재하는 코드입니다
                               </span>
                             </div>
 
@@ -903,7 +843,7 @@ export default class extends React.Component {
                                     id="input"
                                     value="I"
                                     checked={programdetail.io_gubun === "I"}
-                                    onChange={inputs.inputInOut}
+                                    onChange={inputs.InputUpdate}
                                     required
                                   />
                                   <label htmlFor="input">입력</label>
@@ -915,7 +855,7 @@ export default class extends React.Component {
                                     id="lookup"
                                     value="Q"
                                     checked={programdetail.io_gubun === "Q"}
-                                    onChange={inputs.inputInOut}
+                                    onChange={inputs.InputUpdate}
                                     required
                                   />
                                   <label htmlFor="lookup">조회</label>
@@ -927,7 +867,7 @@ export default class extends React.Component {
                                     id="output"
                                     value="P"
                                     checked={programdetail.io_gubun === "P"}
-                                    onChange={inputs.inputInOut}
+                                    onChange={inputs.InputUpdate}
                                     required
                                   />
                                   <label htmlFor="output">출력</label>
@@ -943,7 +883,6 @@ export default class extends React.Component {
                                   programdetail.delyn === "N" ? true : false
                                 }
                                 onChange={inputs.inputCheck}
-                                required
                               />
                             </div>
                             <button
@@ -1039,7 +978,7 @@ export default class extends React.Component {
                                   id="input"
                                   value="I"
                                   checked={programdetail.io_gubun === "I"}
-                                  onChange={inputs.inputInOut}
+                                  onChange={inputs.InputUpdate}
                                   required
                                 />
                                 <label htmlFor="input">입력</label>
@@ -1051,7 +990,7 @@ export default class extends React.Component {
                                   id="lookup"
                                   value="Q"
                                   checked={programdetail.io_gubun === "Q"}
-                                  onChange={inputs.inputInOut}
+                                  onChange={inputs.InputUpdate}
                                   required
                                 />
                                 <label htmlFor="lookup">조회</label>
@@ -1063,7 +1002,7 @@ export default class extends React.Component {
                                   id="output"
                                   value="P"
                                   checked={programdetail.io_gubun === "P"}
-                                  onChange={inputs.inputInOut}
+                                  onChange={inputs.InputUpdate}
                                   required
                                 />
                                 <label htmlFor="output">출력</label>
@@ -1079,7 +1018,6 @@ export default class extends React.Component {
                             name="delyn"
                             checked={programdetail.delyn === "N" ? true : false}
                             onChange={inputs.inputCheck}
-                            required
                           />
                         </div>
                         <button className="save">저장</button>

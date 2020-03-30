@@ -78,7 +78,8 @@
     cursor: pointer;
     width: 2rem;
     height: 2rem;
-    background: $pri url("../../../assets/img/search.svg") center center no-repeat;
+    background: $pri url("../../../assets/img/search.svg") center center
+      no-repeat;
     background-size: 70%;
     padding-top: 0.2rem;
 
@@ -120,7 +121,7 @@
 
   table {
     width: 100%;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-align: left;
   }
 
@@ -129,6 +130,7 @@
     border: 1px solid $gray3;
     padding: 0.55rem 0.45rem;
     border-left: none;
+    font-weight: 300;
   }
 
   thead {
@@ -137,10 +139,12 @@
       background: $gray;
       position: sticky;
       top: 0;
+      font-weight: 600;
 
       &.sortable {
         cursor: pointer;
-        background: $gray2 url("../../../assets/img/sort.svg") right 4px center no-repeat;
+        background: $gray2 url("../../../assets/img/sort.svg") right 4px center
+          no-repeat;
         background-size: 0.85rem;
       }
     }
@@ -167,7 +171,7 @@
 
 .right-panel {
   position: fixed;
-  top: 5.5rem;
+  top: 3.5rem;
   right: 0;
   width: 40rem;
   background: #fff;
@@ -179,6 +183,10 @@
   box-shadow: -10px 0 60px rgba(30, 60, 90, 0.2);
   padding: 2rem;
   padding-top: 1.5rem;
+
+  .title {
+    margin-bottom: 0.7rem;
+  }
 
   .close-btn {
     cursor: pointer;
@@ -226,13 +234,13 @@
   }
 
   .search-cod-list {
-    width: 50%;
+    width: 65%;
     position: absolute;
     background: #fff;
     border: 1px solid $pri;
     border-top: none;
     z-index: 99;
-    top: 2.7rem;
+    top: 51px;
     font-size: 0.7rem;
     height: 15rem;
     overflow-y: scroll;
@@ -297,12 +305,21 @@
   input[type="radio"] {
     width: auto;
   }
+
+  input:read-only {
+    background: $gray;
+    cursor: default;
+
+    &:focus {
+      border-color: $gray3;
+    }
+  }
 }
 
 .save {
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
   font-weight: 600;
   color: #fff;
   background: $pri;
