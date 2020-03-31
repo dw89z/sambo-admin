@@ -12,8 +12,8 @@ export default class extends React.Component {
     data: [],
     programdetail: {
       main_id: "",
-      sub1_id: "0",
-      sub2_id: "0",
+      sub1_id: "",
+      sub2_id: "",
       io_gubun: "M",
       sub2_name: "",
       window_name: "",
@@ -25,7 +25,7 @@ export default class extends React.Component {
       sub2_id: "-"
     },
     tabIndex: 0,
-    innerTabIndex: 1,
+    innerTabIndex: 0,
     maxSub1Id: "",
     maxSub2Id: "",
     invalid: {
@@ -46,9 +46,9 @@ export default class extends React.Component {
         const {
           data: { data }
         } = res;
-        const sub1Select = data[0].sublist.map(sub => sub.program);
+        const sub1Select = data[0].sublist;
         const sub1SubList = data[0].sublist.map(sub => sub.sublist);
-        const sub2Select = sub1SubList[0].map(sub2 => sub2);
+        const sub2Select = sub1SubList[0].map(sub2 => parseInt(sub2.sub2_id));
         this.setState({
           data: data,
           sub1Select,
@@ -209,7 +209,7 @@ export default class extends React.Component {
 
   inputs = {
     inputUpdate: e => {
-      const programdetail = this.state.programdetail;
+      const { programdetail } = this.state;
       this.setState({
         programdetail: {
           ...programdetail,
@@ -219,13 +219,90 @@ export default class extends React.Component {
     },
 
     inputSelect: e => {
-      const programdetail = this.state.programdetail;
-      this.setState({
-        programdetail: {
-          ...programdetail,
-          [e.target.name]: e.target.value
+      const { programdetail, data, innerTabIndex } = this.state;
+      const id = e.target.value;
+      if (e.target.name === "main_id") {
+        const list = data.filter(data => {
+          let result;
+          if (data.program.main_id === id) {
+            result = data.sublist;
+          }
+          return result;
+        });
+        const sub1Select = list[0].sublist;
+        if (innerTabIndex === 1) {
+          this.setState({
+            programdetail: {
+              ...programdetail,
+              [e.target.name]: e.target.value,
+              sub1_id: "",
+              sub2_id: "0"
+            },
+            invalid: {
+              main_id: false,
+              sub1_id: false,
+              sub2_id: false
+            },
+            sub1Select
+          });
+        } else {
+          this.setState({
+            programdetail: {
+              ...programdetail,
+              [e.target.name]: e.target.value,
+              sub1_id: "10",
+              sub2_id: ""
+            },
+            invalid: {
+              main_id: false,
+              sub1_id: false,
+              sub2_id: false
+            },
+            sub1Select
+          });
         }
-      });
+      } else if (e.target.name === "sub1_id") {
+        const { sub1Select } = this.state;
+        const sublist = sub1Select.filter(sub => {
+          let result;
+          if (sub.program.sub1_id === e.target.value) {
+            result = sub.sublist;
+          }
+          return result;
+        });
+        console.log(sublist);
+        const sub2list = sublist[0].sublist;
+        const sub2Select = sub2list.map(sub => parseInt(sub.sub2_id));
+        this.setState({
+          programdetail: {
+            ...programdetail,
+            [e.target.name]: e.target.value,
+            sub2_id: ""
+          },
+          invalid: {
+            main_id: false,
+            sub1_id: false,
+            sub2_id: false
+          },
+          sub2Select
+        });
+      }
+    },
+
+    inputMain: e => {
+      const { data, sub1Select, sub2Select } = this.state;
+      const id = parseInt(e.target.value);
+      const list = data.map(list => parseInt(list.program.main_id));
+
+      if (e.target.name === "main_id") {
+        this.inputs.inputVali(e, id, list);
+      } else if (e.target.name === "sub1_id") {
+        const sub1list = sub1Select.map(sub => parseInt(sub.program.sub1_id));
+
+        this.inputs.inputVali(e, id, sub1list);
+      } else if (e.target.name === "sub2_id") {
+        this.inputs.inputVali(e, id, sub2Select);
+      }
     },
 
     inputCheck: e => {
@@ -248,8 +325,7 @@ export default class extends React.Component {
     },
 
     inputVali: (e, id, list) => {
-      const programdetail = this.state.programdetail;
-      const invalid = this.state.invalid;
+      const { programdetail, invalid } = this.state;
       if (id === "" || this.state.regexp.test(id)) {
         this.setState({
           programdetail: {
@@ -282,106 +358,13 @@ export default class extends React.Component {
           }
         });
       }
-    },
-
-    inputMain: e => {
-      const programdetail = this.state.programdetail;
-      const data = this.state.data;
-      const id = parseInt(e.target.value);
-      const list = data.map(list => parseInt(list.program.main_id));
-
-      if (e.target.name === "main_id") {
-        this.inputs.inputVali(e, id, list);
-      } else if (e.target.name === "sub1_id") {
-        const selected = data.filter(main => {
-          return (
-            parseInt(main.program.main_id) === parseInt(programdetail.main_id)
-          );
-        });
-        const sub1Arr = selected.map(selected => selected.sublist);
-        const sub1listPop = sub1Arr.pop();
-        const sub1list = sub1listPop.map(sub => parseInt(sub.program.sub1_id));
-        console.log(sub1list);
-        this.inputs.inputVali(e, id, sub1list);
-      } else if (e.target.name === "sub2_id") {
-        const selected = data.filter(main => {
-          return (
-            parseInt(main.program.main_id) === parseInt(programdetail.main_id)
-          );
-        });
-        const sub1Arr = selected.map(selected => selected.sublist);
-        const sub1listPop = sub1Arr.pop();
-        const sub1list = sub1listPop.map(sub => parseInt(sub.program.sub1_id));
-        console.log(sub1list);
-        this.inputs.inputVali(e, id, sub1list);
-      }
-    },
-
-    inputSub2: e => {
-      const programdetail = this.state.programdetail;
-      const sub2Select = this.state.sub2Select;
-      const sub2id = e.target.value;
-      const invalid = this.state.invalid;
-
-      if (sub2Select.length) {
-        const limit = sub2Select[sub2Select.length - 1].sub2_id;
-        this.setState({
-          maxSub2Id: limit
-        });
-
-        if (sub2id === "" || this.state.regexp.test(sub2id)) {
-          this.setState({
-            programdetail: {
-              ...programdetail,
-              sub2_id: sub2id
-            }
-          });
-
-          if (parseInt(sub2id) === parseInt(limit)) {
-            this.setState({
-              invalid: {
-                ...invalid,
-                sub2id: false
-              },
-              disable: false
-            });
-          } else {
-            this.setState({
-              invalid: {
-                ...invalid,
-                sub2id: true
-              },
-              disable: true
-            });
-          }
-        }
-      } else if (this.state.regexp.test(sub2id)) {
-        this.setState({
-          programdetail: {
-            ...programdetail,
-            sub2_id: sub2id
-          },
-          invalid: {
-            ...invalid,
-            sub2id: false
-          },
-          disable: false
-        });
-      } else {
-        this.setState({
-          programdetail: {
-            ...programdetail,
-            sub2_id: ""
-          }
-        });
-      }
     }
   };
 
   submits = {
     registSubmit: async e => {
       e.preventDefault();
-      const programdetail = this.state.programdetail;
+      const { programdetail } = this.state;
       if (programdetail.window_name === "") {
         this.setState({
           programdetail: {
@@ -397,6 +380,7 @@ export default class extends React.Component {
         await postApi("admin/pm/registprogram", {
           programdetail: programdetail
         }).then(res => {
+          console.log(res);
           if (!res.data.errorCode) {
             this.props.done(res.data.data.message);
           } else {
@@ -415,7 +399,7 @@ export default class extends React.Component {
 
     updateSubmit: async e => {
       e.preventDefault();
-      const programdetail = this.state.programdetail;
+      const { programdetail } = this.state;
       if (programdetail.window_name === "") {
         this.setState({
           programdetail: {
@@ -449,7 +433,7 @@ export default class extends React.Component {
 
     deleteSubmit: async e => {
       e.preventDefault();
-      const programdetail = this.state.programdetail;
+      const { programdetail } = this.state;
       const data = {
         programdetail: {
           main_id: programdetail.main_id,
@@ -481,9 +465,6 @@ export default class extends React.Component {
   };
 
   async componentDidMount() {
-    this.setState({
-      tabIndex: 0
-    });
     this.tree.getTreeData();
   }
 
@@ -534,14 +515,15 @@ export default class extends React.Component {
                               sub2_name: "",
                               window_name: "",
                               delyn: "N"
-                            }
+                            },
+                            innerTabIndex: 0
                           });
                         }}
                       >
                         신규
                       </Tab>
                       <Tab
-                        className="tab"
+                        className="tab edit"
                         onClick={() => {
                           this.setState({
                             programdetail: {
@@ -552,9 +534,11 @@ export default class extends React.Component {
                               sub2_name: "",
                               window_name: "",
                               delyn: "N"
-                            }
+                            },
+                            innerTabIndex: 0
                           });
                         }}
+                        disabled={true}
                       >
                         수정
                       </Tab>
@@ -623,7 +607,7 @@ export default class extends React.Component {
                             프로그램
                           </Tab>
                         </TabList>
-                        <TabPanel className="tab-panel">
+                        <TabPanel className="tab-panel main-panel">
                           <form onSubmit={submits.registSubmit}>
                             <div className="input-div">
                               <p>대분류 코드</p>
@@ -679,14 +663,14 @@ export default class extends React.Component {
                             </button>
                           </form>
                         </TabPanel>
-                        <TabPanel className="tab-panel">
+                        <TabPanel className="tab-panel sub1-panel">
                           <form onSubmit={submits.registSubmit}>
                             <div className="input-div">
                               <p>대분류 코드</p>
                               <select
                                 name="main_id"
                                 id="main_id"
-                                onChange={inputs.inputUpdate}
+                                onChange={inputs.inputSelect}
                               >
                                 {data.map((main, index) => (
                                   <option
@@ -753,14 +737,14 @@ export default class extends React.Component {
                             </button>
                           </form>
                         </TabPanel>
-                        <TabPanel className="tab-panel">
+                        <TabPanel className="tab-panel sub2-panel">
                           <form onSubmit={submits.registSubmit}>
                             <div className="input-div">
                               <p>대분류 코드</p>
                               <select
                                 name="main_id"
                                 id="main_id"
-                                onChange={inputs.inputUpdate}
+                                onChange={inputs.inputSelect}
                               >
                                 {data.map((main, index) => (
                                   <option
@@ -778,13 +762,19 @@ export default class extends React.Component {
                               <select
                                 name="sub1_id"
                                 id="sub1_id"
-                                onChange={inputs.inputChangeSub2Handle}
+                                onChange={inputs.inputSelect}
                               >
-                                {sub1Select.map((sub, index) => (
-                                  <option value={sub.sub1_id} key={index}>
-                                    {sub.window_name}
-                                  </option>
-                                ))}
+                                {sub1Select.map((sub, index) => {
+                                  // console.log(sub);
+                                  return (
+                                    <option
+                                      value={sub.program.sub1_id}
+                                      key={index}
+                                    >
+                                      {sub.program.window_name}
+                                    </option>
+                                  );
+                                })}
                               </select>
                             </div>
 
@@ -797,12 +787,12 @@ export default class extends React.Component {
                                 spellCheck="false"
                                 autoComplete="off"
                                 value={programdetail.sub2_id}
-                                onChange={inputs.inputSub2}
+                                onChange={inputs.inputMain}
                                 required
                               />
                               <span
                                 className={
-                                  invalid.sub2id ? "error" : "error none"
+                                  invalid.sub2_id ? "error" : "error none"
                                 }
                               >
                                 이미 존재하는 코드입니다
@@ -843,7 +833,7 @@ export default class extends React.Component {
                                     id="input"
                                     value="I"
                                     checked={programdetail.io_gubun === "I"}
-                                    onChange={inputs.InputUpdate}
+                                    onChange={inputs.inputUpdate}
                                     required
                                   />
                                   <label htmlFor="input">입력</label>
@@ -855,7 +845,7 @@ export default class extends React.Component {
                                     id="lookup"
                                     value="Q"
                                     checked={programdetail.io_gubun === "Q"}
-                                    onChange={inputs.InputUpdate}
+                                    onChange={inputs.inputUpdate}
                                     required
                                   />
                                   <label htmlFor="lookup">조회</label>
@@ -867,7 +857,7 @@ export default class extends React.Component {
                                     id="output"
                                     value="P"
                                     checked={programdetail.io_gubun === "P"}
-                                    onChange={inputs.InputUpdate}
+                                    onChange={inputs.inputUpdate}
                                     required
                                   />
                                   <label htmlFor="output">출력</label>
@@ -928,7 +918,7 @@ export default class extends React.Component {
                         <div className="input-div">
                           <p>소분류 코드</p>
                           <input
-                            type="text"
+                            type="num"
                             placeholder="-"
                             name="sub2_id"
                             value={placeholder.sub2_id}
@@ -978,7 +968,7 @@ export default class extends React.Component {
                                   id="input"
                                   value="I"
                                   checked={programdetail.io_gubun === "I"}
-                                  onChange={inputs.InputUpdate}
+                                  onChange={inputs.inputUpdate}
                                   required
                                 />
                                 <label htmlFor="input">입력</label>
@@ -990,7 +980,7 @@ export default class extends React.Component {
                                   id="lookup"
                                   value="Q"
                                   checked={programdetail.io_gubun === "Q"}
-                                  onChange={inputs.InputUpdate}
+                                  onChange={inputs.inputUpdate}
                                   required
                                 />
                                 <label htmlFor="lookup">조회</label>
@@ -1002,7 +992,7 @@ export default class extends React.Component {
                                   id="output"
                                   value="P"
                                   checked={programdetail.io_gubun === "P"}
-                                  onChange={inputs.InputUpdate}
+                                  onChange={inputs.inputUpdate}
                                   required
                                 />
                                 <label htmlFor="output">출력</label>
