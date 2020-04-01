@@ -45,6 +45,14 @@ button {
   }
 }
 
+button:disabled {
+  cursor: default;
+}
+
+button:hover {
+  opacity: 0.75;
+}
+
 table {
   border-collapse: collapse;
 }

@@ -13,15 +13,15 @@ class CreateContent extends React.Component {
     currentMode: this.props.currentMode,
     mountedComp: [
       {
-        index: 1,
-        window_name: "사용자 등록",
-        window_id: "SystPgm"
+        index: 4,
+        window_name: "공지사항 등록",
+        window_id: "SystNotify"
       }
     ],
     currentComp: {
-      index: 1,
-      window_name: "사용자 등록",
-      window_id: "SystPgm"
+      index: 4,
+      window_name: "공지사항 등록",
+      window_id: "SystNotify"
     },
     doneMsg: "",
     errorMsg: ""
@@ -32,7 +32,6 @@ class CreateContent extends React.Component {
       let parent = e.currentTarget.parentElement;
       parent.classList.toggle("active");
       let subMenu = e.currentTarget.nextElementSibling;
-      console.log(subMenu);
       if (subMenu.style.maxHeight) {
         subMenu.style.maxHeight = null;
       } else {

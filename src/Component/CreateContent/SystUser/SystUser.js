@@ -305,10 +305,10 @@ export default class extends React.Component {
     const params = {
       searchKeyword: "test"
     };
+    this.setState({
+      loading: true
+    });
     try {
-      this.setState({
-        loading: true
-      });
       await postApi("admin/um/searchusers", params).then(res => {
         const {
           data: { data }
@@ -326,7 +326,8 @@ export default class extends React.Component {
           });
         }
       });
-    } catch {
+    } catch (err) {
+      alert(err);
     } finally {
       this.setState({
         loading: false
@@ -369,15 +370,15 @@ export default class extends React.Component {
                   <button></button>
                 </form>
                 <div className="utils">
-                  <p onClick={this.openAddMode}>
+                  <p className="util-button" onClick={this.openAddMode}>
                     <img src={addUser} alt="add" />
                     <span>등록</span>
                   </p>
-                  <p onClick={this.editMode}>
+                  <p className="util-button" onClick={this.editMode}>
                     <img src={edit} alt="edit" />
                     <span>수정</span>
                   </p>
-                  <p onClick={this.deleteMode}>
+                  <p className="util-button" onClick={this.deleteMode}>
                     <img src={trash} alt="trash" />
                     <span>삭제</span>
                   </p>

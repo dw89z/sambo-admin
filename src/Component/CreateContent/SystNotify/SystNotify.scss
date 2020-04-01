@@ -3,66 +3,70 @@
 .notify {
   form {
     margin-top: 1rem;
+    width: 100%;
+    height: auto;
+
+    button {
+      background: none;
+    }
 
     .notify-header {
       width: 100%;
       display: flex;
       align-items: center;
-      margin-bottom: 0.5rem;
-      border-bottom: 1px solid $gray3;
-      padding-bottom: 0.75rem;
+      justify-content: flex-start;
+      position: relative;
+    }
 
-      span {
-        margin-left: 1rem;
-        font-size: 0.9rem;
-        color: $dark;
+    .react-daterange-picker {
+      height: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
 
-        &.divider {
-          margin-left: 1rem;
-          font-size: 1.5rem;
-        }
+      button {
+        width: auto;
+        height: auto;
+        padding: 0.6rem;
+      }
+    }
 
-        &.label {
-          font-size: 0.8rem;
-          font-weight: 600;
-          margin-left: 2rem;
-          color: #000;
+    .react-daterange-picker__wrapper {
+      padding: 0.25rem 0.7rem;
+      border-color: $gray3;
 
-          &:first-child {
-            margin-left: 0;
-          }
-        }
+      &:hover {
+        border-color: $pri;
       }
 
-      .react-date-picker {
-        margin-left: 1rem;
-        font-size: 0.8rem;
-        width: 8rem;
-        text-align: center;
-
-        input {
-          cursor: pointer;
-          padding: 0.15rem 0.3rem;
-        }
+      input {
+        overflow: visible;
+        margin-left: 0.35rem;
+        cursor: pointer;
       }
 
-      .react-date-picker--diabled {
-        cursor: default !important;
+      .react-daterange-picker__range-divider {
+        margin: 0 0.5rem;
+      }
+    }
 
-        input {
-          cursor: default !important;
-        }
+    .react-date-picker__inputGroup__divider:last-child {
+      display: none;
+    }
+
+    .react-calendar {
+      padding: 0.5rem;
+
+      &:hover {
+        border-color: $pri;
       }
 
-      .react-date-picker__wrapper {
-        align-items: center;
+      .react-calendar__navigation__label {
+        font-size: 1rem;
+        font-weight: 600;
       }
 
-      .react-date-picker__inputGroup__divider {
-        margin-left: 0;
-        &:last-child {
-          display: none;
-        }
+      .react-calendar__tile--active {
+        background: $pri;
       }
     }
 
@@ -77,10 +81,16 @@
         font-size: 0.8rem;
         font-weight: 600;
       }
+
       input {
         width: calc(100% - 3rem);
         padding: 0.4rem 0.25rem;
       }
+    }
+
+    .utils {
+      position: absolute;
+      right: 0;
     }
   }
 

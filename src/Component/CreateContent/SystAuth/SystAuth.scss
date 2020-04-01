@@ -2,7 +2,7 @@
 
 .form {
   .user-info {
-    margin-left: 1rem;
+    margin-left: 3rem;
     display: flex;
     align-items: center;
     height: 2rem;
@@ -10,9 +10,10 @@
 
   .info-cvnas {
     margin-left: 0.7rem;
+    margin-right: 3rem;
     font-weight: 400;
     font-size: 1rem;
-    color: $gray3;
+    color: $dark;
   }
 
   .user-list {
@@ -23,8 +24,8 @@
     border-top: none;
     z-index: 99;
     top: 2rem;
-    left: 5.01rem;
-    font-size: 0.7rem;
+    left: 4.84rem;
+    font-size: 0.75rem;
     height: 15rem;
     overflow-y: scroll;
 

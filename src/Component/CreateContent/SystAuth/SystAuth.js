@@ -200,8 +200,6 @@ export default class extends React.Component {
     } finally {
       await putApi(`admin/uam/programofuser/${userId}`, {
         programs: this.state.result
-      }).then(res => {
-        console.log(res);
       });
     }
   };

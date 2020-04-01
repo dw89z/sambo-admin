@@ -4,6 +4,8 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { postApi, getApi } from "../../../api";
 import "./SystPgm.scss";
 
+// 삭제시 하위 뎁스가 없으면 삭제가 안되게
+
 export default class extends React.Component {
   state = {
     loading: false,
@@ -26,8 +28,6 @@ export default class extends React.Component {
     },
     tabIndex: 0,
     innerTabIndex: 0,
-    maxSub1Id: "",
-    maxSub2Id: "",
     invalid: {
       main_id: false,
       sub1_id: false,
@@ -179,7 +179,9 @@ export default class extends React.Component {
         if (lvlno === "0") {
           this.setState({
             placeholder: {
-              main_id: `${program.sub2_name} (${program.main_id})`
+              main_id: `${program.sub2_name} (${program.main_id})`,
+              sub1_id: "-",
+              sub2_id: "-"
             },
             programdetail: program,
             radioVisible: false
@@ -188,7 +190,8 @@ export default class extends React.Component {
           this.setState({
             placeholder: {
               ...placeholder,
-              sub1_id: `${program.sub2_name} (${program.sub1_id})`
+              sub1_id: `${program.sub2_name} (${program.sub1_id})`,
+              sub2_id: "-"
             },
             programdetail: program,
             radioVisible: false
@@ -270,7 +273,6 @@ export default class extends React.Component {
           }
           return result;
         });
-        console.log(sublist);
         const sub2list = sublist[0].sublist;
         const sub2Select = sub2list.map(sub => parseInt(sub.sub2_id));
         this.setState({
@@ -380,7 +382,6 @@ export default class extends React.Component {
         await postApi("admin/pm/registprogram", {
           programdetail: programdetail
         }).then(res => {
-          console.log(res);
           if (!res.data.errorCode) {
             this.props.done(res.data.data.message);
           } else {
@@ -591,6 +592,8 @@ export default class extends React.Component {
                           <Tab
                             className="inner-tab"
                             onClick={() => {
+                              const { data } = this.state;
+                              const sub1Select = data[0].sublist;
                               this.setState({
                                 programdetail: {
                                   main_id: "10",
@@ -600,7 +603,8 @@ export default class extends React.Component {
                                   sub2_name: "",
                                   window_name: "",
                                   delyn: "N"
-                                }
+                                },
+                                sub1Select
                               });
                             }}
                           >
@@ -765,7 +769,6 @@ export default class extends React.Component {
                                 onChange={inputs.inputSelect}
                               >
                                 {sub1Select.map((sub, index) => {
-                                  // console.log(sub);
                                   return (
                                     <option
                                       value={sub.program.sub1_id}

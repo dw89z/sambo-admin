@@ -34,7 +34,8 @@
     display: flex;
     margin-left: 0.55rem;
 
-    p {
+    .util-button {
+      width: auto;
       display: flex;
       align-items: center;
       cursor: pointer;
