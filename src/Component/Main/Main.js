@@ -13,7 +13,7 @@ export default class extends React.Component {
     currentMode: {},
     mode: [],
     currentMenu: [],
-    menuAxis: false,
+    menuAxis: true,
     loading: true
   };
 

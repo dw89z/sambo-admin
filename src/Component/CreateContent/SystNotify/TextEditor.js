@@ -3,6 +3,7 @@ import "../../../globals";
 import ReactSummernote from "react-summernote";
 import DateRangePicker from "@wojtekmaj/react-daterange-picker";
 import Dropzone from "react-dropzone-uploader";
+import "react-dropzone-uploader/dist/styles.css";
 import "react-summernote/dist/react-summernote.css";
 import "react-summernote/lang/summernote-ko-KR";
 import "bootstrap/js/dist/modal";
@@ -22,11 +23,37 @@ class TextEditor extends React.Component {
   };
 
   render() {
+    console.log(this.props.user);
     return (
       <form>
-        <div className="submit-section">
-          <span className="label">제목</span>
-          <input type="text" name="title" required autoComplete="false" />
+        <div className="textedit-section">
+          <div className="textedit-header">
+            <span className="label">사용자ID</span>
+            <input
+              name="userId"
+              placeholder="-"
+              className="auth-search main-search"
+              type="text"
+              value={this.props.user.logid}
+              autoComplete="off"
+              spellCheck="false"
+              readOnly
+            />
+            <div className="user-info">
+              <span className="label">사용자명</span>
+              <span className="info-cvnas">{this.props.user.cvnas}</span>
+            </div>
+            <span className="label calendar">등록일자</span>
+          </div>
+
+          <span className="textedit-label">제목</span>
+          <input
+            className="textedit-title"
+            type="text"
+            name="title"
+            required
+            autoComplete="false"
+          />
         </div>
 
         <ReactSummernote

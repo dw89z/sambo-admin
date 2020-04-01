@@ -53,7 +53,9 @@ export default class extends React.Component {
       {
         dataField: "title",
         text: "제목",
-        sort: true
+        sort: true,
+        classes: "notice-title",
+        headerClasses: "notice-title notice-title-header"
       },
       {
         dataField: "logid",
@@ -69,7 +71,8 @@ export default class extends React.Component {
     title: "",
     userId: "",
     cvnas: "",
-    errorSearch: true
+    errorSearch: true,
+    listMode: true
   };
 
   getDate = () => {
@@ -224,7 +227,14 @@ export default class extends React.Component {
   }
 
   render() {
-    const { loading, userList, noticeList, columns, errorSearch } = this.state;
+    const {
+      loading,
+      userList,
+      noticeList,
+      columns,
+      errorSearch,
+      listMode
+    } = this.state;
     const {
       user: { userinfo }
     } = this.props;
@@ -237,76 +247,87 @@ export default class extends React.Component {
             <Loading />
           ) : (
             <>
-              <form onSubmit={submits.searchOption}>
-                <div className="notify-header form">
-                  <span className="label">사용자 조회</span>
-                  <input
-                    name="userId"
-                    placeholder="로그인ID로 검색"
-                    className="auth-search main-search"
-                    type="text"
-                    onChange={this.inputUpdateId}
-                    value={this.state.userId}
-                    onKeyPress={e => {
-                      if (e.key === "Enter") e.preventDefault();
-                    }}
-                    autoComplete="off"
-                    spellCheck="false"
-                  />
-                  {userList.visible && userList.list ? (
-                    <ul className="user-list">
-                      {userList.list.map((list, index) => {
-                        return (
-                          <li
-                            key={index}
-                            onClick={this.setSearchId}
-                            data-logid={list.logid}
-                          >
-                            <span>{list.logid}</span>
-                            <span>{list.cvnas}</span>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  ) : null}
-                  <div className="user-info">
-                    <span>사용자명</span>
-                    <span className="info-cvnas">{this.state.cvnas}</span>
+              {listMode ? (
+                <>
+                  <form onSubmit={submits.searchOption}>
+                    <div className="notify-header form">
+                      <span className="label">사용자 조회</span>
+                      <input
+                        name="userId"
+                        placeholder="로그인ID로 검색"
+                        className="auth-search main-search"
+                        type="text"
+                        onChange={this.inputUpdateId}
+                        value={this.state.userId}
+                        onKeyPress={e => {
+                          if (e.key === "Enter") e.preventDefault();
+                        }}
+                        autoComplete="off"
+                        spellCheck="false"
+                      />
+                      {userList.visible && userList.list ? (
+                        <ul className="user-list">
+                          {userList.list.map((list, index) => {
+                            return (
+                              <li
+                                key={index}
+                                onClick={this.setSearchId}
+                                data-logid={list.logid}
+                              >
+                                <span>{list.logid}</span>
+                                <span>{list.cvnas}</span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : null}
+                      <div className="user-info">
+                        <span>사용자명</span>
+                        <span className="info-cvnas">{this.state.cvnas}</span>
+                      </div>
+                      <span className="label">등록일자</span>
+                      <DateRangePicker
+                        onChange={this.onDataChange}
+                        value={this.state.date}
+                        calendarIcon={null}
+                        clearIcon={null}
+                        required={true}
+                        locale={"ko-KR"}
+                      />
+                      <div className="utils">
+                        <button
+                          className="util-button"
+                          onClick={this.openAddMode}
+                        >
+                          <img src={search} alt="add" />
+                          <span>조회</span>
+                        </button>
+                        <button className="util-button" onClick={this.editMode}>
+                          <img src={edit} alt="edit" />
+                          <span>신규</span>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                  <div className="table">
+                    <div className={errorSearch ? "error active" : "error"}>
+                      검색된 데이터가 없습니다.
+                    </div>
+                    <BootstrapTable
+                      wrapperClasses={
+                        this.props.menuAxis
+                          ? "notice-table"
+                          : "notice-table left"
+                      }
+                      keyField="id"
+                      data={noticeList}
+                      columns={columns}
+                    />
                   </div>
-                  <span className="label">등록일자</span>
-                  <DateRangePicker
-                    onChange={this.onDataChange}
-                    value={this.state.date}
-                    calendarIcon={null}
-                    clearIcon={null}
-                    required={true}
-                    locale={"ko-KR"}
-                  />
-                  <div className="utils">
-                    <button className="util-button" onClick={this.openAddMode}>
-                      <img src={search} alt="add" />
-                      <span>조회</span>
-                    </button>
-                    <button className="util-button" onClick={this.editMode}>
-                      <img src={edit} alt="edit" />
-                      <span>신규</span>
-                    </button>
-                  </div>
-                </div>
-              </form>
-              <div className="table">
-                <div className={errorSearch ? "error active" : "error"}>
-                  검색된 데이터가 없습니다.
-                </div>
-                <BootstrapTable
-                  wrapperClasses={
-                    this.props.menuAxis ? "notice-table" : "notice-table left"
-                  }
-                  keyField="id"
-                  data={noticeList}
-                  columns={columns}
-                />
-              </div>
+                </>
+              ) : (
+                <TextEditor user={userinfo} />
+              )}
             </>
           )}
         </div>
