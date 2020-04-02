@@ -204,7 +204,6 @@ export default class extends React.Component {
           return list;
         });
         if (noticelist.length === 0) {
-          console.log("did");
           this.setState({
             errorSearch: true,
             noticeList: []
@@ -244,6 +243,7 @@ export default class extends React.Component {
       user: { userinfo }
     } = this.props;
     const submits = this.submits;
+
     return (
       <>
         <div className="content-component notify data-room">

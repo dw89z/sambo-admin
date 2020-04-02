@@ -219,7 +219,7 @@ export default class extends React.Component {
           cvnas: userinfo.cvnas
         });
       })
-      .catch(err => {});
+      .catch(err => alert(err));
   }
 
   render() {
