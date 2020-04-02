@@ -72,7 +72,13 @@ export default class extends React.Component {
     userId: "",
     cvnas: "",
     errorSearch: true,
-    listMode: true
+    listMode: false
+  };
+
+  changeMode = () => {
+    this.setState({
+      listMode: !this.state.listMode
+    });
   };
 
   getDate = () => {
@@ -189,7 +195,6 @@ export default class extends React.Component {
             data: { noticelist }
           }
         } = res;
-        console.log(noticelist);
         const modifyDate = noticelist.map(list => {
           const year = list.crtdat.substr(0, 4);
           const month = list.crtdat.substr(4, 2);
@@ -296,13 +301,18 @@ export default class extends React.Component {
                       />
                       <div className="utils">
                         <button
+                          type="submit"
                           className="util-button"
                           onClick={this.openAddMode}
                         >
                           <img src={search} alt="add" />
                           <span>조회</span>
                         </button>
-                        <button className="util-button" onClick={this.editMode}>
+                        <button
+                          type="button"
+                          className="util-button"
+                          onClick={this.changeMode}
+                        >
                           <img src={edit} alt="edit" />
                           <span>신규</span>
                         </button>
@@ -319,14 +329,14 @@ export default class extends React.Component {
                           ? "notice-table"
                           : "notice-table left"
                       }
-                      keyField="id"
+                      keyField="seqno"
                       data={noticeList}
                       columns={columns}
                     />
                   </div>
                 </>
               ) : (
-                <TextEditor user={userinfo} />
+                <TextEditor user={userinfo} changeMode={this.changeMode} />
               )}
             </>
           )}
