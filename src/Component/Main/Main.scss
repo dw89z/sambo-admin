@@ -259,7 +259,7 @@
     opacity: 0.4;
     position: relative;
     white-space: nowrap;
-    border: 1px solid $gray3;
+    border: 1px solid $dark;
 
     &.active {
       opacity: 1;
@@ -328,8 +328,9 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   padding: 1rem;
-  border: 1px solid $gray3;
+  border: 1px solid $dark;
   overflow-y: scroll;
+  box-shadow: 5px 5px 10px rgba(20, 30, 50, 0.25);
 
   &.left {
     width: calc(100% - 15rem);

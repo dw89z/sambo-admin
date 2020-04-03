@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import BootstrapTable from "react-bootstrap-table-next";
 import ReactSummernote from "react-summernote";
 import DatePicker from "react-date-picker";
-import Dropzone from "react-dropzone-uploader";
+import Dropzone from "react-dropzone";
 import axios from "axios";
 import "react-dropzone-uploader/dist/styles.css";
 import "react-summernote/dist/react-summernote.css";
@@ -21,7 +21,6 @@ class TextEditor extends React.Component {
     userSearch: "",
     userList: [],
     checkedList: [],
-    checkedNum: [],
     columns: [
       {
         dataField: "logid",
@@ -71,15 +70,29 @@ class TextEditor extends React.Component {
     },
 
     deleteSelected: e => {
-      const { checkedList, checkedNum } = this.state;
+      const { checkedList } = this.state;
       const btn = e.currentTarget;
       const logidSpan = btn.previousElementSibling.previousElementSibling;
       const logid = logidSpan.innerHTML;
       const result = checkedList.filter(list => list.logid !== logid);
-      const resultNum = result.map(list => list.id);
       this.setState({
-        checkedList: result,
-        checkedNum: resultNum
+        checkedList: result
+      });
+    },
+
+    selectAll: () => {
+      const { userList, checkedList } = this.state;
+      const result = checkedList
+        .filter(list => !userList.includes(list))
+        .concat(userList.filter(list => !checkedList.includes(list)));
+      this.setState({
+        checkedList: [...checkedList, ...result]
+      });
+    },
+
+    deselectAll: () => {
+      this.setState({
+        checkedList: []
       });
     }
   };
@@ -159,6 +172,33 @@ class TextEditor extends React.Component {
     }
   };
 
+  rowEvents = {
+    onClick: (e, row, rowIndex) => {
+      const { checkedList } = this.state;
+
+      if (checkedList.length === 0) {
+        this.setState({
+          checkedList: [row]
+        });
+      } else {
+        let result;
+        for (let i in checkedList) {
+          if (!checkedList.includes(row)) {
+            result = row;
+          } else {
+            result = null;
+          }
+        }
+
+        if (result !== null) {
+          this.setState({
+            checkedList: [...checkedList, result]
+          });
+        }
+      }
+    }
+  };
+
   formatDate = () => {
     const { notify } = this.state;
     const date = new Date();
@@ -184,12 +224,6 @@ class TextEditor extends React.Component {
   };
 
   componentDidMount() {
-    const dzuInput = document.getElementsByClassName("dzu-input")[0];
-    const dzu = dzuInput.parentNode;
-    let kr = document.createElement("p");
-    kr.classList.add("kr-label");
-    kr.innerHTML = "클릭, 혹은 드래그하여 파일을 첨부하세요";
-    dzu.prepend(kr);
     this.formatDate();
   }
 
@@ -205,17 +239,6 @@ class TextEditor extends React.Component {
     const notice = this.notice;
     const submits = this.submits;
     const inputs = this.inputs;
-    const rowEvents = {
-      onClick: (e, row, rowIndex) => {
-        if (checkedList.length === 0) {
-          this.setState({
-            checkedList: [row]
-          });
-        } else {
-          console.log(row);
-        }
-      }
-    };
 
     return (
       <>
@@ -316,13 +339,20 @@ class TextEditor extends React.Component {
                 });
               }}
             />
-            <Dropzone
-              getUploadParams={notice.getUploadParams}
-              onChangeStatus={notice.handleChangeStatus}
-              onSubmit={notice.handleSubmit}
-            />
+            <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+              {({ getRootProps, getInputProps }) => (
+                <section>
+                  <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <p>
+                      Drag 'n' drop some files here, or click to select files
+                    </p>
+                  </div>
+                </section>
+              )}
+            </Dropzone>
           </div>
-          <button>저장</button>
+          <button className="save">저장</button>
         </form>
         <div className="user-select-section">
           <div className="user-selection">
@@ -339,7 +369,7 @@ class TextEditor extends React.Component {
                     });
                   }}
                 >
-                  특정ID
+                  전체
                 </Tab>
                 <Tab
                   className="tab"
@@ -352,11 +382,14 @@ class TextEditor extends React.Component {
                     });
                   }}
                 >
-                  전체
+                  특정ID
                 </Tab>
               </TabList>
 
               <TabPanel className="user-entire-panel">
+                <p>공지사항이 전체 사용자에게 보여집니다.</p>
+              </TabPanel>
+              <TabPanel className="user-specific-panel">
                 <form className="user-input-form" onSubmit={submits.searchUser}>
                   <div className="user-input">
                     <span className="label">검색ID</span>
@@ -368,6 +401,16 @@ class TextEditor extends React.Component {
                       placeholder="검색ID를 입력하세요"
                     />
                     <button className="search-btn"></button>
+                    <div
+                      className={
+                        userList.length === 0
+                          ? "select-all wait"
+                          : "select-all active"
+                      }
+                      onClick={userList.length === 0 ? null : inputs.selectAll}
+                    >
+                      전체선택
+                    </div>
                   </div>
                 </form>
 
@@ -380,7 +423,7 @@ class TextEditor extends React.Component {
                     keyField="id"
                     data={userList}
                     columns={columns}
-                    rowEvents={rowEvents}
+                    rowEvents={this.rowEvents}
                   />
 
                   <div className="selected-users">
@@ -388,7 +431,7 @@ class TextEditor extends React.Component {
                       <ul>
                         {checkedList.map((list, index) => {
                           return (
-                            <li key={index} id={list.id}>
+                            <li key={index}>
                               <span className="logid">{list.logid}</span>
                               <span className="cvnas">{list.cvnas}</span>
                               <span
@@ -403,10 +446,17 @@ class TextEditor extends React.Component {
                       <p className="none">추가된 사용자가 없습니다.</p>
                     )}
                   </div>
+                  <div
+                    className={
+                      checkedList.length === 0
+                        ? "deselect-all wait"
+                        : "deselect-all active"
+                    }
+                    onClick={inputs.deselectAll}
+                  >
+                    전체삭제
+                  </div>
                 </div>
-              </TabPanel>
-              <TabPanel className="user-specific-panel">
-                <p>공지사항이 전체 사용자에게 보여집니다.</p>
               </TabPanel>
             </Tabs>
           </div>
