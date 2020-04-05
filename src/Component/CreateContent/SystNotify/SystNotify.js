@@ -19,12 +19,12 @@ export default class extends React.Component {
       {
         dataField: "seqno",
         text: "번호",
-        sort: true
+        sort: true,
       },
       {
         dataField: "crtdat",
         text: "등록일자",
-        sort: true
+        sort: true,
       },
       {
         dataField: "mslvl",
@@ -35,8 +35,8 @@ export default class extends React.Component {
         },
         formatExtraData: {
           0: "일반",
-          1: "중요"
-        }
+          1: "중요",
+        },
       },
       {
         dataField: "gubun",
@@ -47,26 +47,26 @@ export default class extends React.Component {
         },
         formatExtraData: {
           0: "전체",
-          1: "특정ID"
-        }
+          1: "특정ID",
+        },
       },
       {
         dataField: "title",
         text: "제목",
         sort: true,
         classes: "notice-title",
-        headerClasses: "notice-title notice-title-header"
+        headerClasses: "notice-title notice-title-header",
       },
       {
         dataField: "logid",
         text: "등록자명",
-        sort: true
-      }
+        sort: true,
+      },
     ],
     noticeList: [],
     userList: {
       visible: false,
-      list: []
+      list: [],
     },
     title: "",
     userId: "",
@@ -74,13 +74,13 @@ export default class extends React.Component {
     errorSearch: true,
     listMode: true,
     editData: {},
-    editMode: false
+    editMode: false,
   };
 
   changeMode = () => {
     this.setState({
       listMode: !this.state.listMode,
-      editMode: false
+      editMode: false,
     });
     this.submits.searchList();
   };
@@ -90,19 +90,19 @@ export default class extends React.Component {
     const today = date.setDate(date.getDate());
     const before = date.setDate(date.getDate() - 60);
     this.setState({
-      date: [before, today]
+      date: [before, today],
     });
   };
 
-  inputUpdate = e => {
+  inputUpdate = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  inputUpdateId = e => {
+  inputUpdateId = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
     const value = e.target.value;
 
@@ -114,38 +114,38 @@ export default class extends React.Component {
       typingTimeout: setTimeout(async () => {
         if (value !== "") {
           const userId = {
-            searchKeyword: value.trim()
+            searchKeyword: value.trim(),
           };
-          await postApi("admin/um/searchusers", userId).then(res => {
+          await postApi("admin/um/searchusers", userId).then((res) => {
             const {
-              data: { data }
+              data: { data },
             } = res;
             this.setState({
               userList: {
                 visible: true,
-                list: data
-              }
+                list: data,
+              },
             });
           });
         } else if (value === "") {
           this.setState({
             userList: {
               visible: false,
-              list: []
-            }
+              list: [],
+            },
           });
         }
-      }, 300)
+      }, 300),
     });
   };
 
-  setSearchId = async e => {
+  setSearchId = async (e) => {
     const userId = e.currentTarget.getAttribute("data-logid");
-    await getApi(`admin/um/user/${userId}`).then(res => {
+    await getApi(`admin/um/user/${userId}`).then((res) => {
       const {
         data: {
-          data: { userinfo }
-        }
+          data: { userinfo },
+        },
       } = res;
 
       this.setState({
@@ -153,16 +153,16 @@ export default class extends React.Component {
         cvnas: userinfo.cvnas,
         userList: {
           visible: false,
-          list: []
-        }
+          list: [],
+        },
       });
     });
   };
 
-  onDataChange = date => this.setState({ date });
+  onDataChange = (date) => this.setState({ date });
 
   submits = {
-    formatDate: date => {
+    formatDate: (date) => {
       const yearNum = date.getFullYear();
       let monthNum = date.getMonth() + 1;
       let dayNum = date.getDate();
@@ -189,16 +189,16 @@ export default class extends React.Component {
         searchoption: {
           logid: userId,
           fromdate,
-          todate
-        }
+          todate,
+        },
       };
-      await postApi("admin/notify/noticeList", searchoption).then(res => {
+      await postApi("admin/notify/noticeList", searchoption).then((res) => {
         const {
           data: {
-            data: { noticelist }
-          }
+            data: { noticelist },
+          },
         } = res;
-        const modifyDate = noticelist.map(list => {
+        const modifyDate = noticelist.map((list) => {
           const year = list.crtdat.substr(0, 4);
           const month = list.crtdat.substr(4, 2);
           const day = list.crtdat.substr(6, 2);
@@ -209,49 +209,49 @@ export default class extends React.Component {
         if (noticelist.length === 0) {
           this.setState({
             errorSearch: true,
-            noticeList: []
+            noticeList: [],
           });
         } else {
           this.setState({
             noticeList: noticelist,
-            errorSearch: false
+            errorSearch: false,
           });
         }
       });
     },
 
-    searchOption: async e => {
+    searchOption: async (e) => {
       e.preventDefault();
       this.submits.searchList();
-    }
+    },
   };
 
   rowEvents = {
     onClick: async (e, row, rowIndex) => {
       await postApi(`admin/notify/getnoticedetail/${row.seqno}`, {}).then(
-        res => {
+        (res) => {
           const {
-            data: { data }
+            data: { data },
           } = res;
           this.setState({
             editData: data,
             editMode: true,
-            listMode: false
+            listMode: false,
           });
         }
       );
-    }
+    },
   };
 
   componentDidMount() {
     this.getDate();
     const {
-      user: { userinfo }
+      user: { userinfo },
     } = this.props;
 
     this.setState({
       userId: "bselpin",
-      cvnas: userinfo.cvnas
+      cvnas: userinfo.cvnas,
     });
   }
 
@@ -264,10 +264,10 @@ export default class extends React.Component {
       errorSearch,
       listMode,
       editData,
-      editMode
+      editMode,
     } = this.state;
     const {
-      user: { userinfo }
+      user: { userinfo },
     } = this.props;
     const submits = this.submits;
 
@@ -291,7 +291,7 @@ export default class extends React.Component {
                         type="text"
                         onChange={this.inputUpdateId}
                         value={this.state.userId}
-                        onKeyPress={e => {
+                        onKeyPress={(e) => {
                           if (e.key === "Enter") e.preventDefault();
                         }}
                         autoComplete="off"

@@ -24,13 +24,13 @@ class TextEditor extends React.Component {
       {
         dataField: "logid",
         text: "로그인ID",
-        sort: true
+        sort: true,
       },
       {
         dataField: "cvnas",
         text: "사용자명",
-        sort: true
-      }
+        sort: true,
+      },
     ],
     errorSearch: true,
     notify: {
@@ -39,12 +39,12 @@ class TextEditor extends React.Component {
       gubun: "0",
       title: "",
       logid: this.props.user.logid,
-      bdata: ""
+      bdata: "",
     },
     file: [],
     tabIndex: 0,
     notifyfilelist: [],
-    deleteList: []
+    deleteList: [],
   };
 
   init = () => {
@@ -55,22 +55,22 @@ class TextEditor extends React.Component {
         gubun: "0",
         title: "",
         logid: this.props.user.logid,
-        bdata: ""
+        bdata: "",
       },
       file: [],
       tabIndex: 0,
       notifyauth: [],
       notifyfilelist: [],
-      deletelist: []
+      deletelist: [],
     });
   };
 
-  onDrop = files => {
+  onDrop = (files) => {
     const { file } = this.state;
     this.setState({ file: [...file, ...files] });
   };
 
-  onImageUpload = fileList => {
+  onImageUpload = (fileList) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       ReactSummernote.insertImage(reader.result);
@@ -79,120 +79,120 @@ class TextEditor extends React.Component {
   };
 
   inputs = {
-    delFile: e => {
+    delFile: (e) => {
       const { file } = this.state;
-      const toDelFile = file.filter(file => file.name !== e.currentTarget.id);
+      const toDelFile = file.filter((file) => file.name !== e.currentTarget.id);
       this.setState({
-        file: toDelFile
+        file: toDelFile,
       });
     },
 
-    deleteFile: e => {
+    deleteFile: (e) => {
       const { notifyfilelist, deleteList } = this.state;
       const toDelFile = notifyfilelist.filter(
-        file => file.stored_file_name !== e.currentTarget.id
+        (file) => file.stored_file_name !== e.currentTarget.id
       );
       const delFile = notifyfilelist.filter(
-        file => file.stored_file_name === e.currentTarget.id
+        (file) => file.stored_file_name === e.currentTarget.id
       );
-      const delStored = delFile.map(file => file.stored_file_name);
+      const delStored = delFile.map((file) => file.stored_file_name);
       this.setState({
         notifyfilelist: toDelFile,
-        deleteList: [...deleteList, ...delStored]
+        deleteList: [...deleteList, ...delStored],
       });
     },
 
-    inputUpdate: e => {
+    inputUpdate: (e) => {
       this.setState({
-        [e.target.name]: e.target.value
+        [e.target.name]: e.target.value,
       });
     },
 
-    inputNotice: e => {
+    inputNotice: (e) => {
       const { notify } = this.state;
       this.setState({
         notify: {
           ...notify,
-          [e.target.name]: e.target.value
-        }
+          [e.target.name]: e.target.value,
+        },
       });
     },
 
-    deleteSelected: e => {
+    deleteSelected: (e) => {
       const { notifyauth } = this.state;
       const btn = e.currentTarget;
       const logidSpan = btn.previousElementSibling.previousElementSibling;
       const logid = logidSpan.innerHTML;
-      const result = notifyauth.filter(list => list.logid !== logid);
+      const result = notifyauth.filter((list) => list.logid !== logid);
       this.setState({
-        notifyauth: result
+        notifyauth: result,
       });
     },
 
     selectAll: () => {
       const { userList, notifyauth } = this.state;
 
-      const jsonAuth = notifyauth.map(list => JSON.stringify(list));
-      const jsonUser = userList.map(list => JSON.stringify(list));
+      const jsonAuth = notifyauth.map((list) => JSON.stringify(list));
+      const jsonUser = userList.map((list) => JSON.stringify(list));
       const remain = jsonAuth
-        .filter(list => !jsonUser.includes(list))
-        .concat(jsonUser.filter(list => !jsonAuth.includes(list)));
-      const authResult = remain.map(remain => JSON.parse(remain));
+        .filter((list) => !jsonUser.includes(list))
+        .concat(jsonUser.filter((list) => !jsonAuth.includes(list)));
+      const authResult = remain.map((remain) => JSON.parse(remain));
       console.log(authResult);
       this.setState({
-        notifyauth: [...notifyauth, ...authResult]
+        notifyauth: [...notifyauth, ...authResult],
       });
     },
 
     deselectAll: () => {
       this.setState({
-        notifyauth: []
+        notifyauth: [],
       });
-    }
+    },
   };
 
   submits = {
-    searchUser: async e => {
+    searchUser: async (e) => {
       e.preventDefault();
       const { userSearch } = this.state;
       const data = {
-        searchKeyword: userSearch
+        searchKeyword: userSearch,
       };
       this.setState({
-        userList: []
+        userList: [],
       });
-      await postApi("admin/um/searchusers", data).then(res => {
+      await postApi("admin/um/searchusers", data).then((res) => {
         const {
-          data: { data }
+          data: { data },
         } = res;
         if (data.length === 0) {
           this.setState({
             userList: [],
-            errorSearch: true
+            errorSearch: true,
           });
         } else {
-          const result = data.map(data => {
+          const result = data.map((data) => {
             const list = {
               logid: data.logid,
-              cvnas: data.cvnas
+              cvnas: data.cvnas,
             };
             return list;
           });
           this.setState({
             userList: result,
-            errorSearch: false
+            errorSearch: false,
           });
         }
       });
     },
 
-    deleteNotice: async e => {
+    deleteNotice: async (e) => {
       e.preventDefault();
       const {
-        editData: { notifydetail }
+        editData: { notifydetail },
       } = this.props;
       await postApi(`admin/notify/deletenotice/${notifydetail.seqno}`, {}).then(
-        res => {
+        (res) => {
           if (!res.data.errorCode) {
             this.init();
             this.props.done(res.data.data.message);
@@ -204,7 +204,7 @@ class TextEditor extends React.Component {
       );
     },
 
-    saveNotice: async e => {
+    saveNotice: async (e) => {
       e.preventDefault();
       const { notify, notifyauth, file, deleteList } = this.state;
       let formData = new FormData();
@@ -223,13 +223,13 @@ class TextEditor extends React.Component {
       const token = sessionStorage.getItem("token");
       const config = {
         "Content-Type": "multipart/form-data",
-        Authorization: token
+        Authorization: token,
       };
 
       formData.append("notify", jsonNotify);
 
       if (notify.gubun === 1) {
-        const users = notifyauth.map(list => list.logid);
+        const users = notifyauth.map((list) => list.logid);
         const jsonAuth = JSON.stringify(users);
         formData.append("notifyauth", jsonAuth);
       }
@@ -247,7 +247,7 @@ class TextEditor extends React.Component {
             formData,
             { headers: config }
           )
-          .then(res => {
+          .then((res) => {
             console.log(res);
             if (!res.data.errorCode) {
               this.init();
@@ -264,7 +264,7 @@ class TextEditor extends React.Component {
             formData,
             { headers: config }
           )
-          .then(res => {
+          .then((res) => {
             console.log(res);
             if (!res.data.errorCode) {
               this.init();
@@ -275,7 +275,7 @@ class TextEditor extends React.Component {
             }
           });
       }
-    }
+    },
   };
 
   rowEvents = {
@@ -284,7 +284,7 @@ class TextEditor extends React.Component {
 
       if (notifyauth.length === 0) {
         this.setState({
-          notifyauth: [row]
+          notifyauth: [row],
         });
       } else {
         let result;
@@ -298,11 +298,11 @@ class TextEditor extends React.Component {
 
         if (result !== null) {
           this.setState({
-            notifyauth: [...notifyauth, result]
+            notifyauth: [...notifyauth, result],
           });
         }
       }
-    }
+    },
   };
 
   formatDate = () => {
@@ -324,8 +324,8 @@ class TextEditor extends React.Component {
     this.setState({
       notify: {
         ...notify,
-        crtdat: fulldate
-      }
+        crtdat: fulldate,
+      },
     });
   };
 
@@ -344,7 +344,7 @@ class TextEditor extends React.Component {
   componentDidMount() {
     if (this.props.editMode) {
       const {
-        editData: { notifydetail, notifyauth, notifyfilelist }
+        editData: { notifydetail, notifyauth, notifyfilelist },
       } = this.props;
       this.setState({
         notify: {
@@ -354,20 +354,20 @@ class TextEditor extends React.Component {
           title: notifydetail.title,
           logid: this.props.user.logid,
           bdata: notifydetail.bdata,
-          seqno: notifydetail.seqno
+          seqno: notifydetail.seqno,
         },
-        notifyfilelist: []
+        notifyfilelist: [],
       });
       if (notifyfilelist) {
         this.setState({
-          notifyfilelist
+          notifyfilelist,
         });
       }
 
       if (notifydetail.gubun === 1) {
         this.setState({
           notifyauth,
-          tabIndex: 1
+          tabIndex: 1,
         });
       }
     } else {
@@ -378,11 +378,11 @@ class TextEditor extends React.Component {
           gubun: "0",
           title: "",
           logid: this.props.user.logid,
-          bdata: ""
+          bdata: "",
         },
         file: [],
         tabIndex: 0,
-        notifyauth: []
+        notifyauth: [],
       });
       this.formatDate();
     }
@@ -398,7 +398,7 @@ class TextEditor extends React.Component {
       notify,
       file,
       tabIndex,
-      notifyfilelist
+      notifyfilelist,
     } = this.state;
     const submits = this.submits;
     const inputs = this.inputs;
@@ -498,17 +498,17 @@ class TextEditor extends React.Component {
                   ["font", ["bold", "underline", "clear", "fontsize", "color"]],
                   ["para", ["ul", "ol", "paragraph"]],
                   ["table", ["table"]],
-                  ["insert", ["link", "picture", "video"]]
-                ]
+                  ["insert", ["link", "picture", "video"]],
+                ],
               }}
               onImageUpload={this.onImageUpload}
-              onChange={content => {
+              onChange={(content) => {
                 const { notify } = this.state;
                 this.setState({
                   notify: {
                     ...notify,
-                    bdata: content
-                  }
+                    bdata: content,
+                  },
                 });
               }}
             />
@@ -559,7 +559,7 @@ class TextEditor extends React.Component {
             <Tabs
               className="user-select-tabs"
               selectedIndex={tabIndex}
-              onSelect={tabIndex => this.setState({ tabIndex })}
+              onSelect={(tabIndex) => this.setState({ tabIndex })}
             >
               <TabList className="user-select-tabs-list">
                 <Tab
@@ -568,8 +568,8 @@ class TextEditor extends React.Component {
                     this.setState({
                       notify: {
                         ...notify,
-                        gubun: 0
-                      }
+                        gubun: 0,
+                      },
                     });
                   }}
                 >
@@ -581,8 +581,8 @@ class TextEditor extends React.Component {
                     this.setState({
                       notify: {
                         ...notify,
-                        gubun: 1
-                      }
+                        gubun: 1,
+                      },
                     });
                   }}
                 >
