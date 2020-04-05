@@ -6,21 +6,20 @@ import ReactSummernote from "react-summernote";
 import DatePicker from "react-date-picker";
 import Dropzone from "react-dropzone";
 import axios from "axios";
-import "react-dropzone-uploader/dist/styles.css";
 import "react-summernote/dist/react-summernote.css";
 import "react-summernote/lang/summernote-ko-KR";
 import "bootstrap/js/dist/modal";
 import "bootstrap/js/dist/dropdown";
 import "bootstrap/js/dist/tooltip";
 import Loading from "../../Loading";
-import { postApi, getApi } from "../../../api";
+import { postApi } from "../../../api";
 import "./SystNotify.scss";
 
 class TextEditor extends React.Component {
   state = {
     userSearch: "",
     userList: [],
-    checkedList: [],
+    notifyauth: [],
     columns: [
       {
         dataField: "logid",
@@ -41,7 +40,34 @@ class TextEditor extends React.Component {
       title: "",
       logid: this.props.user.logid,
       bdata: ""
-    }
+    },
+    file: [],
+    tabIndex: 0,
+    notifyfilelist: [],
+    deleteList: []
+  };
+
+  init = () => {
+    this.setState({
+      notify: {
+        crtdat: "",
+        mslvl: "",
+        gubun: "0",
+        title: "",
+        logid: this.props.user.logid,
+        bdata: ""
+      },
+      file: [],
+      tabIndex: 0,
+      notifyauth: [],
+      notifyfilelist: [],
+      deletelist: []
+    });
+  };
+
+  onDrop = files => {
+    const { file } = this.state;
+    this.setState({ file: [...file, ...files] });
   };
 
   onImageUpload = fileList => {
@@ -53,6 +79,29 @@ class TextEditor extends React.Component {
   };
 
   inputs = {
+    delFile: e => {
+      const { file } = this.state;
+      const toDelFile = file.filter(file => file.name !== e.currentTarget.id);
+      this.setState({
+        file: toDelFile
+      });
+    },
+
+    deleteFile: e => {
+      const { notifyfilelist, deleteList } = this.state;
+      const toDelFile = notifyfilelist.filter(
+        file => file.stored_file_name !== e.currentTarget.id
+      );
+      const delFile = notifyfilelist.filter(
+        file => file.stored_file_name === e.currentTarget.id
+      );
+      const delStored = delFile.map(file => file.stored_file_name);
+      this.setState({
+        notifyfilelist: toDelFile,
+        deleteList: [...deleteList, ...delStored]
+      });
+    },
+
     inputUpdate: e => {
       this.setState({
         [e.target.name]: e.target.value
@@ -70,48 +119,35 @@ class TextEditor extends React.Component {
     },
 
     deleteSelected: e => {
-      const { checkedList } = this.state;
+      const { notifyauth } = this.state;
       const btn = e.currentTarget;
       const logidSpan = btn.previousElementSibling.previousElementSibling;
       const logid = logidSpan.innerHTML;
-      const result = checkedList.filter(list => list.logid !== logid);
+      const result = notifyauth.filter(list => list.logid !== logid);
       this.setState({
-        checkedList: result
+        notifyauth: result
       });
     },
 
     selectAll: () => {
-      const { userList, checkedList } = this.state;
-      const result = checkedList
-        .filter(list => !userList.includes(list))
-        .concat(userList.filter(list => !checkedList.includes(list)));
+      const { userList, notifyauth } = this.state;
+
+      const jsonAuth = notifyauth.map(list => JSON.stringify(list));
+      const jsonUser = userList.map(list => JSON.stringify(list));
+      const remain = jsonAuth
+        .filter(list => !jsonUser.includes(list))
+        .concat(jsonUser.filter(list => !jsonAuth.includes(list)));
+      const authResult = remain.map(remain => JSON.parse(remain));
+      console.log(authResult);
       this.setState({
-        checkedList: [...checkedList, ...result]
+        notifyauth: [...notifyauth, ...authResult]
       });
     },
 
     deselectAll: () => {
       this.setState({
-        checkedList: []
+        notifyauth: []
       });
-    }
-  };
-
-  notice = {
-    // specify upload params and url for your files
-    getUploadParams: ({ meta }) => {
-      return { url: "https://httpbin.org/post" };
-    },
-
-    // called every time a file's `status` changes
-    handleChangeStatus: ({ meta, file }, status) => {
-      console.log(status, meta, file);
-    },
-
-    // receives array of files that are done uploading when submit button is clicked
-    handleSubmit: (files, allFiles) => {
-      console.log(files.map(f => f.meta));
-      allFiles.forEach(f => f.remove());
     }
   };
 
@@ -135,9 +171,8 @@ class TextEditor extends React.Component {
             errorSearch: true
           });
         } else {
-          const result = data.map((data, index) => {
+          const result = data.map(data => {
             const list = {
-              id: index,
               logid: data.logid,
               cvnas: data.cvnas
             };
@@ -151,39 +186,110 @@ class TextEditor extends React.Component {
       });
     },
 
+    deleteNotice: async e => {
+      e.preventDefault();
+      const {
+        editData: { notifydetail }
+      } = this.props;
+      await postApi(`admin/notify/deletenotice/${notifydetail.seqno}`, {}).then(
+        res => {
+          if (!res.data.errorCode) {
+            this.init();
+            this.props.done(res.data.data.message);
+            this.props.changeMode();
+          } else {
+            this.props.error(res.data.errorMessage);
+          }
+        }
+      );
+    },
+
     saveNotice: async e => {
       e.preventDefault();
-      const { notify } = this.state;
+      const { notify, notifyauth, file, deleteList } = this.state;
+      let formData = new FormData();
+      if (this.props.editMode) {
+        delete notify.crtdat;
+        delete notify.logid;
+        if (deleteList.length > 0) {
+          const jsonDeleteList = JSON.stringify(deleteList);
+          formData.append("deletelist", jsonDeleteList);
+        }
+      } else {
+        delete notify.seqno;
+      }
+
       const jsonNotify = JSON.stringify(notify);
       const token = sessionStorage.getItem("token");
       const config = {
         "Content-Type": "multipart/form-data",
         Authorization: token
       };
-      let formData = new FormData();
+
       formData.append("notify", jsonNotify);
-      await axios
-        .post(
-          "http://192.168.75.104:8080/admin/notify/insertnotice",
-          formData,
-          { headers: config }
-        )
-        .then(res => console.log(res));
+
+      if (notify.gubun === 1) {
+        const users = notifyauth.map(list => list.logid);
+        const jsonAuth = JSON.stringify(users);
+        formData.append("notifyauth", jsonAuth);
+      }
+
+      if (file.length > 0) {
+        for (let i in file) {
+          formData.append("file", file[i]);
+        }
+      }
+
+      if (!this.props.editMode) {
+        await axios
+          .post(
+            "http://125.141.30.222:8757/admin/notify/insertnotice",
+            formData,
+            { headers: config }
+          )
+          .then(res => {
+            console.log(res);
+            if (!res.data.errorCode) {
+              this.init();
+              this.props.changeMode();
+              this.props.done(res.data.data.message);
+            } else {
+              this.props.error(res.data.data.errorMessage);
+            }
+          });
+      } else {
+        await axios
+          .post(
+            "http://125.141.30.222:8757/admin/notify/modifynotice",
+            formData,
+            { headers: config }
+          )
+          .then(res => {
+            console.log(res);
+            if (!res.data.errorCode) {
+              this.init();
+              this.props.changeMode();
+              this.props.done(res.data.data.message);
+            } else {
+              this.props.error(res.data.data.errorMessage);
+            }
+          });
+      }
     }
   };
 
   rowEvents = {
     onClick: (e, row, rowIndex) => {
-      const { checkedList } = this.state;
+      const { notifyauth } = this.state;
 
-      if (checkedList.length === 0) {
+      if (notifyauth.length === 0) {
         this.setState({
-          checkedList: [row]
+          notifyauth: [row]
         });
       } else {
         let result;
-        for (let i in checkedList) {
-          if (!checkedList.includes(row)) {
+        for (let i in notifyauth) {
+          if (!notifyauth.includes(row)) {
             result = row;
           } else {
             result = null;
@@ -192,7 +298,7 @@ class TextEditor extends React.Component {
 
         if (result !== null) {
           this.setState({
-            checkedList: [...checkedList, result]
+            notifyauth: [...notifyauth, result]
           });
         }
       }
@@ -223,22 +329,89 @@ class TextEditor extends React.Component {
     });
   };
 
+  formatBytes = (bytes, decimals = 2) => {
+    if (bytes === 0) return "0 Bytes";
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+  };
+
   componentDidMount() {
-    this.formatDate();
+    if (this.props.editMode) {
+      const {
+        editData: { notifydetail, notifyauth, notifyfilelist }
+      } = this.props;
+      this.setState({
+        notify: {
+          crtdat: notifydetail.crtdat,
+          mslvl: notifydetail.mslvl.toString(),
+          gubun: notifydetail.gubun,
+          title: notifydetail.title,
+          logid: this.props.user.logid,
+          bdata: notifydetail.bdata,
+          seqno: notifydetail.seqno
+        },
+        notifyfilelist: []
+      });
+      if (notifyfilelist) {
+        this.setState({
+          notifyfilelist
+        });
+      }
+
+      if (notifydetail.gubun === 1) {
+        this.setState({
+          notifyauth,
+          tabIndex: 1
+        });
+      }
+    } else {
+      this.setState({
+        notify: {
+          crtdat: "",
+          mslvl: "",
+          gubun: "0",
+          title: "",
+          logid: this.props.user.logid,
+          bdata: ""
+        },
+        file: [],
+        tabIndex: 0,
+        notifyauth: []
+      });
+      this.formatDate();
+    }
   }
 
   render() {
     const {
       userList,
       columns,
-      checkedList,
+      notifyauth,
       userSearch,
       errorSearch,
-      notify
+      notify,
+      file,
+      tabIndex,
+      notifyfilelist
     } = this.state;
-    const notice = this.notice;
     const submits = this.submits;
     const inputs = this.inputs;
+    const files = file.map((file, index) => (
+      <li key={index}>
+        {file.name} - {this.formatBytes(file.size)}
+        <span
+          className="del-btn"
+          onClick={inputs.delFile}
+          id={file.name}
+        ></span>
+      </li>
+    ));
 
     return (
       <>
@@ -316,7 +489,7 @@ class TextEditor extends React.Component {
               className="summernote"
               options={{
                 lang: "ko-KR",
-                height: 380,
+                height: 410,
                 dialogsInBody: true,
                 spellCheck: false,
                 disableDragAndDrop: true,
@@ -339,24 +512,55 @@ class TextEditor extends React.Component {
                 });
               }}
             />
-            <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+            {this.props.editMode && notifyfilelist.length > 0 ? (
+              <>
+                <div className="modify-file-section">
+                  <span className="file-label">기존 업로드 파일</span>
+                  <ul className="modify-list">
+                    {notifyfilelist.map((list, index) => (
+                      <li key={index} className="modify-file">
+                        {list.org_file_name}
+                        <span
+                          id={list.stored_file_name}
+                          className="del-btn"
+                          onClick={inputs.deleteFile}
+                        ></span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            ) : null}
+            <Dropzone onDrop={this.onDrop} multiple>
               {({ getRootProps, getInputProps }) => (
-                <section>
-                  <div {...getRootProps()}>
+                <section className="dzu-dropzone">
+                  <div {...getRootProps({ className: "dropzone" })}>
                     <input {...getInputProps()} />
-                    <p>
-                      Drag 'n' drop some files here, or click to select files
+                    <p className="droparea">
+                      클릭, 혹은 드래그하여 파일을 추가하세요
                     </p>
                   </div>
+                  <aside>
+                    <ul>{files}</ul>
+                  </aside>
                 </section>
               )}
             </Dropzone>
           </div>
           <button className="save">저장</button>
+          {this.props.editMode ? (
+            <button className="save delete" onClick={submits.deleteNotice}>
+              삭제
+            </button>
+          ) : null}
         </form>
         <div className="user-select-section">
           <div className="user-selection">
-            <Tabs className="user-select-tabs">
+            <Tabs
+              className="user-select-tabs"
+              selectedIndex={tabIndex}
+              onSelect={tabIndex => this.setState({ tabIndex })}
+            >
               <TabList className="user-select-tabs-list">
                 <Tab
                   className="tab"
@@ -427,9 +631,10 @@ class TextEditor extends React.Component {
                   />
 
                   <div className="selected-users">
-                    {checkedList.length !== 0 ? (
+                    <p className="selected-label">선택된 특정ID</p>
+                    {notifyauth.length !== 0 ? (
                       <ul>
-                        {checkedList.map((list, index) => {
+                        {notifyauth.map((list, index) => {
                           return (
                             <li key={index}>
                               <span className="logid">{list.logid}</span>
@@ -448,7 +653,7 @@ class TextEditor extends React.Component {
                   </div>
                   <div
                     className={
-                      checkedList.length === 0
+                      notifyauth.length === 0
                         ? "deselect-all wait"
                         : "deselect-all active"
                     }

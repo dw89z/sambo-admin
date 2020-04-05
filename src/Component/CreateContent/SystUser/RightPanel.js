@@ -191,7 +191,6 @@ class RightPanel extends React.Component {
       });
     } else if (openEdit) {
       await putApi("admin/um/user", data).then(res => {
-        console.log("edit", res);
         if (!res.data.errorCode) {
           this.props.done(res.data.data.message);
           this.props.closeAllMode();

@@ -72,13 +72,17 @@ export default class extends React.Component {
     userId: "",
     cvnas: "",
     errorSearch: true,
-    listMode: false
+    listMode: true,
+    editData: {},
+    editMode: false
   };
 
   changeMode = () => {
     this.setState({
-      listMode: !this.state.listMode
+      listMode: !this.state.listMode,
+      editMode: false
     });
+    this.submits.searchList();
   };
 
   getDate = () => {
@@ -175,8 +179,7 @@ export default class extends React.Component {
       return fulldate;
     },
 
-    searchOption: async e => {
-      e.preventDefault();
+    searchList: async () => {
       const { date, userId } = this.state;
       const rawFromDate = new Date(date[0]);
       const rawToDate = new Date(date[1]);
@@ -215,6 +218,28 @@ export default class extends React.Component {
           });
         }
       });
+    },
+
+    searchOption: async e => {
+      e.preventDefault();
+      this.submits.searchList();
+    }
+  };
+
+  rowEvents = {
+    onClick: async (e, row, rowIndex) => {
+      await postApi(`admin/notify/getnoticedetail/${row.seqno}`, {}).then(
+        res => {
+          const {
+            data: { data }
+          } = res;
+          this.setState({
+            editData: data,
+            editMode: true,
+            listMode: false
+          });
+        }
+      );
     }
   };
 
@@ -225,7 +250,7 @@ export default class extends React.Component {
     } = this.props;
 
     this.setState({
-      userId: "system",
+      userId: "bselpin",
       cvnas: userinfo.cvnas
     });
   }
@@ -237,7 +262,9 @@ export default class extends React.Component {
       noticeList,
       columns,
       errorSearch,
-      listMode
+      listMode,
+      editData,
+      editMode
     } = this.state;
     const {
       user: { userinfo }
@@ -332,11 +359,19 @@ export default class extends React.Component {
                       keyField="seqno"
                       data={noticeList}
                       columns={columns}
+                      rowEvents={this.rowEvents}
                     />
                   </div>
                 </>
               ) : (
-                <TextEditor user={userinfo} changeMode={this.changeMode} />
+                <TextEditor
+                  user={userinfo}
+                  changeMode={this.changeMode}
+                  done={this.props.done}
+                  error={this.props.error}
+                  editData={editData}
+                  editMode={editMode}
+                />
               )}
             </>
           )}
