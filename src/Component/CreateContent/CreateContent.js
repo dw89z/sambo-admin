@@ -13,15 +13,15 @@ class CreateContent extends React.Component {
     currentMode: this.props.currentMode,
     mountedComp: [
       {
-        index: 4,
-        window_name: "공지사항 등록",
-        window_id: "SystNotify"
+        index: 0,
+        window_name: "대시보드",
+        window_id: "Dashboard"
       }
     ],
     currentComp: {
-      index: 4,
-      window_name: "공지사항 등록",
-      window_id: "SystNotify"
+      index: 0,
+      window_name: "대시보드",
+      window_id: "Dashboard"
     },
     doneMsg: "",
     errorMsg: ""
