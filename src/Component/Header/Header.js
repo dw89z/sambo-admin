@@ -1,5 +1,5 @@
 import React from "react";
-import "./Header.css";
+import "./Header.scss";
 import user from "../../assets/img/user.svg";
 import logout from "../../assets/img/logout.svg";
 import ui from "../../assets/img/ui.svg";

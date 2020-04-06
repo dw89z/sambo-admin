@@ -4,10 +4,10 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 13rem;
+  width: 11rem;
   overflow-y: auto;
   height: 100vh;
-  padding-top: 5.5rem;
+  padding-top: 4.5rem;
   padding-bottom: 3rem;
   background: #fff;
   z-index: 999;
@@ -17,8 +17,8 @@
   img {
     display: inline-block;
     position: absolute;
-    width: 8rem;
-    top: 3.35rem;
+    width: 7rem;
+    top: 2.75rem;
     left: 50%;
     transform: translateX(-52%);
   }
@@ -34,9 +34,9 @@
     }
 
     p {
-      padding: 0.7rem 0 0.7rem 1.2rem;
+      padding: 0.5rem 0 0.5rem 1rem;
       cursor: pointer;
-      font-weight: 500;
+      font-weight: 600;
       position: relative;
 
       &:after {
@@ -79,8 +79,8 @@
     font-size: 0.8rem;
 
     .sub-menu-list {
-      padding: 0.5rem 1rem 0.5rem 2rem;
-      padding-left: 2.5rem;
+      padding: 0.35rem 1rem 0.35rem;
+      padding-left: 1.5rem;
       font-weight: 400;
       border-top: 1px solid $gray2;
 
@@ -104,7 +104,7 @@
   width: 10rem;
 
   &.left {
-    width: 13rem;
+    width: 11rem;
   }
 
   img {
@@ -121,7 +121,7 @@
     width: 100%;
     top: 0rem;
     left: 0rem;
-    height: 2.5rem;
+    height: 2rem;
     border: none;
     padding: 0 1rem;
     font-weight: 600;
@@ -144,17 +144,17 @@
 .header-menu {
   width: 100%;
   position: absolute;
-  height: 2.5rem;
-  top: 2.5rem;
+  height: 2rem;
+  top: 2rem;
   left: 0rem;
   background: #fff;
   z-index: 99;
   border-bottom: 1px solid #c4b9ae;
 
   img {
-    width: 8rem;
-    margin-top: 0.65rem;
-    margin-left: 1rem;
+    width: 6.5rem;
+    margin-top: 0.45rem;
+    margin-left: 1.5rem;
   }
 
   .menu {
@@ -166,11 +166,11 @@
 
     .menu-list {
       position: relative;
-      height: 2.5rem;
-      line-height: 2.5rem;
+      height: 2rem;
+      line-height: 2rem;
       padding: 0 3rem 0 1.25rem;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       position: relative;
       color: #000;
       font-weight: 500;
@@ -182,7 +182,7 @@
         width: 4.5px;
         height: 4.5px;
         background: $gray3;
-        top: 1.1rem;
+        top: 0.85rem;
         left: 0.5rem;
         border-radius: 4.5px;
         transition: all 0.2s;
@@ -191,7 +191,7 @@
       &:hover {
         &:after {
           background: $pri;
-          top: 0.75rem;
+          top: 0.5rem;
           height: 18px;
         }
 
@@ -209,7 +209,7 @@
       width: 10rem;
       position: absolute;
       left: 0.5rem;
-      top: 2.4rem;
+      top: 1.94rem;
       line-height: 1rem;
       font-size: 0.8rem;
       border: 1px solid $gray3;
@@ -237,14 +237,14 @@
   position: absolute;
   display: flex;
   z-index: 50;
-  top: 5.95rem;
+  top: 4.95rem;
   left: 1rem;
   width: 100%;
   overflow-y: hidden;
 
   &.left {
-    top: 3.6rem;
-    left: 14rem;
+    top: 3.1rem;
+    left: 12rem;
   }
 
   .tab {
@@ -327,8 +327,8 @@
 .contents {
   position: absolute;
   width: calc(100% - 2rem);
-  height: calc(100% - 11rem);
-  top: 8rem;
+  height: calc(100% - 10rem);
+  top: 7rem;
   background: #fff;
   left: 1rem;
   border-top-left-radius: 0;
@@ -339,10 +339,10 @@
   box-shadow: 5px 5px 10px rgba(20, 30, 50, 0.25);
 
   &.left {
-    width: calc(100% - 15rem);
-    height: calc(100% - 8.5rem);
-    top: 5.65rem;
-    left: 14rem;
+    width: calc(100% - 13rem);
+    height: calc(100% - 8rem);
+    top: 5.15rem;
+    left: 12rem;
   }
 }
 

@@ -3,18 +3,18 @@
 .contents {
   &.left {
     .tree-section {
-      height: 38rem;
+      height: calc(100vh - 14rem);
     }
 
     .pgm-panel {
-      height: 38rem;
+      height: calc(100vh - 14rem);
     }
   }
 }
 
 .syst-pgm {
   .tree-title {
-    margin-top: 2rem;
+    margin-top: 0.5rem;
     position: absolute;
     font-size: 0.8rem;
   }
@@ -25,13 +25,13 @@
   }
 
   .tree-section {
-    margin-top: 3.5rem;
-    width: 60%;
-    height: 35.5rem;
+    margin-top: 2rem;
+    width: 40%;
+    height: calc(100vh - 15.5rem);
     border: 1px solid $dark;
     padding: 1rem;
     padding-bottom: 5rem;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     overflow: hidden;
     overflow-y: scroll;
 
@@ -164,10 +164,11 @@
   .pgm-panel {
     margin-left: 1rem;
     width: 100%;
-    margin-top: 3.5rem;
-    height: 35.5rem;
+    margin-top: 2rem;
+    height: calc(100vh - 15.5rem);
     border: 1px solid $dark;
-    padding: 2rem 2.5rem;
+    padding: 1.5rem 1.5rem;
+    position: relative;
 
     .title {
       top: 2.25rem;
@@ -185,7 +186,7 @@
     }
 
     .tab-panel {
-      width: calc(100% - 8rem);
+      width: calc(100% - 6.25rem);
       display: none;
 
       .react-tabs {
@@ -197,16 +198,16 @@
     .tab-list {
       display: flex;
       position: absolute;
-      top: -59px;
-      left: calc(-2.5rem - 1px);
+      top: -49px;
+      left: calc(-1.5rem - 1px);
       width: 100%;
-      height: 20px;
+      height: 1rem;
       align-items: center;
 
       .tab {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 500;
-        width: 5rem;
+        width: 4rem;
         padding: 0.4rem;
         text-align: center;
         border: 1px solid $gray4;
@@ -236,7 +237,6 @@
     .inner-tab-list {
       display: flex;
       flex-direction: column;
-      margin-right: 2rem;
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       -khtml-user-select: none;
@@ -246,15 +246,17 @@
 
       .inner-tab {
         box-sizing: initial;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         font-weight: 500;
-        padding: 0.25rem 0;
+        padding: 0.15rem 0;
         text-align: left;
         border-bottom: 4px solid #fff;
         color: $gray4;
         cursor: pointer;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+
         margin-right: 2.5rem;
+        margin-left: 0.5rem;
 
         &.react-tabs__tab--selected {
           border-color: $pri;
@@ -264,17 +266,23 @@
     }
 
     .input-div {
+      display: flex;
+      align-items: center;
+      margin-top: 1.25rem;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
       select {
-        width: 60%;
+        width: 55%;
         padding: 0.25rem 0;
-        font-size: 0.9rem;
-        margin-top: 0.5rem;
+        font-size: 0.8rem;
       }
 
       input {
-        width: 60%;
-        font-size: 0.9rem;
-        margin-top: 0.25rem;
+        width: 55%;
+        font-size: 0.8rem;
       }
 
       input:read-only {
@@ -288,7 +296,6 @@
       }
 
       input[type="checkbox"] {
-        margin-top: 0.5rem;
         width: 1.2rem;
         height: 1.2rem;
         cursor: pointer;
