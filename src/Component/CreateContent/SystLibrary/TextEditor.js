@@ -3,7 +3,7 @@ import "../../../globals";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import BootstrapTable from "react-bootstrap-table-next";
 import ReactSummernote from "react-summernote";
-import DatePicker from "react-date-picker";
+import DatePicker from "react-datepicker";
 import Dropzone from "react-dropzone";
 import axios from "axios";
 import "react-summernote/dist/react-summernote.css";
@@ -13,13 +13,13 @@ import "bootstrap/js/dist/dropdown";
 import "bootstrap/js/dist/tooltip";
 import Loading from "../../Loading";
 import { postApi } from "../../../api";
-import "./SystNotify.scss";
+import "../SystNotify/SystNotify.scss";
 
 class TextEditor extends React.Component {
   state = {
     userSearch: "",
     userList: [],
-    notifyauth: [],
+    libraryauth: [],
     columns: [
       {
         dataField: "logid",
@@ -33,34 +33,39 @@ class TextEditor extends React.Component {
       },
     ],
     errorSearch: true,
-    notify: {
+    library: {
       crtdat: "",
-      mslvl: "",
       gubun: "0",
       title: "",
       logid: this.props.user.logid,
       bdata: "",
+      stdat: "",
+      eddat: "",
     },
     file: [],
     tabIndex: 0,
-    notifyfilelist: [],
+    libraryfilelist: [],
     deleteList: [],
+    stdat: new Date(),
+    eddat: new Date(),
+    crtdat: new Date(),
   };
 
   init = () => {
     this.setState({
-      notify: {
+      library: {
         crtdat: "",
-        mslvl: "",
         gubun: "0",
         title: "",
         logid: this.props.user.logid,
         bdata: "",
+        stdat: "",
+        eddat: "",
       },
       file: [],
       tabIndex: 0,
-      notifyauth: [],
-      notifyfilelist: [],
+      libraryauth: [],
+      libraryfilelist: [],
       deletelist: [],
     });
   };
@@ -79,6 +84,30 @@ class TextEditor extends React.Component {
   };
 
   inputs = {
+    stDatChange: (date) => {
+      const { library } = this.state;
+      const stdat = this.formatLibDate(date);
+      this.setState({
+        stdat: date,
+        library: {
+          ...library,
+          stdat,
+        },
+      });
+    },
+
+    edDatChange: (date) => {
+      const { library } = this.state;
+      const eddat = this.formatLibDate(date);
+      this.setState({
+        eddat: date,
+        library: {
+          ...library,
+          eddat,
+        },
+      });
+    },
+
     delFile: (e) => {
       const { file } = this.state;
       const toDelFile = file.filter((file) => file.name !== e.currentTarget.id);
@@ -88,16 +117,16 @@ class TextEditor extends React.Component {
     },
 
     deleteFile: (e) => {
-      const { notifyfilelist, deleteList } = this.state;
-      const toDelFile = notifyfilelist.filter(
+      const { libraryfilelist, deleteList } = this.state;
+      const toDelFile = libraryfilelist.filter(
         (file) => file.stored_file_name !== e.currentTarget.id
       );
-      const delFile = notifyfilelist.filter(
+      const delFile = libraryfilelist.filter(
         (file) => file.stored_file_name === e.currentTarget.id
       );
       const delStored = delFile.map((file) => file.stored_file_name);
       this.setState({
-        notifyfilelist: toDelFile,
+        libraryfilelist: toDelFile,
         deleteList: [...deleteList, ...delStored],
       });
     },
@@ -108,44 +137,44 @@ class TextEditor extends React.Component {
       });
     },
 
-    inputNotice: (e) => {
-      const { notify } = this.state;
+    inputLibrary: (e) => {
+      const { library } = this.state;
       this.setState({
-        notify: {
-          ...notify,
+        library: {
+          ...library,
           [e.target.name]: e.target.value,
         },
       });
     },
 
     deleteSelected: (e) => {
-      const { notifyauth } = this.state;
+      const { libraryauth } = this.state;
       const btn = e.currentTarget;
       const logidSpan = btn.previousElementSibling.previousElementSibling;
       const logid = logidSpan.innerHTML;
-      const result = notifyauth.filter((list) => list.logid !== logid);
+      const result = libraryauth.filter((list) => list.logid !== logid);
       this.setState({
-        notifyauth: result,
+        libraryauth: result,
       });
     },
 
     selectAll: () => {
-      const { userList, notifyauth } = this.state;
+      const { userList, libraryauth } = this.state;
 
-      const jsonAuth = notifyauth.map((list) => JSON.stringify(list));
+      const jsonAuth = libraryauth.map((list) => JSON.stringify(list));
       const jsonUser = userList.map((list) => JSON.stringify(list));
       const remain = jsonAuth
         .filter((list) => !jsonUser.includes(list))
         .concat(jsonUser.filter((list) => !jsonAuth.includes(list)));
       const authResult = remain.map((remain) => JSON.parse(remain));
       this.setState({
-        notifyauth: [...notifyauth, ...authResult],
+        libraryauth: [...libraryauth, ...authResult],
       });
     },
 
     deselectAll: () => {
       this.setState({
-        notifyauth: [],
+        libraryauth: [],
       });
     },
   };
@@ -185,12 +214,12 @@ class TextEditor extends React.Component {
       });
     },
 
-    deleteNotice: async (e) => {
+    deleteLibrary: async (e) => {
       e.preventDefault();
       const {
-        editData: { notifydetail },
+        editData: { library },
       } = this.props;
-      await postApi(`admin/notify/deletenotice/${notifydetail.seqno}`, {}).then(
+      await postApi(`admin/library/deletelibrary/${library.seqno}`, {}).then(
         (res) => {
           if (!res.data.errorCode) {
             this.init();
@@ -203,34 +232,34 @@ class TextEditor extends React.Component {
       );
     },
 
-    saveNotice: async (e) => {
+    saveLibrary: async (e) => {
       e.preventDefault();
-      const { notify, notifyauth, file, deleteList } = this.state;
+      const { library, libraryauth, file, deleteList } = this.state;
       let formData = new FormData();
       if (this.props.editMode) {
-        delete notify.crtdat;
-        delete notify.logid;
+        delete library.crtdat;
+        delete library.logid;
         if (deleteList.length > 0) {
           const jsonDeleteList = JSON.stringify(deleteList);
           formData.append("deletelist", jsonDeleteList);
         }
       } else {
-        delete notify.seqno;
+        delete library.seqno;
       }
 
-      const jsonNotify = JSON.stringify(notify);
+      const jsonLibrary = JSON.stringify(library);
       const token = sessionStorage.getItem("token");
       const config = {
         "Content-Type": "multipart/form-data",
         Authorization: token,
       };
 
-      formData.append("notify", jsonNotify);
+      formData.append("library", jsonLibrary);
 
-      if (notify.gubun === 1) {
-        const users = notifyauth.map((list) => list.logid);
+      if (library.gubun === 1) {
+        const users = libraryauth.map((list) => list.logid);
         const jsonAuth = JSON.stringify(users);
-        formData.append("notifyauth", jsonAuth);
+        formData.append("libraryauth", jsonAuth);
       }
 
       if (file.length > 0) {
@@ -242,7 +271,7 @@ class TextEditor extends React.Component {
       if (!this.props.editMode) {
         await axios
           .post(
-            "http://125.141.30.222:8757/admin/notify/insertnotice",
+            "http://125.141.30.222:8757/admin/library/insertlibrary",
             formData,
             { headers: config }
           )
@@ -258,11 +287,12 @@ class TextEditor extends React.Component {
       } else {
         await axios
           .post(
-            "http://125.141.30.222:8757/admin/notify/modifynotice",
+            "http://125.141.30.222:8757/admin/library/modifylibrary",
             formData,
             { headers: config }
           )
           .then((res) => {
+            console.log(res);
             if (!res.data.errorCode) {
               this.init();
               this.props.changeMode();
@@ -277,16 +307,16 @@ class TextEditor extends React.Component {
 
   rowEvents = {
     onClick: (e, row, rowIndex) => {
-      const { notifyauth } = this.state;
+      const { libraryauth } = this.state;
 
-      if (notifyauth.length === 0) {
+      if (libraryauth.length === 0) {
         this.setState({
-          notifyauth: [row],
+          libraryauth: [row],
         });
       } else {
         let result;
-        for (let i in notifyauth) {
-          if (!notifyauth.includes(row)) {
+        for (let i in libraryauth) {
+          if (!libraryauth.includes(row)) {
             result = row;
           } else {
             result = null;
@@ -295,7 +325,7 @@ class TextEditor extends React.Component {
 
         if (result !== null) {
           this.setState({
-            notifyauth: [...notifyauth, result],
+            libraryauth: [...libraryauth, result],
           });
         }
       }
@@ -303,7 +333,7 @@ class TextEditor extends React.Component {
   };
 
   formatDate = () => {
-    const { notify } = this.state;
+    const { library } = this.state;
     const date = new Date();
     const yearNum = date.getFullYear();
     let monthNum = date.getMonth() + 1;
@@ -319,11 +349,36 @@ class TextEditor extends React.Component {
     }
     const fulldate = `${year}${month}${day}`;
     this.setState({
-      notify: {
-        ...notify,
+      library: {
+        ...library,
         crtdat: fulldate,
       },
     });
+  };
+
+  formatLibDate = (date, name) => {
+    const { library } = this.state;
+    const yearNum = date.getFullYear();
+    let monthNum = date.getMonth() + 1;
+    let dayNum = date.getDate();
+    let year = yearNum.toString();
+    let month = monthNum.toString();
+    let day = dayNum.toString();
+    if (month.length === 1) {
+      month = "0" + month;
+    }
+    if (day.length === 1) {
+      day = "0" + day;
+    }
+    const fulldate = `${year}${month}${day}`;
+    return fulldate;
+  };
+
+  formatDateObj = (date) => {
+    const year = date.substring(0, 4);
+    const month = date.substring(4, 6) - 1;
+    const day = date.substring(6, 8);
+    return new Date(year, month, day);
   };
 
   formatBytes = (bytes, decimals = 2) => {
@@ -341,45 +396,53 @@ class TextEditor extends React.Component {
   componentDidMount() {
     if (this.props.editMode) {
       const {
-        editData: { notifydetail, notifyauth, notifyfilelist },
+        editData: { library, libraryauth, libraryfilelist },
       } = this.props;
+      const stdat = this.formatDateObj(library.stdat);
+      const eddat = this.formatDateObj(library.eddat);
+      const crtdat = this.formatDateObj(library.crtdat);
       this.setState({
-        notify: {
-          crtdat: notifydetail.crtdat,
-          mslvl: notifydetail.mslvl.toString(),
-          gubun: notifydetail.gubun,
-          title: notifydetail.title,
+        library: {
+          crtdat: library.crtdat,
+          gubun: library.gubun,
+          title: library.title,
           logid: this.props.user.logid,
-          bdata: notifydetail.bdata,
-          seqno: notifydetail.seqno,
+          bdata: library.bdata,
+          seqno: library.seqno,
+          stdat: library.stdat,
+          eddat: library.eddat,
         },
-        notifyfilelist: [],
+        stdat,
+        eddat,
+        crtdat,
+        libraryfilelist: [],
       });
-      if (notifyfilelist) {
+      if (libraryfilelist) {
         this.setState({
-          notifyfilelist,
+          libraryfilelist,
         });
       }
 
-      if (notifydetail.gubun === 1) {
+      if (library.gubun === 1) {
         this.setState({
-          notifyauth,
+          libraryauth,
           tabIndex: 1,
         });
       }
     } else {
       this.setState({
-        notify: {
+        library: {
           crtdat: "",
-          mslvl: "",
           gubun: "0",
           title: "",
           logid: this.props.user.logid,
           bdata: "",
+          stdat: "",
+          eddat: "",
         },
         file: [],
         tabIndex: 0,
-        notifyauth: [],
+        libraryauth: [],
       });
       this.formatDate();
     }
@@ -389,13 +452,16 @@ class TextEditor extends React.Component {
     const {
       userList,
       columns,
-      notifyauth,
+      libraryauth,
       userSearch,
       errorSearch,
-      notify,
+      library,
       file,
       tabIndex,
-      notifyfilelist,
+      libraryfilelist,
+      stdat,
+      eddat,
+      crtdat,
     } = this.state;
     const submits = this.submits;
     const inputs = this.inputs;
@@ -413,7 +479,7 @@ class TextEditor extends React.Component {
     return (
       <>
         <div className="close-btn" onClick={this.props.changeMode}></div>
-        <form onSubmit={submits.saveNotice}>
+        <form onSubmit={submits.saveLibrary}>
           <div className="textedit-section">
             <div className="textedit-header">
               <span className="label">사용자ID</span>
@@ -427,44 +493,20 @@ class TextEditor extends React.Component {
                 spellCheck="false"
                 readOnly
               />
-              <div className="user-info">
-                <span className="label">사용자명</span>
-                <span className="info-cvnas">{this.props.user.cvnas}</span>
-              </div>
-              <span className="label calendar">등록일자</span>
+              <span className="label calendar">노출기간</span>
               <DatePicker
-                value={new Date()}
-                calendarIcon={null}
-                clearIcon={null}
-                disabled
-                locale={"ko-KR"}
+                selected={stdat}
+                onChange={inputs.stDatChange}
+                dateFormat="yyyy-MM-dd"
               />
-              <div className="radio-section">
-                <div className="radio">
-                  <input
-                    type="radio"
-                    name="mslvl"
-                    id="normal"
-                    value="0"
-                    checked={notify.mslvl === "0"}
-                    onChange={inputs.inputNotice}
-                    required
-                  />
-                  <label htmlFor="normal">일반</label>
-                </div>
-                <div className="radio">
-                  <input
-                    type="radio"
-                    name="mslvl"
-                    id="admin"
-                    value="1"
-                    checked={notify.mslvl === "1"}
-                    onChange={inputs.inputNotice}
-                    required
-                  />
-                  <label htmlFor="admin">중요</label>
-                </div>
-              </div>
+              <span className="date-divider">~</span>
+              <DatePicker
+                selected={eddat}
+                onChange={inputs.edDatChange}
+                dateFormat="yyyy-MM-dd"
+              />
+              <span className="label ml">등록일자</span>
+              <DatePicker selected={crtdat} dateFormat="yyyy-MM-dd" disabled />
             </div>
 
             <span className="textedit-label">제목</span>
@@ -473,8 +515,8 @@ class TextEditor extends React.Component {
               className="textedit-title"
               type="text"
               name="title"
-              onChange={inputs.inputNotice}
-              value={notify.title}
+              onChange={inputs.inputLibrary}
+              value={library.title}
               required
               autoComplete="false"
             />
@@ -482,7 +524,7 @@ class TextEditor extends React.Component {
 
           <div className="notice-editor">
             <ReactSummernote
-              value={notify.bdata}
+              value={library.bdata}
               className="summernote"
               options={{
                 lang: "ko-KR",
@@ -500,21 +542,21 @@ class TextEditor extends React.Component {
               }}
               onImageUpload={this.onImageUpload}
               onChange={(content) => {
-                const { notify } = this.state;
+                const { library } = this.state;
                 this.setState({
-                  notify: {
-                    ...notify,
+                  library: {
+                    ...library,
                     bdata: content,
                   },
                 });
               }}
             />
-            {this.props.editMode && notifyfilelist.length > 0 ? (
+            {this.props.editMode && libraryfilelist.length > 0 ? (
               <>
                 <div className="modify-file-section">
                   <span className="file-label">기존 업로드 파일</span>
                   <ul className="modify-list">
-                    {notifyfilelist.map((list, index) => (
+                    {libraryfilelist.map((list, index) => (
                       <li key={index} className="modify-file">
                         {list.org_file_name}
                         <span
@@ -546,7 +588,7 @@ class TextEditor extends React.Component {
           </div>
           <button className="save">저장</button>
           {this.props.editMode ? (
-            <button className="save delete" onClick={submits.deleteNotice}>
+            <button className="save delete" onClick={submits.deleteLibrary}>
               삭제
             </button>
           ) : null}
@@ -563,8 +605,8 @@ class TextEditor extends React.Component {
                   className="tab"
                   onClick={() => {
                     this.setState({
-                      notify: {
-                        ...notify,
+                      library: {
+                        ...library,
                         gubun: 0,
                       },
                     });
@@ -576,8 +618,8 @@ class TextEditor extends React.Component {
                   className="tab"
                   onClick={() => {
                     this.setState({
-                      notify: {
-                        ...notify,
+                      library: {
+                        ...library,
                         gubun: 1,
                       },
                     });
@@ -588,7 +630,7 @@ class TextEditor extends React.Component {
               </TabList>
 
               <TabPanel className="user-entire-panel">
-                <p>공지사항이 전체 사용자에게 보여집니다.</p>
+                <p>자료실이 전체 사용자에게 보여집니다.</p>
               </TabPanel>
               <TabPanel className="user-specific-panel">
                 <form className="user-input-form" onSubmit={submits.searchUser}>
@@ -629,9 +671,9 @@ class TextEditor extends React.Component {
 
                   <div className="selected-users">
                     <p className="selected-label">선택된 특정ID</p>
-                    {notifyauth.length !== 0 ? (
+                    {libraryauth.length !== 0 ? (
                       <ul>
-                        {notifyauth.map((list, index) => {
+                        {libraryauth.map((list, index) => {
                           return (
                             <li key={index}>
                               <span className="logid">{list.logid}</span>
@@ -650,7 +692,7 @@ class TextEditor extends React.Component {
                   </div>
                   <div
                     className={
-                      notifyauth.length === 0
+                      libraryauth.length === 0
                         ? "deselect-all wait"
                         : "deselect-all active"
                     }

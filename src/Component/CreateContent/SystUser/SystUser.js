@@ -24,22 +24,22 @@ export default class extends React.Component {
       {
         dataField: "logid",
         text: "로그인ID",
-        sort: true
+        sort: true,
       },
       {
         dataField: "passwd",
         text: "비밀번호",
-        sort: true
+        sort: true,
       },
       {
         dataField: "cvnas",
         text: "거래처명",
-        sort: true
+        sort: true,
       },
       {
         dataField: "cvcod",
         text: "거래처코드",
-        sort: true
+        sort: true,
       },
       {
         dataField: "auth",
@@ -51,8 +51,8 @@ export default class extends React.Component {
         formatExtraData: {
           0: "일반",
           1: "관리자",
-          2: "사용자"
-        }
+          2: "사용자",
+        },
       },
       {
         dataField: "gubn",
@@ -63,8 +63,8 @@ export default class extends React.Component {
         },
         formatExtraData: {
           0: "외주",
-          1: "구매"
-        }
+          1: "구매",
+        },
       },
       {
         dataField: "hphone",
@@ -72,8 +72,8 @@ export default class extends React.Component {
         sort: true,
         formatter: this.noneFormatter,
         formatExtraData: {
-          null: "-"
-        }
+          null: "-",
+        },
       },
       {
         dataField: "telno",
@@ -81,8 +81,8 @@ export default class extends React.Component {
         sort: true,
         formatter: this.noneFormatter,
         formatExtraData: {
-          null: "-"
-        }
+          null: "-",
+        },
       },
       {
         dataField: "email",
@@ -90,8 +90,8 @@ export default class extends React.Component {
         sort: true,
         formatter: this.noneFormatter,
         formatExtraData: {
-          null: "-"
-        }
+          null: "-",
+        },
       },
       {
         dataField: "edit",
@@ -99,13 +99,13 @@ export default class extends React.Component {
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
             this.setState({
-              selectedRow: row
+              selectedRow: row,
             });
-          }
+          },
         },
         headerAlign: (column, colIndex) => "center",
         classes: "edit",
-        hidden: true
+        hidden: true,
       },
       {
         dataField: "delete",
@@ -113,16 +113,16 @@ export default class extends React.Component {
         events: {
           onClick: (e, column, columnIndex, row, rowIndex) => {
             this.setState({
-              selectedRow: row
+              selectedRow: row,
             });
-          }
+          },
         },
         headerAlign: (column, colIndex) => "center",
         classes: "delete",
-        hidden: true
-      }
+        hidden: true,
+      },
     ],
-    rightPanel: "사용자 등록"
+    rightPanel: "사용자 등록",
   };
 
   noneFormatter(cell, row, rowIndex, formatExtraData) {
@@ -133,41 +133,41 @@ export default class extends React.Component {
     return <span>{cell}</span>;
   }
 
-  userSearch = async e => {
+  userSearch = async (e) => {
     e.preventDefault();
     const params = { searchKeyword: this.state.userSearch };
     try {
       this.setState({
-        loading: true
+        loading: true,
       });
-      await postApi("admin/um/searchusers", params).then(res => {
+      await postApi("admin/um/searchusers", params).then((res) => {
         const {
-          data: { data }
+          data: { data },
         } = res;
 
         if (data.length !== 0) {
           this.setState({
             users: [...data],
-            errorSearch: false
+            errorSearch: false,
           });
         } else {
           this.setState({
             users: [],
-            errorSearch: true
+            errorSearch: true,
           });
         }
       });
     } catch {
     } finally {
       this.setState({
-        loading: false
+        loading: false,
       });
     }
   };
 
-  inputUpdate = e => {
+  inputUpdate = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -182,29 +182,29 @@ export default class extends React.Component {
             selectedRow: row,
             openEdit: !openEdit,
             addMode: false,
-            rightPanel: "사용자 수정"
+            rightPanel: "사용자 수정",
           });
-        }
+        },
       },
       headerAlign: (column, colIndex) => "center",
       classes: "edit",
-      hidden: true
+      hidden: true,
     };
     const nonEdit = {
       ...addEdit,
-      hidden: false
+      hidden: false,
     };
 
     if (!editMode) {
       this.setState({
         columns: [...columns, nonEdit],
-        editMode: true
+        editMode: true,
       });
     } else {
       columns.pop();
       this.setState({
         column: [...columns, addEdit],
-        editMode: false
+        editMode: false,
       });
     }
   };
@@ -218,58 +218,58 @@ export default class extends React.Component {
         onClick: async (e, column, columnIndex, row, rowIndex) => {
           try {
             console.log(row.logid);
-            await deleteApi("admin/um/user", row.logid).then(res => {
+            await deleteApi("admin/um/user", row.logid).then((res) => {
               console.log(res.data);
             });
           } catch (error) {
             alert(error);
           } finally {
             const data = {
-              searchKeyword: this.state.userSearch
+              searchKeyword: this.state.userSearch,
             };
             this.setState({
-              loading: true
+              loading: true,
             });
-            await postApi("admin/um/searchusers", data).then(res => {
+            await postApi("admin/um/searchusers", data).then((res) => {
               const {
-                data: { data }
+                data: { data },
               } = res;
               if (data.length !== 0) {
                 this.setState({
                   users: [...data],
                   errorSearch: false,
-                  loading: false
+                  loading: false,
                 });
               } else {
                 this.setState({
                   users: [],
                   errorSearch: true,
-                  loading: false
+                  loading: false,
                 });
               }
             });
           }
-        }
+        },
       },
       headerAlign: (column, colIndex) => "center",
       classes: "delete",
-      hidden: true
+      hidden: true,
     };
     const nonDelete = {
       ...addDelete,
-      hidden: false
+      hidden: false,
     };
 
     if (!deleteMode) {
       this.setState({
         columns: [...columns, nonDelete],
-        deleteMode: true
+        deleteMode: true,
       });
     } else {
       columns.pop();
       this.setState({
         column: [...columns, addDelete],
-        deleteMode: false
+        deleteMode: false,
       });
     }
   };
@@ -279,7 +279,7 @@ export default class extends React.Component {
     this.setState({
       addMode: !addMode,
       openMode: false,
-      rightPanel: "사용자 등록"
+      rightPanel: "사용자 등록",
     });
   };
 
@@ -288,7 +288,7 @@ export default class extends React.Component {
       addMode: false,
       openEdit: false,
       editMode: false,
-      selectedRow: {}
+      selectedRow: {},
     });
   };
 
@@ -297,32 +297,32 @@ export default class extends React.Component {
     this.setState({
       openEdit: !openEdit,
       addMode: false,
-      rightPanel: "사용자 수정"
+      rightPanel: "사용자 수정",
     });
   };
 
   async componentDidMount() {
     const params = {
-      searchKeyword: "test"
+      searchKeyword: "test",
     };
     this.setState({
-      loading: true
+      loading: true,
     });
     try {
-      await postApi("admin/um/searchusers", params).then(res => {
+      await postApi("admin/um/searchusers", params).then((res) => {
         const {
-          data: { data }
+          data: { data },
         } = res;
 
         if (data.length !== 0) {
           this.setState({
             users: [...data],
-            errorSearch: false
+            errorSearch: false,
           });
         } else {
           this.setState({
             users: [],
-            errorSearch: true
+            errorSearch: true,
           });
         }
       });
@@ -330,7 +330,7 @@ export default class extends React.Component {
       alert(err);
     } finally {
       this.setState({
-        loading: false
+        loading: false,
       });
     }
   }
@@ -345,7 +345,7 @@ export default class extends React.Component {
       addMode,
       openEdit,
       rightPanel,
-      userSearch
+      userSearch,
     } = this.state;
 
     return (
@@ -367,7 +367,7 @@ export default class extends React.Component {
                     value={userSearch}
                     onChange={this.inputUpdate}
                   />
-                  <button></button>
+                  <button className="search-btn"></button>
                 </form>
                 <div className="utils">
                   <p className="util-button" onClick={this.openAddMode}>

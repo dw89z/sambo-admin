@@ -14,50 +14,50 @@ export default class extends React.Component {
     data: [],
     programdetail: {
       main_id: "",
-      sub1_id: "",
-      sub2_id: "",
+      sub1_id: "0",
+      sub2_id: "0",
       io_gubun: "M",
       sub2_name: "",
       window_name: "",
-      delyn: "Y"
+      delyn: "Y",
     },
     placeholder: {
       main_id: "-",
       sub1_id: "-",
-      sub2_id: "-"
+      sub2_id: "-",
     },
     tabIndex: 0,
     innerTabIndex: 0,
     invalid: {
       main_id: false,
       sub1_id: false,
-      sub2_id: false
+      sub2_id: false,
     },
     disable: true,
     mainSelect: 10,
     sub1Select: [],
     sub2Select: [],
-    radioVisible: false
+    radioVisible: false,
   };
 
   tree = {
     getTreeData: async () => {
-      await getApi("admin/pm/programlist").then(res => {
+      await getApi("admin/pm/programlist").then((res) => {
         const {
-          data: { data }
+          data: { data },
         } = res;
         const sub1Select = data[0].sublist;
-        const sub1SubList = data[0].sublist.map(sub => sub.sublist);
-        const sub2Select = sub1SubList[0].map(sub2 => parseInt(sub2.sub2_id));
+        const sub1SubList = data[0].sublist.map((sub) => sub.sublist);
+        const sub2Select = sub1SubList[0].map((sub2) => parseInt(sub2.sub2_id));
         this.setState({
           data: data,
           sub1Select,
-          sub2Select
+          sub2Select,
         });
       });
     },
 
-    treeStr: data => {
+    treeStr: (data) => {
       return (
         <>
           {data.map((main, index) => {
@@ -72,7 +72,7 @@ export default class extends React.Component {
                 >
                   <p
                     className="top-tree"
-                    onClick={e => {
+                    onClick={(e) => {
                       this.tree.lookupProgram(e);
                       this.tree.toggleClass(e);
                     }}
@@ -90,7 +90,7 @@ export default class extends React.Component {
                           data-sub2id={sublist.program.sub2_id}
                         >
                           <p
-                            onClick={e => {
+                            onClick={(e) => {
                               this.tree.lookupProgram(e);
                               this.tree.toggleSubClass(e);
                             }}
@@ -108,7 +108,7 @@ export default class extends React.Component {
                                   data-sub2id={last.sub2_id}
                                 >
                                   <p
-                                    onClick={e => {
+                                    onClick={(e) => {
                                       this.tree.lookupProgram(e);
                                     }}
                                   >
@@ -130,7 +130,7 @@ export default class extends React.Component {
       );
     },
 
-    toggleClass: e => {
+    toggleClass: (e) => {
       let subMenu = e.currentTarget.nextElementSibling;
       if (subMenu.style.maxHeight) {
         subMenu.style.maxHeight = null;
@@ -139,7 +139,7 @@ export default class extends React.Component {
       }
     },
 
-    toggleSubClass: e => {
+    toggleSubClass: (e) => {
       let subMenu = e.currentTarget.nextElementSibling;
       let parent = subMenu.parentElement.parentElement;
       let parentHeight = parseInt(parent.style.maxHeight);
@@ -152,24 +152,24 @@ export default class extends React.Component {
       }
     },
 
-    lookupProgram: async e => {
+    lookupProgram: async (e) => {
       this.setState({
-        tabIndex: 1
+        tabIndex: 1,
       });
       const parent = e.currentTarget.parentNode;
       const data = {
         programdetail: {
           main_id: parent.dataset.mainid,
           sub1_id: parent.dataset.sub1id,
-          sub2_id: parent.dataset.sub2id
-        }
+          sub2_id: parent.dataset.sub2id,
+        },
       };
       const lvlno = parent.dataset.lvlno;
-      await postApi("admin/pm/getprogram", data).then(res => {
+      await postApi("admin/pm/getprogram", data).then((res) => {
         const {
           data: {
-            data: { program }
-          }
+            data: { program },
+          },
         } = res;
         const placeholder = this.state.placeholder;
         if (program.window_name === null) {
@@ -181,72 +181,82 @@ export default class extends React.Component {
             placeholder: {
               main_id: `${program.sub2_name} (${program.main_id})`,
               sub1_id: "-",
-              sub2_id: "-"
+              sub2_id: "-",
             },
             programdetail: program,
-            radioVisible: false
+            radioVisible: false,
           });
         } else if (lvlno === "1") {
           this.setState({
             placeholder: {
               ...placeholder,
               sub1_id: `${program.sub2_name} (${program.sub1_id})`,
-              sub2_id: "-"
+              sub2_id: "-",
             },
             programdetail: program,
-            radioVisible: false
+            radioVisible: false,
           });
         } else if (lvlno === "2") {
           this.setState({
             placeholder: {
               ...placeholder,
-              sub2_id: `${program.sub2_name} (${program.sub2_id})`
+              sub2_id: `${program.sub2_name} (${program.sub2_id})`,
             },
             programdetail: program,
-            radioVisible: true
+            radioVisible: true,
           });
         }
       });
-    }
+    },
   };
 
   inputs = {
-    inputUpdate: e => {
+    inputUpdate: (e) => {
       const { programdetail } = this.state;
       this.setState({
         programdetail: {
           ...programdetail,
-          [e.target.name]: e.target.value
-        }
+          [e.target.name]: e.target.value,
+        },
       });
     },
 
-    inputSelect: e => {
+    inputSelect: (e) => {
       const { programdetail, data, innerTabIndex } = this.state;
       const id = e.target.value;
+
       if (e.target.name === "main_id") {
-        const list = data.filter(data => {
+        const list = data.filter((data) => {
           let result;
           if (data.program.main_id === id) {
             result = data.sublist;
           }
           return result;
         });
+
         const sub1Select = list[0].sublist;
+        if (sub1Select.length === 1) {
+          const sub2Select = sub1Select[0].sublist.map((sub) => {
+            return parseInt(sub.sub2_id);
+          });
+          this.setState({
+            sub2Select,
+          });
+        }
         if (innerTabIndex === 1) {
           this.setState({
             programdetail: {
               ...programdetail,
               [e.target.name]: e.target.value,
               sub1_id: "",
-              sub2_id: "0"
+              sub2_id: "0",
             },
             invalid: {
               main_id: false,
               sub1_id: false,
-              sub2_id: false
+              sub2_id: false,
             },
-            sub1Select
+            sub1Select,
           });
         } else {
           this.setState({
@@ -254,19 +264,19 @@ export default class extends React.Component {
               ...programdetail,
               [e.target.name]: e.target.value,
               sub1_id: "10",
-              sub2_id: ""
+              sub2_id: "",
             },
             invalid: {
               main_id: false,
               sub1_id: false,
-              sub2_id: false
+              sub2_id: false,
             },
-            sub1Select
+            sub1Select,
           });
         }
       } else if (e.target.name === "sub1_id") {
         const { sub1Select } = this.state;
-        const sublist = sub1Select.filter(sub => {
+        const sublist = sub1Select.filter((sub) => {
           let result;
           if (sub.program.sub1_id === e.target.value) {
             result = sub.sublist;
@@ -274,32 +284,32 @@ export default class extends React.Component {
           return result;
         });
         const sub2list = sublist[0].sublist;
-        const sub2Select = sub2list.map(sub => parseInt(sub.sub2_id));
+        const sub2Select = sub2list.map((sub) => parseInt(sub.sub2_id));
         this.setState({
           programdetail: {
             ...programdetail,
             [e.target.name]: e.target.value,
-            sub2_id: ""
+            sub2_id: "",
           },
           invalid: {
             main_id: false,
             sub1_id: false,
-            sub2_id: false
+            sub2_id: false,
           },
-          sub2Select
+          sub2Select,
         });
       }
     },
 
-    inputMain: e => {
+    inputMain: (e) => {
       const { data, sub1Select, sub2Select } = this.state;
       const id = parseInt(e.target.value);
-      const list = data.map(list => parseInt(list.program.main_id));
+      const list = data.map((list) => parseInt(list.program.main_id));
 
       if (e.target.name === "main_id") {
         this.inputs.inputVali(e, id, list);
       } else if (e.target.name === "sub1_id") {
-        const sub1list = sub1Select.map(sub => parseInt(sub.program.sub1_id));
+        const sub1list = sub1Select.map((sub) => parseInt(sub.program.sub1_id));
 
         this.inputs.inputVali(e, id, sub1list);
       } else if (e.target.name === "sub2_id") {
@@ -307,21 +317,21 @@ export default class extends React.Component {
       }
     },
 
-    inputCheck: e => {
+    inputCheck: (e) => {
       const programdetail = this.state.programdetail;
       if (e.target.checked === true) {
         this.setState({
           programdetail: {
             ...programdetail,
-            [e.target.name]: "N"
-          }
+            [e.target.name]: "N",
+          },
         });
       } else {
         this.setState({
           programdetail: {
             ...programdetail,
-            [e.target.name]: "Y"
-          }
+            [e.target.name]: "Y",
+          },
         });
       }
     },
@@ -332,56 +342,56 @@ export default class extends React.Component {
         this.setState({
           programdetail: {
             ...programdetail,
-            [e.target.name]: id
-          }
+            [e.target.name]: id,
+          },
         });
         if (list.includes(id)) {
           this.setState({
             invalid: {
               ...invalid,
-              [e.target.name]: true
+              [e.target.name]: true,
             },
-            disable: true
+            disable: true,
           });
         } else {
           this.setState({
             invalid: {
               ...invalid,
-              [e.target.name]: false
+              [e.target.name]: false,
             },
-            disable: false
+            disable: false,
           });
         }
       } else {
         this.setState({
           programdetail: {
             ...programdetail,
-            [e.target.name]: ""
-          }
+            [e.target.name]: "",
+          },
         });
       }
-    }
+    },
   };
 
   submits = {
-    registSubmit: async e => {
+    registSubmit: async (e) => {
       e.preventDefault();
       const { programdetail } = this.state;
       if (programdetail.window_name === "") {
         this.setState({
           programdetail: {
             ...programdetail,
-            window_name: null
-          }
+            window_name: null,
+          },
         });
       }
       try {
         this.setState({
-          innerLoading: true
+          innerLoading: true,
         });
         await postApi("admin/pm/registprogram", {
-          programdetail: programdetail
-        }).then(res => {
+          programdetail: programdetail,
+        }).then((res) => {
           if (!res.data.errorCode) {
             this.props.done(res.data.data.message);
           } else {
@@ -393,29 +403,29 @@ export default class extends React.Component {
       } finally {
         await this.tree.getTreeData();
         this.setState({
-          innerLoading: false
+          innerLoading: false,
         });
       }
     },
 
-    updateSubmit: async e => {
+    updateSubmit: async (e) => {
       e.preventDefault();
       const { programdetail } = this.state;
       if (programdetail.window_name === "") {
         this.setState({
           programdetail: {
             ...programdetail,
-            window_name: null
-          }
+            window_name: null,
+          },
         });
       }
       try {
         this.setState({
-          innerLoading: true
+          innerLoading: true,
         });
         await postApi("admin/pm/updateprogram", {
-          programdetail: programdetail
-        }).then(res => {
+          programdetail: programdetail,
+        }).then((res) => {
           if (!res.data.errorCode) {
             this.props.done(res.data.data.message);
           } else {
@@ -427,27 +437,27 @@ export default class extends React.Component {
       } finally {
         await this.tree.getTreeData();
         this.setState({
-          innerLoading: false
+          innerLoading: false,
         });
       }
     },
 
-    deleteSubmit: async e => {
+    deleteSubmit: async (e) => {
       e.preventDefault();
       const { programdetail } = this.state;
       const data = {
         programdetail: {
           main_id: programdetail.main_id,
           sub1_id: programdetail.sub1_id,
-          sub2_id: programdetail.sub2_id
-        }
+          sub2_id: programdetail.sub2_id,
+        },
       };
 
       try {
         this.setState({
-          innerLoading: true
+          innerLoading: true,
         });
-        await postApi("admin/pm/deleteprogram", data).then(res => {
+        await postApi("admin/pm/deleteprogram", data).then((res) => {
           if (!res.data.errorCode) {
             this.props.done(res.data.data.message);
           } else {
@@ -459,10 +469,10 @@ export default class extends React.Component {
       } finally {
         await this.tree.getTreeData();
         this.setState({
-          innerLoading: false
+          innerLoading: false,
         });
       }
-    }
+    },
   };
 
   async componentDidMount() {
@@ -478,7 +488,7 @@ export default class extends React.Component {
       invalid,
       sub1Select,
       placeholder,
-      radioVisible
+      radioVisible,
     } = this.state;
     const tree = this.tree;
     const inputs = this.inputs;
@@ -501,7 +511,7 @@ export default class extends React.Component {
                   <Tabs
                     className="pgm-tab"
                     selectedIndex={this.state.tabIndex}
-                    onSelect={tabIndex => this.setState({ tabIndex })}
+                    onSelect={(tabIndex) => this.setState({ tabIndex })}
                   >
                     <TabList className="tab-list">
                       <Tab
@@ -515,9 +525,9 @@ export default class extends React.Component {
                               io_gubun: "M",
                               sub2_name: "",
                               window_name: "",
-                              delyn: "N"
+                              delyn: "N",
                             },
-                            innerTabIndex: 0
+                            innerTabIndex: 0,
                           });
                         }}
                       >
@@ -534,9 +544,9 @@ export default class extends React.Component {
                               io_gubun: "M",
                               sub2_name: "",
                               window_name: "",
-                              delyn: "N"
+                              delyn: "N",
                             },
-                            innerTabIndex: 0
+                            innerTabIndex: 0,
                           });
                         }}
                         disabled={true}
@@ -548,7 +558,7 @@ export default class extends React.Component {
                     <TabPanel className="tab-panel">
                       <Tabs
                         selectedIndex={this.state.innerTabIndex}
-                        onSelect={tabIndex =>
+                        onSelect={(tabIndex) =>
                           this.setState({ innerTabIndex: tabIndex })
                         }
                       >
@@ -564,8 +574,8 @@ export default class extends React.Component {
                                   io_gubun: "M",
                                   sub2_name: "",
                                   window_name: "",
-                                  delyn: "N"
-                                }
+                                  delyn: "N",
+                                },
                               });
                             }}
                           >
@@ -582,8 +592,8 @@ export default class extends React.Component {
                                   io_gubun: "S",
                                   sub2_name: "",
                                   window_name: "",
-                                  delyn: "N"
-                                }
+                                  delyn: "N",
+                                },
                               });
                             }}
                           >
@@ -602,9 +612,9 @@ export default class extends React.Component {
                                   io_gubun: "",
                                   sub2_name: "",
                                   window_name: "",
-                                  delyn: "N"
+                                  delyn: "N",
                                 },
-                                sub1Select
+                                sub1Select,
                               });
                             }}
                           >

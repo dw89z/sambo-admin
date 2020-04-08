@@ -14,42 +14,42 @@ export default class extends React.Component {
     mode: [],
     currentMenu: [],
     menuAxis: true,
-    loading: true
+    loading: true,
   };
 
   toggleMenuAxis = () => {
     const { menuAxis } = this.state;
     this.setState({
-      menuAxis: !menuAxis
+      menuAxis: !menuAxis,
     });
   };
 
-  handleMode = e => {
+  handleMode = (e) => {
     this.setState({
       currentMode: {
-        main_id: e.target.value
-      }
+        main_id: e.target.value,
+      },
     });
   };
 
   async componentDidMount() {
     try {
       const {
-        data: { data: user }
+        data: { data: user },
       } = await postApi("main/userinfo");
       const {
-        data: { data: mode }
+        data: { data: mode },
       } = await postApi("main/mode");
 
       this.setState({
         user,
         mode,
-        currentMode: mode[1]
+        currentMode: mode[0],
       });
     } catch {
     } finally {
       this.setState({
-        loading: false
+        loading: false,
       });
     }
   }
@@ -73,7 +73,7 @@ export default class extends React.Component {
               className={menuAxis ? "select-section" : "select-section left"}
             >
               <select onChange={this.handleMode} className="mode-selection">
-                {mode.map(mode => (
+                {mode.map((mode) => (
                   <option value={mode.main_id} key={mode.main_id}>
                     {mode.window_name} 모드
                   </option>

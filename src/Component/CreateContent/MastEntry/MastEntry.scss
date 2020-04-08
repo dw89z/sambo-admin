@@ -1,0 +1,159 @@
+@import "../../../scss/Variables.scss";
+
+.mast-entry {
+  .input-div {
+    display: flex;
+    align-items: center;
+
+    input {
+      height: 2rem;
+      border: 1px solid $gray3;
+    }
+  }
+
+  .mast-section {
+    margin-top: 1.5rem;
+
+    table {
+      width: 100%;
+
+      tr:nth-child(2n) {
+        background: $gray;
+      }
+
+      th {
+        background: $gray2;
+        text-align: right;
+        width: 10rem;
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+        border-top: 1px solid $gray3;
+        border-bottom: 1px solid $gray3;
+        border-right: 1px solid $dark;
+
+        &:nth-child(3n) {
+          border-left: 2px solid $dark;
+        }
+      }
+
+      td {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+        border-top: 1px solid $gray3;
+        border-bottom: 1px solid $gray3;
+      }
+    }
+  }
+
+  .mast-modify {
+    width: 100%;
+    display: flex;
+    margin-top: 1rem;
+
+    .password-section {
+      width: calc(50% - 0.5rem);
+      padding: 1rem 1.5rem 1.5rem;
+      border: 1px solid $gray2;
+      height: 16rem;
+      position: relative;
+    }
+
+    .sign-section {
+      width: calc(40% - 0.5rem);
+      padding: 1rem 1.5rem 1.5rem;
+      border: 1px solid $gray2;
+      position: relative;
+      height: 16rem;
+      margin-left: 1rem;
+    }
+
+    .sign-section-inner {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    .sign-drag-box {
+      height: 100%;
+      padding: 0.4rem;
+      height: 9rem;
+    }
+
+    .sign-dropzone {
+      width: 9rem;
+      height: 9rem;
+      border: 1px solid $pri;
+      position: relative;
+      margin-left: 3rem;
+      margin-top: 0.5rem;
+    }
+
+    .sign-image-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6rem;
+      height: auto;
+      z-index: 10;
+      transform: translateX(-3rem) translateY(-3rem);
+
+      .sign-image {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .drag-info {
+      text-align: center;
+      font-size: 0.75rem;
+      color: $pri;
+      padding-top: 3.5rem;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+
+
+      &.hidden {
+        visibility: hidden;
+      }
+    }
+
+    .infos {
+      margin-top: 2.5rem;
+    }
+
+    .file-info {
+      text-align: center;
+      font-size: 0.75rem;
+      color: $gray4;
+      margin: 0.25rem auto;
+      text-align-last: left;
+
+      &.main-info {
+        font-size: 0.85rem;
+        color: $dark;
+      }
+    }
+
+
+    h4 {
+      color: $pri;
+      margin-bottom: 0.75rem;
+    }
+
+    .input-div {
+      .label {
+        width: 6rem;
+        margin-right: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      input {
+        width: 70%;
+        padding: 0.4rem;
+      }
+    }
+  }
+}

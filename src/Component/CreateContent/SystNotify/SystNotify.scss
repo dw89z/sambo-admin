@@ -97,6 +97,8 @@
         font-size: 0.75rem;
         font-weight: 600;
         margin-right: 0.5rem;
+
+
       }
 
       input {
@@ -121,7 +123,7 @@
     }
 
     .user-list-table {
-      height: calc(100vh - 25rem);
+      height: calc(100vh - 30.8rem);
       border-color: $gray3;
 
       tbody {
@@ -244,7 +246,7 @@
       font-size: 0.85rem;
       font-weight: 500;
       color: $gray4;
-      margin-top: 18rem;
+      margin-top: 13rem;
     }
   }
 
@@ -342,6 +344,17 @@
       display: flex;
       margin-bottom: 0.5rem;
       align-items: center;
+
+      .ml {
+        margin-left: 1rem;
+      }
+
+      .react-datepicker__input-container {
+        input:disabled {
+          background: $gray;
+          cursor: default;
+        }
+      }
 
       .main-search:read-only {
         background: $gray;

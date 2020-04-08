@@ -5,6 +5,8 @@ import Done from "./common/Done";
 import { postApi } from "../../api";
 import logo from "../../assets/img/logo.png";
 import Loading from "component/Loading";
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+import ko from "date-fns/locale/ko";
 
 class CreateContent extends React.Component {
   state = {
@@ -15,20 +17,20 @@ class CreateContent extends React.Component {
       {
         index: 0,
         window_name: "대시보드",
-        window_id: "Dashboard"
-      }
+        window_id: "MastEntry",
+      },
     ],
     currentComp: {
       index: 0,
       window_name: "대시보드",
-      window_id: "Dashboard"
+      window_id: "MastEntry",
     },
     doneMsg: "",
-    errorMsg: ""
+    errorMsg: "",
   };
 
   uiFunc = {
-    toggleClassParent: e => {
+    toggleClassParent: (e) => {
       let parent = e.currentTarget.parentElement;
       parent.classList.toggle("active");
       let subMenu = e.currentTarget.nextElementSibling;
@@ -39,11 +41,11 @@ class CreateContent extends React.Component {
       }
     },
 
-    handleMode: e => {
+    handleMode: (e) => {
       this.setState({
         currentMode: {
-          main_id: e.target.value
-        }
+          main_id: e.target.value,
+        },
       });
     },
 
@@ -52,38 +54,37 @@ class CreateContent extends React.Component {
       let newComp = {
         index,
         window_name,
-        window_id
+        window_id,
       };
 
-      let isMounted = mountedComp.some(comp => comp.index === index);
+      let isMounted = mountedComp.some((comp) => comp.index === index);
       if (isMounted) {
         this.setState({
-          currentComp: newComp
+          currentComp: newComp,
         });
       } else {
         this.setState({
           mountedComp: [...mountedComp, newComp],
-          currentComp: newComp
+          currentComp: newComp,
         });
       }
     },
 
     deleteComponent: (e, index) => {
       e.stopPropagation();
-
       const { mountedComp } = this.state;
-      const deleteToId = mountedComp.filter(comp => comp.index !== index);
+      const deleteToId = mountedComp.filter((comp) => comp.index !== index);
       let previousComp = deleteToId[deleteToId.length - 1];
       this.setState({
         mountedComp: deleteToId,
-        currentComp: previousComp
+        currentComp: previousComp,
       });
       this.uiFunc.handleSelect(previousComp);
     },
 
-    handleSelect: comps => {
+    handleSelect: (comps) => {
       this.setState({
-        currentComp: comps
+        currentComp: comps,
       });
     },
 
@@ -104,7 +105,7 @@ class CreateContent extends React.Component {
               {comps.index === currentComp.index && comps.index !== 0 ? (
                 <span
                   className="delete-btn"
-                  onClick={e => this.uiFunc.deleteComponent(e, comps.index)}
+                  onClick={(e) => this.uiFunc.deleteComponent(e, comps.index)}
                 ></span>
               ) : (
                 <span className="delete-btn disable non-delete"></span>
@@ -113,67 +114,69 @@ class CreateContent extends React.Component {
           ))}
         </ul>
       );
-    }
+    },
   };
 
   msg = {
-    done: msg => {
+    done: (msg) => {
       this.setState({
-        doneMsg: msg
+        doneMsg: msg,
       });
       setTimeout(() => {
         this.setState({
-          doneMsg: ""
+          doneMsg: "",
         });
       }, 3500);
     },
 
-    error: msg => {
+    error: (msg) => {
       this.setState({
-        errorMsg: msg
+        errorMsg: msg,
       });
       setTimeout(() => {
         this.setState({
-          errorMsg: ""
+          errorMsg: "",
         });
       }, 3500);
-    }
+    },
   };
 
   async componentDidUpdate(prevProps) {
+    registerLocale("ko", ko);
+    setDefaultLocale("ko");
     if (this.props.currentMode !== prevProps.currentMode) {
       this.setState({
-        loading: true
+        loading: true,
       });
       try {
         await postApi("main/menu", { mainid: this.props.currentMode.main_id })
-          .then(res => {
+          .then((res) => {
             const {
-              data: { data }
+              data: { data },
             } = res;
             this.setState({
               currentMenu: data,
               mountedComp: [
                 {
-                  index: 2,
+                  index: 0,
                   window_name: "대시보드",
-                  window_id: "SystUser"
-                }
+                  window_id: "Dashboard",
+                },
               ],
               currentComp: {
-                index: 2,
+                index: 0,
                 window_name: "대시보드",
-                window_id: "SystUser"
-              }
+                window_id: "Dashboard",
+              },
             });
           })
-          .catch(err => {
+          .catch((err) => {
             alert(err);
           });
       } catch (err) {
       } finally {
         this.setState({
-          loading: false
+          loading: false,
         });
       }
     }
@@ -182,19 +185,19 @@ class CreateContent extends React.Component {
   async componentDidMount() {
     try {
       await postApi("main/menu", {
-        mainid: this.props.currentMode.main_id
-      }).then(res => {
+        mainid: this.props.currentMode.main_id,
+      }).then((res) => {
         const {
-          data: { data }
+          data: { data },
         } = res;
         this.setState({
-          currentMenu: data
+          currentMenu: data,
         });
       });
     } catch (err) {
     } finally {
       this.setState({
-        loading: false
+        loading: false,
       });
     }
   }
