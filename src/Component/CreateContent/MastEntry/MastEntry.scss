@@ -143,6 +143,11 @@
     }
 
     .input-div {
+
+      &.nmt {
+        margin-top: 0;
+      }
+
       .label {
         width: 6rem;
         margin-right: 0.5rem;

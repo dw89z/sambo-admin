@@ -108,9 +108,9 @@ export default class extends React.Component {
     });
   };
 
-  toDeleteList = (row) => {
+  toDeleteList = (row, isSelect) => {
     const { checkedList } = this.state;
-    if (row.useyn === "Y") {
+    if (!isSelect) {
       row.useyn = "N";
       const deleteRow = checkedList.filter((check) => {
         return check !== row.index;
@@ -118,7 +118,7 @@ export default class extends React.Component {
       this.setState({
         checkedList: deleteRow,
       });
-    } else if (row.useyn === "N") {
+    } else {
       row.useyn = "Y";
       const checkedList = this.state.checkedList;
       checkedList.push(row.index);
@@ -129,12 +129,42 @@ export default class extends React.Component {
     }
   };
 
-  toggleAll = (isSelect, rows) => {
-    const { checkedList } = this.state;
+  toggleAll = (isSelect) => {
+    const { authList } = this.state;
+    const checkboxAll = document.getElementsByClassName(
+      "selection-cell-header"
+    );
+    const input = checkboxAll[0].children;
+    console.log(input[0]);
+    input[0].style.display = "none !important";
+    setTimeout(() => {}, 1000);
+
     if (isSelect) {
-      console.log(checkedList);
+      const useYAll = authList.map((list) => {
+        list["useyn"] = "Y";
+        return list;
+      });
+      const checkAll = authList.map((list) => parseInt(list.index));
+      this.setState(
+        {
+          authList: useYAll,
+          checkedList: checkAll,
+        },
+        () => console.log(this.state.authList)
+      );
     } else {
-      console.log(checkedList);
+      const useNAll = authList.map((list) => {
+        list["useyn"] = "N";
+        return list;
+      });
+
+      this.setState(
+        {
+          authList: useNAll,
+          checkedList: [],
+        },
+        () => console.log(this.state.authList)
+      );
     }
   };
 
@@ -247,10 +277,10 @@ export default class extends React.Component {
                     clickToSelect: true,
                     selected: this.state.checkedList,
                     onSelect: (row, isSelect, rowIndex, e) => {
-                      this.toDeleteList(row);
+                      this.toDeleteList(row, isSelect);
                     },
                     onSelectAll: (isSelect, rows, e) => {
-                      this.toggleAll(isSelect, rows);
+                      this.toggleAll(isSelect);
                     },
                   }}
                 />

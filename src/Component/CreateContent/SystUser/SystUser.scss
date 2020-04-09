@@ -83,8 +83,7 @@
     cursor: pointer;
     width: 2rem;
     height: 2rem;
-    background: $pri url("../../../assets/img/search.svg") center center
-      no-repeat;
+    background: $pri url("../../../assets/img/search.svg") center center no-repeat;
     background-size: 70%;
     padding-top: 0.2rem;
 
@@ -103,7 +102,7 @@
   background: #fff;
   height: 95vh;
   border: 1px solid #333;
-  z-index: 99;
+  z-index: 10000;
   transform: translateX(45vw);
   transition: transform 0.25s;
   box-shadow: -10px 0 60px rgba(30, 60, 90, 0.2);

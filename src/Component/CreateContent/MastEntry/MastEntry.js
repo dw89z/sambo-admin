@@ -22,6 +22,7 @@ export default class extends React.Component {
     checkError: false,
     innerLoading: false,
     signURL: "",
+    isMast: true,
   };
 
   inputs = {
@@ -159,9 +160,17 @@ export default class extends React.Component {
     const auth = parseInt(this.props.user.userinfo.auth);
     const { userinfo } = this.props.user;
 
-    this.setState({
-      logid: userinfo.logid,
-    });
+    if (auth) {
+      this.setState({
+        logid: userinfo.logid,
+        auth: true,
+      });
+    } else {
+      this.setState({
+        logid: userinfo.logid,
+        auth: false,
+      });
+    }
 
     const logidPost = {
       logid: userinfo.logid,
@@ -219,6 +228,7 @@ export default class extends React.Component {
       checkPass,
       checkError,
       innerLoading,
+      isMast,
     } = this.state;
     const { userinfo } = this.props.user;
     const submits = this.submits;
@@ -229,8 +239,6 @@ export default class extends React.Component {
       </div>
     ));
 
-    console.log(auth);
-
     return (
       <>
         {innerLoading ? <InnerLoading /> : null}
@@ -240,7 +248,11 @@ export default class extends React.Component {
             <form onSubmit={submits.getContractor}>
               <div className="input-div">
                 <span className="label">로그인ID</span>
-                <LiveSearch user={userinfo} liveResult={inputs.liveResult} />
+                <LiveSearch
+                  user={userinfo}
+                  isMast={isMast}
+                  liveResult={inputs.liveResult}
+                />
                 {this.comp.resultSpan()}
               </div>
             </form>
@@ -290,17 +302,20 @@ export default class extends React.Component {
                 <h4>비밀번호 변경</h4>
                 <form onSubmit={submits.changePass}>
                   <div className="input-div">
-                    <span className="label">현재 비밀번호</span>
-                    <input
-                      type="text"
-                      name="passwd"
-                      value={passwd}
-                      onChange={inputs.inputUpdate}
-                      disabled={auth}
-                      required
-                    />
+                    {auth ? null : (
+                      <>
+                        <span className="label">현재 비밀번호</span>
+                        <input
+                          type="text"
+                          name="passwd"
+                          value={passwd}
+                          onChange={inputs.inputUpdate}
+                          required
+                        />
+                      </>
+                    )}
                   </div>
-                  <div className="input-div">
+                  <div className="input-div nmt">
                     <span className="label">변경할 비밀번호</span>
                     <input
                       type="text"

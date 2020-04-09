@@ -1,5 +1,5 @@
 import React from "react";
-import { postApi, getApi } from "../../../api";
+import { postApi } from "../../../api";
 
 class LiveSearch extends React.Component {
   state = {
@@ -74,6 +74,7 @@ class LiveSearch extends React.Component {
 
   render() {
     const { searchKey, placeholder, result } = this.state;
+    const { isMast, user } = this.props;
     const inputs = this.inputs;
 
     return (
@@ -88,6 +89,7 @@ class LiveSearch extends React.Component {
             onChange={inputs.update}
             spellCheck="false"
             autoComplete="off"
+            disabled={user.auth === "0" && isMast}
           />
           {result.visible && result.data ? (
             <ul className="result-list">
