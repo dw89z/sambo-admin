@@ -1,7 +1,7 @@
 import React from "react";
 import "./Loading.scss";
 
-class Loading extends React.Component {
+export default class extends React.Component {
   render() {
     return (
       <div className="loading">
@@ -23,5 +23,3 @@ class Loading extends React.Component {
     );
   }
 }
-
-export default Loading;

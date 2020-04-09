@@ -26,7 +26,7 @@
 
   .tree-section {
     margin-top: 2rem;
-    width: 40%;
+    width: 50%;
     height: calc(100vh - 15.8rem);
     border: 1px solid $dark;
     padding: 1rem;
@@ -79,7 +79,8 @@
         display: block;
         width: 26px;
         height: 26px;
-        background: url("../../../assets/img/depth-01.png") center center no-repeat;
+        background: url("../../../assets/img/depth-01.png") center center
+          no-repeat;
         background-size: cover;
         position: absolute;
         left: 15px;
@@ -120,7 +121,8 @@
         display: block;
         width: 26px;
         height: 26px;
-        background: url("../../../assets/img/depth-02.png") center center no-repeat;
+        background: url("../../../assets/img/depth-02.png") center center
+          no-repeat;
         background-size: cover;
         position: absolute;
         left: 15px;
@@ -152,7 +154,8 @@
         display: block;
         width: 26px;
         height: 26px;
-        background: url("../../../assets/img/depth-03.png") center center no-repeat;
+        background: url("../../../assets/img/depth-03.png") center center
+          no-repeat;
         background-size: cover;
         position: absolute;
         left: 15px;
@@ -268,7 +271,15 @@
     .input-div {
       display: flex;
       align-items: center;
-      margin-top: 1.25rem;
+      margin-top: 1rem;
+
+      P {
+        margin-bottom: 0.25rem;
+      }
+
+      .window-id {
+        white-space: nowrap;
+      }
 
       &:first-child {
         margin-top: 0;

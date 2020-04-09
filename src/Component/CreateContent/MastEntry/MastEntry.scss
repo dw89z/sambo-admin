@@ -12,7 +12,7 @@
   }
 
   .mast-section {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
 
     table {
       width: 100%;
@@ -49,6 +49,7 @@
     width: 100%;
     display: flex;
     margin-top: 1rem;
+    margin-bottom: 1.5rem;
 
     .password-section {
       width: calc(50% - 0.5rem);
@@ -112,7 +113,7 @@
       width: 100%;
       height: 100%;
       z-index: 20;
-
+      cursor: pointer;
 
       &.hidden {
         visibility: hidden;
@@ -136,7 +137,6 @@
       }
     }
 
-
     h4 {
       color: $pri;
       margin-bottom: 0.75rem;
@@ -151,7 +151,7 @@
       }
 
       input {
-        width: 70%;
+        width: 14rem;
         padding: 0.4rem;
       }
     }

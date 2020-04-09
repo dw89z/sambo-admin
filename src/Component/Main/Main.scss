@@ -148,7 +148,7 @@
   top: 2rem;
   left: 0rem;
   background: #fff;
-  z-index: 99;
+  z-index: 9999;
   border-bottom: 1px solid #c4b9ae;
 
   img {
@@ -163,6 +163,7 @@
     left: 10rem;
     display: flex;
     padding-left: 1rem;
+    z-index: 9999;
 
     .menu-list {
       position: relative;
@@ -291,7 +292,6 @@
     }
 
     &.non-delete {
-
       &:after,
       &:before {
         content: none;

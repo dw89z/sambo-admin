@@ -826,7 +826,7 @@ export default class extends React.Component {
                             </div>
 
                             <div className="input-div">
-                              <p>WINDOW-ID</p>
+                              <p className="window-id">WINDOW-ID</p>
                               <input
                                 type="text"
                                 placeholder="프로그램 아이디를 입력해 주세요"

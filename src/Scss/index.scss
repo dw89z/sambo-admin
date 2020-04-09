@@ -34,6 +34,10 @@ input {
   padding: 0.5rem 0.5rem;
   font-size: 0.85rem;
 
+  &:disabled {
+    background: $gray;
+  }
+
   &:focus {
     outline: none;
     border-color: $pri;
@@ -82,7 +86,6 @@ li {
   position: relative;
   overflow: hidden;
 }
-
 
 .table {
   width: 100%;
@@ -137,7 +140,8 @@ li {
 
       &.sortable {
         cursor: pointer;
-        background: $gray2 url("../assets/img/sort.svg") right 4px center no-repeat;
+        background: $gray2 url("../assets/img/sort.svg") right 4px center
+          no-repeat;
         background-size: 0.85rem;
       }
     }
@@ -255,7 +259,7 @@ li {
   }
 
   input {
-    width: 12rem;
+    width: 13rem;
     border: none;
     border-bottom: 1px solid $gray3;
     padding: 0.4rem 0.25rem;
@@ -303,4 +307,51 @@ li {
   background: $gray;
   text-align: center;
   color: $gray4;
+}
+
+.live-search {
+  position: relative;
+
+  .live-search {
+    width: 14rem;
+  }
+
+  .result-list {
+    width: 14rem;
+    position: absolute;
+    background: #fff;
+    border: 1px solid $pri;
+    border-top: none;
+    z-index: 99;
+    top: 2rem;
+    left: 0;
+    font-size: 0.75rem;
+    height: 15rem;
+    overflow-y: scroll;
+
+    li {
+      cursor: pointer;
+      width: 100%;
+      padding: 0.25rem;
+      padding-left: 0;
+      border-top: 1px solid $gray2;
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+
+      &:hover {
+        background: $gray;
+      }
+
+      span {
+        margin-left: 0.5rem;
+        font-weight: 500;
+
+        &:last-child {
+          border-left: 1px solid #333;
+          padding-left: 0.5rem;
+        }
+      }
+    }
+  }
 }

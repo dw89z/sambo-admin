@@ -239,6 +239,8 @@ class TextEditor extends React.Component {
         }
       }
 
+      console.log(file);
+
       if (!this.props.editMode) {
         await axios
           .post(
