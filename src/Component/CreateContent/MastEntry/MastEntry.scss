@@ -89,6 +89,16 @@
       margin-top: 0.5rem;
     }
 
+    .del-stamp {
+      background: $pri;
+      color: #fff;
+      padding: 0.25rem 0.7rem;
+      position: absolute;
+      right: 0;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
     .sign-image-box {
       position: absolute;
       top: 50%;
@@ -143,7 +153,6 @@
     }
 
     .input-div {
-
       &.nmt {
         margin-top: 0;
       }

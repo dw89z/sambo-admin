@@ -954,64 +954,61 @@ export default class extends React.Component {
                           />
                         </div>
 
-                        <div
-                          className={
-                            radioVisible ? "input-div" : "input-div hidden"
-                          }
-                        >
-                          <p>WINDOW-ID</p>
-                          <input
-                            type="text"
-                            placeholder="프로그램 아이디를 수정할 수 있습니다"
-                            name="window_name"
-                            value={programdetail.window_name}
-                            spellCheck="false"
-                            onChange={inputs.inputUpdate}
-                          />
-                        </div>
-
                         {radioVisible ? (
-                          <div className="input-div">
-                            <p>입출력 구분</p>
-                            <div className="radio-section">
-                              <div className="radio">
-                                <input
-                                  type="radio"
-                                  name="io_gubun"
-                                  id="input"
-                                  value="I"
-                                  checked={programdetail.io_gubun === "I"}
-                                  onChange={inputs.inputUpdate}
-                                  required
-                                />
-                                <label htmlFor="input">입력</label>
-                              </div>
-                              <div className="radio">
-                                <input
-                                  type="radio"
-                                  name="io_gubun"
-                                  id="lookup"
-                                  value="Q"
-                                  checked={programdetail.io_gubun === "Q"}
-                                  onChange={inputs.inputUpdate}
-                                  required
-                                />
-                                <label htmlFor="lookup">조회</label>
-                              </div>
-                              <div className="radio">
-                                <input
-                                  type="radio"
-                                  name="io_gubun"
-                                  id="output"
-                                  value="P"
-                                  checked={programdetail.io_gubun === "P"}
-                                  onChange={inputs.inputUpdate}
-                                  required
-                                />
-                                <label htmlFor="output">출력</label>
+                          <>
+                            <div className="input-div ">
+                              <p className="window-id">WINDOW-ID</p>
+                              <input
+                                type="text"
+                                placeholder="프로그램 아이디를 수정할 수 있습니다"
+                                name="window_name"
+                                value={programdetail.window_name}
+                                spellCheck="false"
+                                onChange={inputs.inputUpdate}
+                              />
+                            </div>
+                            <div className="input-div">
+                              <p>입출력 구분</p>
+                              <div className="radio-section">
+                                <div className="radio">
+                                  <input
+                                    type="radio"
+                                    name="io_gubun"
+                                    id="input"
+                                    value="I"
+                                    checked={programdetail.io_gubun === "I"}
+                                    onChange={inputs.inputUpdate}
+                                    required
+                                  />
+                                  <label htmlFor="input">입력</label>
+                                </div>
+                                <div className="radio">
+                                  <input
+                                    type="radio"
+                                    name="io_gubun"
+                                    id="lookup"
+                                    value="Q"
+                                    checked={programdetail.io_gubun === "Q"}
+                                    onChange={inputs.inputUpdate}
+                                    required
+                                  />
+                                  <label htmlFor="lookup">조회</label>
+                                </div>
+                                <div className="radio">
+                                  <input
+                                    type="radio"
+                                    name="io_gubun"
+                                    id="output"
+                                    value="P"
+                                    checked={programdetail.io_gubun === "P"}
+                                    onChange={inputs.inputUpdate}
+                                    required
+                                  />
+                                  <label htmlFor="output">출력</label>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          </>
                         ) : null}
 
                         <div className="input-div">

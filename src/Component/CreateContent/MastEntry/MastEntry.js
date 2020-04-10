@@ -23,6 +23,7 @@ export default class extends React.Component {
     innerLoading: false,
     signURL: "",
     isMast: true,
+    stampimage: "",
   };
 
   inputs = {
@@ -52,11 +53,7 @@ export default class extends React.Component {
 
     onDrop: (file) => {
       this.setState({
-        signImage: file.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        ),
+        signImage: file,
         isSign: true,
       });
       this.submits.uploadSign();
@@ -75,20 +72,27 @@ export default class extends React.Component {
         const {
           data: { data },
         } = res;
-        console.log(res);
-        this.setState({
-          subcontractor: data.subcontractor,
-          innerLoading: false,
-        });
+        if (data.stampimage) {
+          this.setState({
+            subcontractor: data.subcontractor,
+            stampimage: data.stampimage,
+            innerLoading: false,
+          });
+        } else {
+          this.setState({
+            subcontractor: data.subcontractor,
+            innerLoading: false,
+          });
+        }
       });
-      console.log(logid);
-      await getApi(`admin/um/user/${logid}`).then((res) => {
-        console.log(res);
-        // this.setState({
-        //   userId: userinfo.logid,
-        //   cvnas: userinfo.cvnas,
-        // });
-      });
+      // console.log(logid);
+      // await getApi(`admin/um/user/${logid}`).then((res) => {
+      //   console.log(res);
+      //   this.setState({
+      //     userId: userinfo.logid,
+      //     cvnas: userinfo.cvnas,
+      //   });
+      // });
     },
 
     changePass: async (e) => {
@@ -122,6 +126,19 @@ export default class extends React.Component {
       }
     },
 
+    deleteStamp: async (e) => {
+      e.preventDefault();
+      const data = {
+        cvcod: this.state.subcontractor.cvcod,
+      };
+      await postApi("scm/subcontractor/stampdelete", data).then((res) => {
+        console.log(res, this.state);
+        this.setState({
+          stampimage: "",
+        });
+      });
+    },
+
     uploadSign: async () => {
       const { signImage, subcontractor } = this.state;
       const token = sessionStorage.getItem("token");
@@ -140,14 +157,43 @@ export default class extends React.Component {
           { headers: config }
         )
         .then((res) => {
+          const {
+            data: { data },
+          } = res;
           console.log(res);
-          if (res.data.errorCode === "") {
-            this.props.done(res.data.data.message);
-          } else if (res.data.errorCode === "1") {
-            this.props.error(res.data.errorMessage);
-          }
+          this.setState(
+            {
+              stampimage: data.stampimage,
+            },
+            () => {
+              if (res.data.errorCode === "") {
+                this.props.done(res.data.data.message);
+                this.updateThumb();
+              } else if (res.data.errorCode === "1") {
+                this.props.error(res.data.errorMessage);
+              }
+            }
+          );
         });
     },
+  };
+
+  updateThumb = () => {
+    const { stampimage } = this.state;
+    const url = "http://125.141.30.222:8757/stamp";
+    if (stampimage.stored_file_name) {
+      return (
+        <div className="sign-image-box">
+          <img
+            src={`${url}/${stampimage.stored_file_name}`}
+            alt="sign"
+            className="sign-image"
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -180,10 +226,18 @@ export default class extends React.Component {
         const {
           data: { data },
         } = res;
-        console.log(res);
-        this.setState({
-          subcontractor: data.subcontractor,
-        });
+        if (data.stampimage) {
+          this.setState({
+            subcontractor: data.subcontractor,
+            stampimage: data.stampimage,
+            innerLoading: false,
+          });
+        } else {
+          this.setState({
+            subcontractor: data.subcontractor,
+            innerLoading: false,
+          });
+        }
       }
     );
   }
@@ -218,8 +272,6 @@ export default class extends React.Component {
 
   render() {
     const {
-      signImage,
-      isSign,
       passwd,
       checkpasswd,
       changepasswd,
@@ -229,15 +281,12 @@ export default class extends React.Component {
       checkError,
       innerLoading,
       isMast,
+      stampimage,
     } = this.state;
     const { userinfo } = this.props.user;
     const submits = this.submits;
     const inputs = this.inputs;
-    const thumbs = signImage.map((file) => (
-      <div key={file.name} className="sign-image-box">
-        <img src={file.preview} alt="sign" className="sign-image" />
-      </div>
-    ));
+    console.log(this.state.stampimage);
 
     return (
       <>
@@ -322,6 +371,8 @@ export default class extends React.Component {
                       name="changepasswd"
                       value={changepasswd}
                       onChange={inputs.inputCheck}
+                      autoComplete="off"
+                      spellCheck="false"
                       required
                     />
                   </div>
@@ -332,6 +383,8 @@ export default class extends React.Component {
                       name="checkpasswd"
                       value={checkpasswd}
                       onChange={inputs.inputCheck}
+                      autoComplete="off"
+                      spellCheck="false"
                       required
                     />
                     <span className={checkError ? "error" : "error none"}>
@@ -359,22 +412,32 @@ export default class extends React.Component {
                   <form>
                     <Dropzone onDrop={inputs.onDrop}>
                       {({ getRootProps, getInputProps }) => (
-                        <section className="sign-dropzone">
-                          <div
-                            {...getRootProps({
-                              className: "dropzone",
-                            })}
+                        <>
+                          <section className="sign-dropzone">
+                            <div
+                              {...getRootProps({
+                                className: "dropzone",
+                              })}
+                            >
+                              <input
+                                className="sign-drag-box"
+                                {...getInputProps({ accept: "image/*" })}
+                              />
+                              <p className="drag-info">
+                                {stampimage ? "" : "도장 그림파일 영역"}
+                              </p>
+                            </div>
+                            {innerLoading || !stampimage
+                              ? null
+                              : this.updateThumb()}
+                          </section>
+                          <button
+                            className="del-stamp"
+                            onClick={submits.deleteStamp}
                           >
-                            <input
-                              className="sign-drag-box"
-                              {...getInputProps({ accept: "image/*" })}
-                            />
-                            <p className="drag-info">
-                              {isSign ? "" : "도장 그림파일 영역"}
-                            </p>
-                          </div>
-                          {thumbs}
-                        </section>
+                            도장 삭제
+                          </button>
+                        </>
                       )}
                     </Dropzone>
                   </form>
