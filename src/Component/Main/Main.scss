@@ -266,6 +266,7 @@
     &.active {
       opacity: 1;
       border-bottom-color: #fff;
+      color: $pri;
     }
   }
 
@@ -328,8 +329,8 @@
   background: #fff;
   left: 1rem;
   padding: 1rem 1.25rem 1.25rem;
-  overflow-y: scroll;
-  box-shadow: 0 0 10px rgba(20, 30, 60, 0.35);
+  overflow-y: auto;
+  box-shadow: 5px 5px 15px rgba(20, 30, 60, 0.25);
 
   &.left {
     width: calc(100% - 13rem);

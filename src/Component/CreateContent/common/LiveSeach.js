@@ -53,6 +53,16 @@ class LiveSearch extends React.Component {
       });
     },
 
+    reset: () => {
+      this.setState({
+        searchKey: "",
+        result: {
+          visible: false,
+          data: {},
+        },
+      });
+    },
+
     searchId: (e) => {
       const logid = e.currentTarget.getAttribute("data-logid");
       this.props.liveResult(logid);
@@ -90,9 +100,20 @@ class LiveSearch extends React.Component {
             spellCheck="false"
             autoComplete="off"
             disabled={user.auth === "0" && isMast}
+            onKeyDown={(e) => {
+              if (e.which === 13) {
+                e.preventDefault();
+              } else if (e.which === 27) {
+                inputs.reset();
+              }
+            }}
           />
           {result.visible && result.data ? (
             <ul className="result-list">
+              <li>
+                <span className="list-label">거래처코드</span>
+                <span className="list-label">거래처명</span>
+              </li>
               {result.data.map((data, index) => {
                 return (
                   <li

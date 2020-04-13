@@ -1,4 +1,5 @@
 import React from "react";
+import "./ConGrsales.scss";
 
 export default class extends React.Component {
   render() {

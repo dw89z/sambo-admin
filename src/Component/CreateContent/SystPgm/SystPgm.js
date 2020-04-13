@@ -38,6 +38,7 @@ export default class extends React.Component {
     sub1Select: [],
     sub2Select: [],
     radioVisible: false,
+    noSub1Id: false,
   };
 
   tree = {
@@ -233,16 +234,24 @@ export default class extends React.Component {
           }
           return result;
         });
+        let sub1Select = [];
 
-        const sub1Select = list[0].sublist;
-        if (sub1Select.length === 1) {
+        if (list[0].sublist.length !== 0) {
+          sub1Select = list[0].sublist;
           const sub2Select = sub1Select[0].sublist.map((sub) => {
             return parseInt(sub.sub2_id);
           });
+          console.log(sub1Select);
           this.setState({
             sub2Select,
+            noSub1Id: false,
+          });
+        } else {
+          this.setState({
+            noSub1Id: true,
           });
         }
+
         if (innerTabIndex === 1) {
           this.setState({
             programdetail: {
@@ -410,6 +419,7 @@ export default class extends React.Component {
 
     updateSubmit: async (e) => {
       e.preventDefault();
+
       const { programdetail } = this.state;
       if (programdetail.window_name === "") {
         this.setState({
@@ -489,6 +499,7 @@ export default class extends React.Component {
       sub1Select,
       placeholder,
       radioVisible,
+      noSub1Id,
     } = this.state;
     const tree = this.tree;
     const inputs = this.inputs;
@@ -576,6 +587,7 @@ export default class extends React.Component {
                                   window_name: "",
                                   delyn: "N",
                                 },
+                                noSub1Id: false,
                               });
                             }}
                           >
@@ -594,6 +606,7 @@ export default class extends React.Component {
                                   window_name: "",
                                   delyn: "N",
                                 },
+                                noSub1Id: false,
                               });
                             }}
                           >
@@ -615,6 +628,7 @@ export default class extends React.Component {
                                   delyn: "N",
                                 },
                                 sub1Select,
+                                noSub1Id: false,
                               });
                             }}
                           >
@@ -633,6 +647,9 @@ export default class extends React.Component {
                                 autoComplete="off"
                                 onChange={inputs.inputMain}
                                 value={programdetail.main_id}
+                                onKeyPress={(e) => {
+                                  e.which === 13 && e.preventDefault();
+                                }}
                                 required
                               />
                               <span
@@ -654,6 +671,9 @@ export default class extends React.Component {
                                 autoComplete="off"
                                 value={programdetail.sub2_name}
                                 onChange={inputs.inputUpdate}
+                                onKeyPress={(e) => {
+                                  e.which === 13 && e.preventDefault();
+                                }}
                                 required
                               />
                             </div>
@@ -707,6 +727,9 @@ export default class extends React.Component {
                                 autoComplete="off"
                                 value={programdetail.sub1_id}
                                 onChange={inputs.inputMain}
+                                onKeyPress={(e) => {
+                                  e.which === 13 && e.preventDefault();
+                                }}
                                 required
                               />
                               <span
@@ -728,6 +751,9 @@ export default class extends React.Component {
                                 autoComplete="off"
                                 value={programdetail.sub2_name}
                                 onChange={inputs.inputUpdate}
+                                onKeyPress={(e) => {
+                                  e.which === 13 && e.preventDefault();
+                                }}
                                 required
                               />
                             </div>
@@ -789,6 +815,11 @@ export default class extends React.Component {
                                   );
                                 })}
                               </select>
+                              <span
+                                className={noSub1Id ? "error" : "error none"}
+                              >
+                                중분류가 존재하지 않습니다.
+                              </span>
                             </div>
 
                             <div className="input-div">
@@ -801,6 +832,10 @@ export default class extends React.Component {
                                 autoComplete="off"
                                 value={programdetail.sub2_id}
                                 onChange={inputs.inputMain}
+                                disabled={noSub1Id}
+                                onKeyPress={(e) => {
+                                  e.which === 13 && e.preventDefault();
+                                }}
                                 required
                               />
                               <span
@@ -821,6 +856,10 @@ export default class extends React.Component {
                                 spellCheck="false"
                                 autoComplete="off"
                                 onChange={inputs.inputUpdate}
+                                disabled={noSub1Id}
+                                onKeyPress={(e) => {
+                                  e.which === 13 && e.preventDefault();
+                                }}
                                 required
                               />
                             </div>
@@ -833,6 +872,10 @@ export default class extends React.Component {
                                 name="window_name"
                                 spellCheck="false"
                                 onChange={inputs.inputUpdate}
+                                disabled={noSub1Id}
+                                onKeyPress={(e) => {
+                                  e.which === 13 && e.preventDefault();
+                                }}
                                 required
                               />
                             </div>
@@ -847,6 +890,7 @@ export default class extends React.Component {
                                     value="I"
                                     checked={programdetail.io_gubun === "I"}
                                     onChange={inputs.inputUpdate}
+                                    disabled={noSub1Id}
                                     required
                                   />
                                   <label htmlFor="input">입력</label>
@@ -859,6 +903,7 @@ export default class extends React.Component {
                                     value="Q"
                                     checked={programdetail.io_gubun === "Q"}
                                     onChange={inputs.inputUpdate}
+                                    disabled={noSub1Id}
                                     required
                                   />
                                   <label htmlFor="lookup">조회</label>
@@ -871,6 +916,7 @@ export default class extends React.Component {
                                     value="P"
                                     checked={programdetail.io_gubun === "P"}
                                     onChange={inputs.inputUpdate}
+                                    disabled={noSub1Id}
                                     required
                                   />
                                   <label htmlFor="output">출력</label>
@@ -886,6 +932,7 @@ export default class extends React.Component {
                                   programdetail.delyn === "N" ? true : false
                                 }
                                 onChange={inputs.inputCheck}
+                                disabled={noSub1Id}
                               />
                             </div>
                             <button
@@ -898,6 +945,8 @@ export default class extends React.Component {
                         </TabPanel>
                       </Tabs>
                     </TabPanel>
+
+                    {/* 수정패널 */}
                     <TabPanel className="tab-panel">
                       <form onSubmit={submits.updateSubmit}>
                         <div className="input-div">
@@ -910,6 +959,9 @@ export default class extends React.Component {
                             spellCheck="false"
                             autoComplete="off"
                             onChange={this.inputUpdate}
+                            onKeyPress={(e) => {
+                              e.which === 13 && e.preventDefault();
+                            }}
                             required
                             readOnly
                           />
@@ -950,6 +1002,9 @@ export default class extends React.Component {
                             value={programdetail.sub2_name}
                             onChange={inputs.inputUpdate}
                             spellCheck="false"
+                            onKeyPress={(e) => {
+                              e.which === 13 && e.preventDefault();
+                            }}
                             required
                           />
                         </div>
@@ -965,6 +1020,9 @@ export default class extends React.Component {
                                 value={programdetail.window_name}
                                 spellCheck="false"
                                 onChange={inputs.inputUpdate}
+                                onKeyPress={(e) => {
+                                  e.which === 13 && e.preventDefault();
+                                }}
                               />
                             </div>
                             <div className="input-div">

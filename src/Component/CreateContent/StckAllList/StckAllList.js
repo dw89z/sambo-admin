@@ -4,7 +4,9 @@ export default class extends React.Component {
   render() {
     return (
       <>
-        <div>StckAllList</div>
+        <div className="content-component">
+          <h2>{this.props.title}</h2>
+        </div>
       </>
     );
   }
