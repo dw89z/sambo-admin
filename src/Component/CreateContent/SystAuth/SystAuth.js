@@ -129,45 +129,6 @@ export default class extends React.Component {
     }
   };
 
-  toggleAll = (isSelect) => {
-    const { authList } = this.state;
-    const checkboxAll = document.getElementsByClassName(
-      "selection-cell-header"
-    );
-    const input = checkboxAll[0].children;
-    console.log(input[0]);
-    input[0].style.display = "none !important";
-    setTimeout(() => {}, 1000);
-
-    if (isSelect) {
-      const useYAll = authList.map((list) => {
-        list["useyn"] = "Y";
-        return list;
-      });
-      const checkAll = authList.map((list) => parseInt(list.index));
-      this.setState(
-        {
-          authList: useYAll,
-          checkedList: checkAll,
-        },
-        () => console.log(this.state.authList)
-      );
-    } else {
-      const useNAll = authList.map((list) => {
-        list["useyn"] = "N";
-        return list;
-      });
-
-      this.setState(
-        {
-          authList: useNAll,
-          checkedList: [],
-        },
-        () => console.log(this.state.authList)
-      );
-    }
-  };
-
   detectCheck = (array) => {
     const useyn = array.filter((list) => list.useyn === "Y");
     const checkedList = useyn.map((list) => list.index);
@@ -279,8 +240,26 @@ export default class extends React.Component {
                     onSelect: (row, isSelect, rowIndex, e) => {
                       this.toDeleteList(row, isSelect);
                     },
-                    onSelectAll: (isSelect, rows, e) => {
-                      this.toggleAll(isSelect);
+                    onSelectAll: async (isSelect, rows, e) => {
+                      let chklist;
+                      let checkAll;
+                      const { authList } = this.state;
+                      let rowsString = JSON.stringify(authList);
+
+                      if (isSelect) {
+                        checkAll = authList.map((list) => parseInt(list.index));
+                        rowsString = rowsString.replace(/\"N\"/g, '"Y"');
+                      } else {
+                        checkAll = [];
+                        rowsString = rowsString.replace(/\"Y\"/g, '"N"');
+                      }
+
+                      chklist = JSON.parse(rowsString);
+
+                      this.setState({
+                        authList: chklist,
+                        checkedList: checkAll,
+                      });
                     },
                   }}
                 />

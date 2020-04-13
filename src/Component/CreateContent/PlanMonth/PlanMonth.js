@@ -1,5 +1,6 @@
 import React from "react";
 import Loading from "../../Loading";
+import InnerLoading from "../../InnerLoading";
 import { postApi, getApi } from "../../../api";
 import BootstrapTable from "react-bootstrap-table-next";
 import "./PlanMonth.scss";
@@ -7,103 +8,122 @@ import "./PlanMonth.scss";
 export default class extends React.Component {
   state = {
     loading: false,
-    users: [],
+    monthplan: [],
     columns: [
       {
-        dataField: "logid",
+        dataField: "rowseq",
         text: "번호",
         sort: true,
       },
       {
-        dataField: "logid",
+        dataField: "itnbr",
         text: "품번",
         sort: true,
       },
       {
-        dataField: "logid",
+        dataField: "itdsc",
         text: "품명",
         sort: true,
       },
       {
-        dataField: "logid",
+        dataField: "ispec",
         text: "규격",
         sort: true,
       },
       {
-        dataField: "logid",
+        dataField: "qty_sum",
         text: "합계",
         sort: true,
       },
       {
-        dataField: "logid",
-        text: "1월",
+        dataField: "qty_m0",
+        text: "이번 달",
         sort: true,
       },
       {
-        dataField: "logid",
-        text: "2월",
+        dataField: "qty_01",
+        text: "-",
         sort: true,
       },
       {
-        dataField: "logid",
-        text: "3월",
+        dataField: "qty_02",
+        text: "-",
         sort: true,
       },
       {
-        dataField: "logid",
-        text: "4월",
+        dataField: "qty_03",
+        text: "-",
         sort: true,
       },
       {
-        dataField: "logid",
-        text: "5월",
+        dataField: "qty_04",
+        text: "-",
         sort: true,
       },
       {
-        dataField: "logid",
-        text: "6월",
+        dataField: "qty_05",
+        text: "-",
         sort: true,
       },
       {
-        dataField: "logid",
-        text: "7월",
+        dataField: "qty_06",
+        text: "-",
         sort: true,
       },
       {
-        dataField: "logid",
-        text: "8월",
+        dataField: "qty_m1",
+        text: "-",
         sort: true,
       },
       {
-        dataField: "logid",
-        text: "9월",
-        sort: true,
-      },
-      {
-        dataField: "logid",
-        text: "10월",
-        sort: true,
-      },
-      {
-        dataField: "logid",
-        text: "11월",
-        sort: true,
-      },
-      {
-        dataField: "logid",
-        text: "12월",
+        dataField: "qty_m2",
+        text: "-",
         sort: true,
       },
     ],
     errorSearch: true,
+    InnerLoading: true,
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    const date = new Date();
+    const year = date.getFullYear();
+
+    this.setState(
+      {
+        date,
+        cvcod: this.props.user.userinfo.cvcod,
+        innerLoading: true,
+      },
+      async () => {
+        const data = {
+          date: "201010",
+          cvcod: this.state.cvcod,
+          searchkeyword: "",
+        };
+        console.log(data);
+        await postApi("scm/purchaseplan/monthplan", data).then((res) => {
+          console.log(res);
+          const {
+            data: {
+              data: { monthplan },
+            },
+          } = res;
+          this.setState({
+            monthplan,
+            innerLoading: false,
+            errorSearch: false,
+          });
+        });
+      }
+    );
+  }
 
   render() {
-    const { users, columns, errorSearch } = this.state;
+    const { monthplan, columns, errorSearch, innerLoading } = this.state;
     return (
       <>
+        {innerLoading ? <InnerLoading /> : null}
         <div className="content-component plan-month">
           <h2>{this.props.title}</h2>
           <div className="form">
@@ -136,7 +156,7 @@ export default class extends React.Component {
                 this.props.menuAxis ? "year-table" : "year-table left"
               }
               keyField="id"
-              data={users}
+              data={monthplan}
               columns={columns}
             />
           </div>

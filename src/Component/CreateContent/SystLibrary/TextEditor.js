@@ -276,13 +276,14 @@ class TextEditor extends React.Component {
             { headers: config }
           )
           .then((res) => {
-            if (!res.data.errorCode) {
-              this.init();
-              this.props.changeMode();
-              this.props.done(res.data.data.message);
-            } else {
-              this.props.error(res.data.data.errorMessage);
-            }
+            console.log(res);
+            // if (!res.data.errorCode) {
+            //   this.init();
+            //   this.props.changeMode();
+            //   this.props.done(res.data.data.message);
+            // } else {
+            //   this.props.error(res.data.data.errorMessage);
+            // }
           });
       } else {
         await axios
@@ -348,9 +349,12 @@ class TextEditor extends React.Component {
       day = "0" + day;
     }
     const fulldate = `${year}${month}${day}`;
+    const beforeDate = `${year}${month - 1}${day}`;
     this.setState({
       library: {
         ...library,
+        stdat: beforeDate,
+        eddat: fulldate,
         crtdat: fulldate,
       },
     });
@@ -475,6 +479,8 @@ class TextEditor extends React.Component {
         ></span>
       </li>
     ));
+
+    console.log(library);
 
     return (
       <>
