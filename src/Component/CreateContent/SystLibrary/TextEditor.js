@@ -11,12 +11,13 @@ import "react-summernote/lang/summernote-ko-KR";
 import "bootstrap/js/dist/modal";
 import "bootstrap/js/dist/dropdown";
 import "bootstrap/js/dist/tooltip";
-import Loading from "../../Loading";
+import InnerLoading from "../../InnerLoading";
 import { postApi } from "../../../api";
 import "../SystNotify/SystNotify.scss";
 
 class TextEditor extends React.Component {
   state = {
+    innerLoading: false,
     userSearch: "",
     userList: [],
     libraryauth: [],
@@ -46,7 +47,7 @@ class TextEditor extends React.Component {
     tabIndex: 0,
     libraryfilelist: [],
     deleteList: [],
-    stdat: new Date(),
+    stdat: "",
     eddat: new Date(),
     crtdat: new Date(),
   };
@@ -160,7 +161,6 @@ class TextEditor extends React.Component {
 
     selectAll: () => {
       const { userList, libraryauth } = this.state;
-
       const jsonAuth = libraryauth.map((list) => JSON.stringify(list));
       const jsonUser = userList.map((list) => JSON.stringify(list));
       const remain = jsonAuth
@@ -234,6 +234,9 @@ class TextEditor extends React.Component {
 
     saveLibrary: async (e) => {
       e.preventDefault();
+      this.setState({
+        innerLoading: true,
+      });
       const { library, libraryauth, file, deleteList } = this.state;
       let formData = new FormData();
       if (this.props.editMode) {
@@ -277,13 +280,13 @@ class TextEditor extends React.Component {
           )
           .then((res) => {
             console.log(res);
-            // if (!res.data.errorCode) {
-            //   this.init();
-            //   this.props.changeMode();
-            //   this.props.done(res.data.data.message);
-            // } else {
-            //   this.props.error(res.data.data.errorMessage);
-            // }
+            if (!res.data.errorCode) {
+              this.init();
+              this.props.changeMode();
+              this.props.done(res.data.data.message);
+            } else {
+              this.props.error(res.data.data.errorMessage);
+            }
           });
       } else {
         await axios
@@ -337,19 +340,19 @@ class TextEditor extends React.Component {
     const { library } = this.state;
     const date = new Date();
     const yearNum = date.getFullYear();
+    const stdat = date.setMonth(date.getMonth() - 2);
     let monthNum = date.getMonth() + 1;
     let dayNum = date.getDate();
     let year = yearNum.toString();
     let month = monthNum.toString();
+    let beforeMonth = month - 2;
     let day = dayNum.toString();
-    if (month.length === 1) {
-      month = "0" + month;
-    }
-    if (day.length === 1) {
-      day = "0" + day;
-    }
+    month = month.length === 1 ? "0" + month : month;
+    beforeMonth =
+      beforeMonth.toString().length === 1 ? "0" + beforeMonth : beforeMonth;
+    day = day.length === 1 ? "0" + day : day;
     const fulldate = `${year}${month}${day}`;
-    const beforeDate = `${year}${month - 1}${day}`;
+    const beforeDate = `${year}${beforeMonth}${day}`;
     this.setState({
       library: {
         ...library,
@@ -357,23 +360,19 @@ class TextEditor extends React.Component {
         eddat: fulldate,
         crtdat: fulldate,
       },
+      stdat,
     });
   };
 
-  formatLibDate = (date, name) => {
-    const { library } = this.state;
+  formatLibDate = (date) => {
     const yearNum = date.getFullYear();
     let monthNum = date.getMonth() + 1;
     let dayNum = date.getDate();
     let year = yearNum.toString();
     let month = monthNum.toString();
     let day = dayNum.toString();
-    if (month.length === 1) {
-      month = "0" + month;
-    }
-    if (day.length === 1) {
-      day = "0" + day;
-    }
+    month = month.length === 1 ? "0" + month : month;
+    day = day.length === 1 ? "0" + day : day;
     const fulldate = `${year}${month}${day}`;
     return fulldate;
   };
@@ -402,6 +401,7 @@ class TextEditor extends React.Component {
       const {
         editData: { library, libraryauth, libraryfilelist },
       } = this.props;
+      console.log(library);
       const stdat = this.formatDateObj(library.stdat);
       const eddat = this.formatDateObj(library.eddat);
       const crtdat = this.formatDateObj(library.crtdat);
@@ -466,6 +466,7 @@ class TextEditor extends React.Component {
       stdat,
       eddat,
       crtdat,
+      innerLoading,
     } = this.state;
     const submits = this.submits;
     const inputs = this.inputs;
@@ -484,6 +485,7 @@ class TextEditor extends React.Component {
 
     return (
       <>
+        {innerLoading ? <InnerLoading /> : null}
         <div className="close-btn" onClick={this.props.changeMode}></div>
         <form onSubmit={submits.saveLibrary}>
           <div className="textedit-section">

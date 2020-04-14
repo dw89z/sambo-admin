@@ -1,13 +1,11 @@
 import React from "react";
-import Loading from "../../Loading";
 import InnerLoading from "../../InnerLoading";
-import { postApi, getApi } from "../../../api";
+import { postApi } from "../../../api";
 import BootstrapTable from "react-bootstrap-table-next";
 import "./PlanYear.scss";
 
 export default class extends React.Component {
   state = {
-    loading: false,
     year: "",
     cvcod: "",
     searchkeyword: "",
@@ -103,6 +101,76 @@ export default class extends React.Component {
     InnerLoading: true,
   };
 
+  inputs = {
+    update: (e) => {
+      this.setState({
+        [e.target.name]: e.target.value,
+      });
+    },
+
+    prevYear: () => {
+      this.setState(
+        {
+          year: this.state.year - 1,
+        },
+        () => {
+          const data = {
+            year: this.state.year,
+            cvcod: this.props.user.userinfo.cvcod,
+            searchkeyword: this.state.searchkeyword,
+          };
+          this.submit(data);
+        }
+      );
+    },
+
+    nextYear: () => {
+      this.setState(
+        {
+          year: this.state.year + 1,
+        },
+        () => {
+          const data = {
+            year: this.state.year,
+            cvcod: this.props.user.userinfo.cvcod,
+            searchkeyword: this.state.searchkeyword,
+          };
+          this.submit(data);
+        }
+      );
+    },
+  };
+
+  submit = async (data) => {
+    this.setState({
+      innerLoading: true,
+    });
+    await postApi("scm/purchaseplan/yearplan", data).then((res) => {
+      console.log(res);
+      const {
+        data: {
+          data: { yearplan },
+        },
+      } = res;
+      this.setState({
+        yearplan,
+        innerLoading: false,
+        errorSearch: false,
+      });
+    });
+  };
+
+  search = (e) => {
+    e.preventDefault();
+    const { year, cvcod, searchkeyword } = this.state;
+    const data = {
+      year,
+      cvcod,
+      searchkeyword,
+    };
+    this.submit(data);
+  };
+
   componentDidMount() {
     const date = new Date();
     const year = date.getFullYear();
@@ -111,34 +179,21 @@ export default class extends React.Component {
       {
         year,
         cvcod: this.props.user.userinfo.cvcod,
-        innerLoading: true,
       },
-      async () => {
+      () => {
         const data = {
           year: this.state.year,
           cvcod: this.state.cvcod,
           searchkeyword: "",
         };
-        console.log(data);
-        await postApi("scm/purchaseplan/yearplan", data).then((res) => {
-          console.log(res);
-          const {
-            data: {
-              data: { yearplan },
-            },
-          } = res;
-          this.setState({
-            yearplan,
-            innerLoading: false,
-            errorSearch: false,
-          });
-        });
+        this.submit(data);
       }
     );
   }
 
   render() {
-    const { yearplan, columns, errorSearch, innerLoading } = this.state;
+    const { yearplan, columns, errorSearch, innerLoading, year } = this.state;
+    const inputs = this.inputs;
 
     return (
       <>
@@ -146,22 +201,32 @@ export default class extends React.Component {
         <div className="content-component plan-year">
           <h2>{this.props.title}</h2>
           <div className="form">
-            <form onSubmit={this.userSearch}>
+            <form onSubmit={this.search}>
               <span className="label">계획년도</span>
-              <input
-                name="userSearch"
-                placeholder="로그인ID 및 거래처명으로 검색"
-                className="user-search main-search"
-                type="text"
-                onChange={this.inputUpdate}
-              />
+              <div className="year-box">
+                <span
+                  className="year-btn prev-btn"
+                  onClick={inputs.prevYear}
+                ></span>
+                <input
+                  type="num"
+                  name="year"
+                  value={year}
+                  className="year"
+                  onChange={inputs.update}
+                />
+                <span
+                  className="year-btn next-btn"
+                  onClick={inputs.nextYear}
+                ></span>
+              </div>
               <span className="label ml">검색어</span>
               <input
-                name="searchKeyword"
+                name="searchkeyword"
                 placeholder="검색어를 입력하세요"
                 className="user-search main-search"
                 type="text"
-                onChange={this.inputUpdate}
+                onChange={inputs.update}
               />
               <button className="search-btn"></button>
             </form>

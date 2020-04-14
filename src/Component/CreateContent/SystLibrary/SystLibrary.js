@@ -215,16 +215,16 @@ export default class extends React.Component {
           const crtday = list.crtdat.substring(6, 8);
           const crtdate = `${crtyear}-${crtmonth}-${crtday}`;
           list.crtdat = crtdate;
-          // const styear = list.stdat.substring(0, 4);
-          // const stmonth = list.stdat.substring(4, 6);
-          // const stday = list.stdat.substring(6, 8);
-          // const stdate = `${styear}-${stmonth}-${stday}`;
-          // list.stdat = stdate;
-          // const edyear = list.eddat.substring(0, 4);
-          // const edmonth = list.eddat.substring(4, 6);
-          // const edday = list.eddat.substring(6, 8);
-          // const eddate = `${edyear}-${edmonth}-${edday}`;
-          // list.eddat = eddate;
+          const styear = list.stdat.substring(0, 4);
+          const stmonth = list.stdat.substring(4, 6);
+          const stday = list.stdat.substring(6, 8);
+          const stdate = `${styear}-${stmonth}-${stday}`;
+          list.stdat = stdate;
+          const edyear = list.eddat.substring(0, 4);
+          const edmonth = list.eddat.substring(4, 6);
+          const edday = list.eddat.substring(6, 8);
+          const eddate = `${edyear}-${edmonth}-${edday}`;
+          list.eddat = eddate;
           return list;
         });
         if (libraryList.length === 0) {

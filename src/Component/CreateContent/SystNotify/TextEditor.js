@@ -11,12 +11,13 @@ import "react-summernote/lang/summernote-ko-KR";
 import "bootstrap/js/dist/modal";
 import "bootstrap/js/dist/dropdown";
 import "bootstrap/js/dist/tooltip";
-import Loading from "../../Loading";
+import InnerLoading from "../../InnerLoading";
 import { postApi } from "../../../api";
 import "./SystNotify.scss";
 
 class TextEditor extends React.Component {
   state = {
+    innerLoading: false,
     userSearch: "",
     userList: [],
     notifyauth: [],
@@ -205,6 +206,9 @@ class TextEditor extends React.Component {
 
     saveNotice: async (e) => {
       e.preventDefault();
+      this.setState({
+        innerLoading: true,
+      });
       const { notify, notifyauth, file, deleteList } = this.state;
       let formData = new FormData();
       if (this.props.editMode) {
@@ -396,6 +400,7 @@ class TextEditor extends React.Component {
       file,
       tabIndex,
       notifyfilelist,
+      innerLoading,
     } = this.state;
     const submits = this.submits;
     const inputs = this.inputs;
@@ -412,6 +417,7 @@ class TextEditor extends React.Component {
 
     return (
       <>
+        {innerLoading ? <InnerLoading /> : null}
         <div className="close-btn" onClick={this.props.changeMode}></div>
         <form onSubmit={submits.saveNotice}>
           <div className="textedit-section">

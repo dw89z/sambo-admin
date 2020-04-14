@@ -1,3 +1,54 @@
 @import "../../../scss/Variables.scss";
 
-.plan-year {}
+.year-box {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+
+  .year {
+    width: 4rem;
+    height: 2rem;
+    padding: 0.35rem 1rem;
+    border: 1px solid $gray3;
+    border-right: none;
+    border-left: none;
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-align: center;
+
+    &.month {
+      width: 6rem;
+    }
+  }
+
+  .year-btn {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid $gray3;
+    cursor: pointer;
+
+    &:hover {
+      border-color: $pri;
+      opacity: 0.75;
+    }
+
+    &.next-btn {
+      background: url("../../../assets/img/next-btn.svg") center no-repeat;
+      background-size: 1rem;
+    }
+
+    &.prev-btn {
+      background: url("../../../assets/img/prev-btn.svg") center no-repeat;
+      background-size: 1rem;
+    }
+  }
+}
+
+.year-table {
+  thead {
+    th {
+      padding-right: 1.25rem;
+    }
+  }
+}
