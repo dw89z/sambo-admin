@@ -244,15 +244,15 @@
   overflow-y: hidden;
 
   &.left {
-    top: 3.1rem;
+    top: 3rem;
     left: 12rem;
   }
 
   .tab {
     background: #fff;
-    padding: 0.5rem 2.1rem 0.5rem 1rem;
-    font-size: 0.75rem;
-    font-weight: 700;
+    padding: 0.35rem 1.6rem 0.35rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
     font-family: "Noto sans KR", sans-serif;
     cursor: pointer;
     opacity: 0.65;
@@ -275,8 +275,8 @@
     width: 22px;
     height: 22px;
     position: absolute;
-    top: 7px;
-    right: 8px;
+    top: 4px;
+    right: 2px;
 
     &.disable {
       &:after {
@@ -289,6 +289,7 @@
     }
 
     &.non-delete {
+
       &:after,
       &:before {
         content: none;
@@ -324,8 +325,8 @@
 .contents {
   position: absolute;
   width: calc(100% - 2rem);
-  height: calc(100% - 10rem);
-  top: 7rem;
+  height: calc(100% - 9.75rem);
+  top: 6.6rem;
   background: #fff;
   left: 1rem;
   padding: 1rem 1.25rem 1.25rem;
@@ -334,8 +335,8 @@
 
   &.left {
     width: calc(100% - 13rem);
-    height: calc(100% - 8rem);
-    top: 5.15rem;
+    height: calc(100% - 7.85rem);
+    top: 4.75rem;
     left: 12rem;
   }
 }

@@ -145,7 +145,7 @@ export default class extends React.Component {
               wrapperClasses={
                 this.props.menuAxis ? "year-table" : "year-table left"
               }
-              keyField="id"
+              keyField="rowseq"
               data={weekplan}
               columns={columns}
             />

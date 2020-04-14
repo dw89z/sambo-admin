@@ -146,17 +146,23 @@ export default class extends React.Component {
       innerLoading: true,
     });
     await postApi("scm/purchaseplan/yearplan", data).then((res) => {
-      console.log(res);
       const {
         data: {
           data: { yearplan },
         },
       } = res;
-      this.setState({
-        yearplan,
-        innerLoading: false,
-        errorSearch: false,
-      });
+      if (yearplan.length !== 0) {
+        this.setState({
+          yearplan,
+          innerLoading: false,
+          errorSearch: false,
+        });
+      } else {
+        this.setState({
+          yearplan: [],
+          errorSearch: true,
+        });
+      }
     });
   };
 
@@ -239,7 +245,7 @@ export default class extends React.Component {
               wrapperClasses={
                 this.props.menuAxis ? "year-table" : "year-table left"
               }
-              keyField="id"
+              keyField="rowseq"
               data={yearplan}
               columns={columns}
             />

@@ -7,6 +7,9 @@ export default class extends React.Component {
       <>
         <div className="content-component">
           <h2>{this.props.title}</h2>
+          <div className="form">
+            <form></form>
+          </div>
         </div>
       </>
     );

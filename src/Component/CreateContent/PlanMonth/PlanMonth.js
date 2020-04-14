@@ -43,32 +43,32 @@ export default class extends React.Component {
       },
       {
         dataField: "qty_01",
-        text: "-",
+        text: "1주",
         sort: true,
       },
       {
         dataField: "qty_02",
-        text: "-",
+        text: "2주",
         sort: true,
       },
       {
         dataField: "qty_03",
-        text: "-",
+        text: "3주",
         sort: true,
       },
       {
         dataField: "qty_04",
-        text: "-",
+        text: "4주",
         sort: true,
       },
       {
         dataField: "qty_05",
-        text: "-",
+        text: "5주",
         sort: true,
       },
       {
         dataField: "qty_06",
-        text: "-",
+        text: "6주",
         sort: true,
       },
       {
@@ -104,8 +104,8 @@ export default class extends React.Component {
     },
 
     // 이전달 버튼 이벤트
-    prevYear: () => {
-      this.inputs.converter("prev");
+    prevYear: async () => {
+      await this.inputs.converter("prev");
       const { date } = this.state;
       let nDate = date.replace("-", "");
       const data = {
@@ -117,8 +117,8 @@ export default class extends React.Component {
     },
 
     // 다음달 버튼 이벤트
-    nextYear: () => {
-      this.inputs.converter("next");
+    nextYear: async () => {
+      await this.inputs.converter("next");
       const { date } = this.state;
       let nDate = date.replace("-", "");
       const data = {
@@ -151,13 +151,53 @@ export default class extends React.Component {
         nMonth -= 1;
         if (nMonth === 0) {
           nMonth = 12;
+          nYear -= 1;
         }
       }
-      nMonth = nMonth.toString().length === 1 ? "0" + nMonth : nMonth;
-      const resultDate = `${nYear}-${nMonth}`;
+      const fMonth = nMonth.toString().length === 1 ? "0" + nMonth : nMonth;
+      const resultDate = `${nYear}-${fMonth}`;
+      this.inputs.setMonth(nMonth);
       this.setState({
         date: resultDate,
       });
+    },
+
+    // 자바스크립트 월 보정, 칼럼 데이터 동적 수정 함수
+    setMonth: (month) => {
+      const { columns } = this.state;
+      let m1 = new Date();
+      let m2 = new Date();
+      m1.setMonth(month + 1);
+      m2.setMonth(month + 2);
+      let m1Obj, m2Obj;
+      m1Obj = {
+        dataField: "qty_m1",
+        text: `${m1.getMonth()}월`,
+        sort: true,
+      };
+      m2Obj = {
+        dataField: "qty_m2",
+        text: `${m2.getMonth()}월`,
+        sort: true,
+      };
+      if (m1.getMonth() === 0) {
+        m1Obj = {
+          dataField: "qty_m1",
+          text: `12월`,
+          sort: true,
+        };
+      }
+      if (m2.getMonth() === 0) {
+        m2Obj = {
+          dataField: "qty_m2",
+          text: `12월`,
+          sort: true,
+        };
+      }
+      const m1Index = columns.findIndex((data) => data.dataField === "qty_m1");
+      const m2Index = columns.findIndex((data) => data.dataField === "qty_m2");
+      columns.splice(m1Index, 1, m1Obj);
+      columns.splice(m2Index, 1, m2Obj);
     },
   };
 
@@ -166,6 +206,9 @@ export default class extends React.Component {
     this.setState({
       innerLoading: true,
     });
+    if (data.date.includes("-")) {
+      data.date = data.date.replace("-", "");
+    }
     try {
       await postApi("scm/purchaseplan/monthplan", data).then((res) => {
         console.log(res);
@@ -174,14 +217,21 @@ export default class extends React.Component {
             data: { monthplan },
           },
         } = res;
-        this.setState({
-          monthplan,
-          innerLoading: false,
-          errorSearch: false,
-        });
+        if (monthplan.length !== 0) {
+          this.setState({
+            monthplan,
+            innerLoading: false,
+            errorSearch: false,
+          });
+        } else {
+          this.setState({
+            monthplan: [],
+            errorSearch: true,
+          });
+        }
       });
     } catch (error) {
-      alert(error);
+      alert("잘못된 데이터 형식입니다. 다시 시도해 주세요.");
       this.setState({
         innerLoading: false,
       });
@@ -227,6 +277,7 @@ export default class extends React.Component {
           searchkeyword: "",
         };
         this.submit(data);
+        this.inputs.setMonth(month);
       }
     );
   }
@@ -239,6 +290,7 @@ export default class extends React.Component {
       innerLoading,
       date,
       searchkeyword,
+      cvcod,
     } = this.state;
     const inputs = this.inputs;
 
@@ -251,7 +303,12 @@ export default class extends React.Component {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                this.submit();
+                const data = {
+                  date,
+                  cvcod,
+                  searchkeyword,
+                };
+                this.submit(data);
               }}
             >
               <span className="label">계획년월</span>
@@ -266,6 +323,12 @@ export default class extends React.Component {
                   value={date}
                   className="year month"
                   onChange={inputs.numUpdate}
+                  onFocus={() => {
+                    this.setState({
+                      date: "",
+                    });
+                  }}
+                  autoComplete="off"
                 />
                 <span
                   className="year-btn next-btn"
@@ -292,7 +355,7 @@ export default class extends React.Component {
               wrapperClasses={
                 this.props.menuAxis ? "year-table" : "year-table left"
               }
-              keyField="id"
+              keyField="rowseq"
               data={monthplan}
               columns={columns}
             />
