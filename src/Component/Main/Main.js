@@ -44,7 +44,7 @@ export default class extends React.Component {
       this.setState({
         user,
         mode,
-        currentMode: mode[0],
+        currentMode: mode[1],
       });
     } catch {
     } finally {

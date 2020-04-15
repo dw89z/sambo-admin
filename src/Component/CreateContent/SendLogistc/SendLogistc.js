@@ -224,6 +224,7 @@ export default class extends React.Component {
                 <span className="label ml">시작품</span>
                 <input type="checkbox" />
               </div>
+              <button className="save">저장</button>
             </form>
           </div>
           <div className="table">

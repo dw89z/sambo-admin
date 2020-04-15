@@ -2,6 +2,7 @@ import React from "react";
 import close from "../../../assets/img/close.svg";
 import { postApi, putApi } from "../../../api";
 
+//요청 전송 및 피드백으로 인해 LiveSearch 컴포넌트 미사용
 class RightPanel extends React.Component {
   state = {
     typing: false,
@@ -15,39 +16,41 @@ class RightPanel extends React.Component {
       hphone: "",
       email: "",
       telno: "",
-      auth: ""
+      auth: "",
     },
     idpass: false,
     cvcodpass: false,
     error: {
       id: {
         error: false,
-        message: ""
+        message: "",
       },
       cvcod: {
         error: false,
-        message: ""
-      }
+        message: "",
+      },
     },
     cvcodList: {
       visible: false,
-      list: []
-    }
+      list: [],
+    },
   };
 
-  inputUpdate = e => {
-    const user = this.state.user;
+  // 인풋 state 업데이트
+  inputUpdate = (e) => {
+    const { user } = this.state;
     this.setState({
       user: {
         ...user,
-        [e.target.name]: e.target.value
-      }
+        [e.target.name]: e.target.value,
+      },
     });
   };
 
-  inputUpdateId = e => {
+  // 아이디 입력시마다 시간차를 두고 중복아이디 체크
+  inputUpdateId = (e) => {
     const data = {
-      userid: e.target.value.trim()
+      userid: e.target.value.trim(),
     };
     const user = this.state.user;
 
@@ -58,14 +61,14 @@ class RightPanel extends React.Component {
     this.setState({
       user: {
         ...user,
-        [e.target.name]: e.target.value
+        [e.target.name]: e.target.value,
       },
       idpass: false,
       typingTimeout: setTimeout(async () => {
         const userid = this.state.user.logid.trim();
         const error = this.state.error;
         if (userid !== "") {
-          await postApi("admin/um/checkuser", data).then(res => {
+          await postApi("admin/um/checkuser", data).then((res) => {
             const { data } = res;
             if (data.data.result) {
               this.setState({
@@ -73,10 +76,10 @@ class RightPanel extends React.Component {
                   ...error,
                   id: {
                     error: false,
-                    message: data.errorMessage
-                  }
+                    message: data.errorMessage,
+                  },
                 },
-                idpass: true
+                idpass: true,
               });
             } else {
               this.setState({
@@ -84,10 +87,10 @@ class RightPanel extends React.Component {
                   ...error,
                   id: {
                     error: true,
-                    message: data.errorMessage
-                  }
+                    message: data.errorMessage,
+                  },
                 },
-                idpass: true
+                idpass: true,
               });
             }
           });
@@ -97,20 +100,21 @@ class RightPanel extends React.Component {
               ...error,
               id: {
                 error: false,
-                message: ""
-              }
-            }
+                message: "",
+              },
+            },
           });
         }
-      }, 300)
+      }, 150),
     });
   };
 
-  inputUpdateCod = e => {
+  // cvcod입력시마다 시간차를 두고 cvcod리스트를 보여줌
+  inputUpdateCod = (e) => {
     const cvTrim = e.target.value.trim();
     const cvUpper = cvTrim.toUpperCase();
     const data = {
-      searchKeyword: cvUpper
+      searchKeyword: cvUpper,
     };
     const user = this.state.user;
 
@@ -121,30 +125,29 @@ class RightPanel extends React.Component {
     this.setState({
       user: {
         ...user,
-        [e.target.name]: e.target.value
+        [e.target.name]: e.target.value,
       },
       cvcodpass: false,
       typingTimeout: setTimeout(async () => {
         const usercvcod = this.state.user.cvcod.trim();
         const error = this.state.error;
         if (usercvcod !== "") {
-          await postApi("admin/um/searchconnections", data).then(res => {
+          await postApi("admin/um/searchconnections", data).then((res) => {
             const { data } = res;
 
             if (data.data) {
               this.setState({
                 cvcodList: {
                   visible: true,
-                  list: data.data
+                  list: data.data,
                 },
                 error: {
                   ...error,
                   cvcod: {
                     error: false,
-                    message: ""
-                  }
+                    message: "",
+                  },
                 },
-                cvcodpass: true
               });
             } else if (data.status === "Fail") {
               this.setState({
@@ -152,20 +155,54 @@ class RightPanel extends React.Component {
                   ...error,
                   cvcod: {
                     error: true,
-                    message: data.errorMessage
-                  }
+                    message: data.errorMessage,
+                  },
                 },
-                cvcodpass: false
               });
             }
           });
         } else {
         }
-      }, 500)
+      }, 500),
     });
   };
 
-  submitUser = async e => {
+  // 리스트를 클릭할 경우 cvcod와 cvnas를 인풋창에 바인딩
+  setCvcod = (e) => {
+    const cvcod = e.currentTarget.getAttribute("data-cvcod");
+    const cvnas = e.currentTarget.getAttribute("data-cvnas");
+    const user = this.state.user;
+    this.setState({
+      user: {
+        ...user,
+        cvcod,
+        cvnas,
+      },
+      cvcodList: {
+        visible: false,
+      },
+      cvcodpass: true,
+    });
+  };
+
+  // 리스트에서 esc를 입력하면 초기회
+  reset = () => {
+    const { user } = this.state;
+    this.setState({
+      user: {
+        ...user,
+        cvcod: "",
+      },
+      cvcodList: {
+        visible: false,
+        list: [],
+      },
+      cvcodpass: false,
+    });
+  };
+
+  // 등록/수정 api요청 섭밋
+  submitUser = async (e) => {
     e.preventDefault();
     const { addMode, openEdit } = this.props;
     const data = {
@@ -177,10 +214,10 @@ class RightPanel extends React.Component {
       email: this.state.user.email,
       auth: this.state.user.auth,
       gubn: this.state.user.gubn,
-      hphone: this.state.user.hphone
+      hphone: this.state.user.hphone,
     };
     if (addMode) {
-      await postApi("admin/um/user", data).then(res => {
+      await postApi("admin/um/user", data).then((res) => {
         console.log("regist", res);
         if (!res.data.errorCode) {
           this.props.done(res.data.data.message);
@@ -190,10 +227,11 @@ class RightPanel extends React.Component {
         }
       });
     } else if (openEdit) {
-      await putApi("admin/um/user", data).then(res => {
+      await putApi("admin/um/user", data).then((res) => {
         if (!res.data.errorCode) {
           this.props.done(res.data.data.message);
           this.props.closeAllMode();
+          this.props.reqUpdate();
         } else {
           this.props.error(res.data.errorMessage);
         }
@@ -201,29 +239,13 @@ class RightPanel extends React.Component {
     }
   };
 
-  setCvcod = e => {
-    const cvcod = e.currentTarget.getAttribute("data-cvcod");
-    const cvnas = e.currentTarget.getAttribute("data-cvnas");
-    const user = this.state.user;
-    this.setState({
-      user: {
-        ...user,
-        cvcod,
-        cvnas
-      },
-      cvcodList: {
-        visible: false
-      },
-      cvcodpass: true
-    });
-  };
-
+  // 수정 모드일 경우 수정에 맞는 state를 세팅하고 등록모드일 경우 초기화
   componentDidUpdate(props) {
     if (props.openEdit !== this.props.openEdit) {
       this.setState({
         user: this.props.selectedRow,
         idpass: true,
-        cvcodpass: true
+        cvcodpass: true,
       });
     }
     if (props.addMode !== this.props.addMode) {
@@ -237,20 +259,20 @@ class RightPanel extends React.Component {
           hphone: "",
           email: "",
           telno: "",
-          auth: ""
+          auth: "",
         },
         idpass: false,
         cvcodpass: false,
         error: {
           id: {
             error: false,
-            message: ""
+            message: "",
           },
           cvcod: {
             error: false,
-            message: ""
-          }
-        }
+            message: "",
+          },
+        },
       });
     }
   }
@@ -272,7 +294,7 @@ class RightPanel extends React.Component {
             className="close-btn"
             onClick={() => {
               this.setState({
-                cvcodList: []
+                cvcodList: [],
               });
               this.props.closeAllMode();
             }}
@@ -322,10 +344,21 @@ class RightPanel extends React.Component {
                 value={user.cvcod}
                 autoComplete="off"
                 onChange={this.inputUpdateCod}
+                onKeyDown={(e) => {
+                  if (e.which === 13) {
+                    e.preventDefault();
+                  } else if (e.which === 27) {
+                    this.reset();
+                  }
+                }}
                 required
               />
               {cvcodList.visible ? (
                 <ul className="search-cod-list">
+                  <li>
+                    <span className="list-label">거래처코드</span>
+                    <span className="list-label">거래처명</span>
+                  </li>
                   {cvcodList.list.map((list, index) => {
                     return (
                       <li

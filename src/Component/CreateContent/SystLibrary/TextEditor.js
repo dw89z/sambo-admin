@@ -279,7 +279,6 @@ class TextEditor extends React.Component {
             { headers: config }
           )
           .then((res) => {
-            console.log(res);
             if (!res.data.errorCode) {
               this.init();
               this.props.changeMode();
@@ -296,13 +295,12 @@ class TextEditor extends React.Component {
             { headers: config }
           )
           .then((res) => {
-            console.log(res);
             if (!res.data.errorCode) {
               this.init();
               this.props.changeMode();
               this.props.done(res.data.data.message);
             } else {
-              this.props.error(res.data.data.errorMessage);
+              this.props.error(res.data.data.message);
             }
           });
       }
@@ -401,7 +399,6 @@ class TextEditor extends React.Component {
       const {
         editData: { library, libraryauth, libraryfilelist },
       } = this.props;
-      console.log(library);
       const stdat = this.formatDateObj(library.stdat);
       const eddat = this.formatDateObj(library.eddat);
       const crtdat = this.formatDateObj(library.crtdat);
@@ -480,8 +477,6 @@ class TextEditor extends React.Component {
         ></span>
       </li>
     ));
-
-    console.log(library);
 
     return (
       <>
@@ -671,7 +666,7 @@ class TextEditor extends React.Component {
                   </div>
                   <BootstrapTable
                     wrapperClasses="user-list-table"
-                    keyField="id"
+                    keyField="logid"
                     data={userList}
                     columns={columns}
                     rowEvents={this.rowEvents}

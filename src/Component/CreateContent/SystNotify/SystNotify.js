@@ -2,8 +2,9 @@ import React from "react";
 import "../../../globals";
 import edit from "../../../assets/img/edit.svg";
 import search from "../../../assets/img/search-blue.svg";
+import LiveSearch from "../common/LiveSeach";
 import BootstrapTable from "react-bootstrap-table-next";
-import DateRangePicker from "@wojtekmaj/react-daterange-picker";
+import DatePicker from "react-datepicker";
 import TextEditor from "./TextEditor";
 import Loading from "../../Loading";
 import { postApi, getApi } from "../../../api";
@@ -14,7 +15,8 @@ export default class extends React.Component {
     loading: false,
     typing: false,
     typingTimeout: 0,
-    date: [],
+    fromDate: "",
+    toData: "",
     columns: [
       {
         dataField: "seqno",
@@ -64,10 +66,6 @@ export default class extends React.Component {
       },
     ],
     noticeList: [],
-    userList: {
-      visible: false,
-      list: [],
-    },
     title: "",
     userId: "",
     cvnas: "",
@@ -87,60 +85,24 @@ export default class extends React.Component {
 
   getDate = () => {
     const date = new Date();
-    const today = date.setDate(date.getDate());
-    const before = date.setDate(date.getDate() - 60);
+    const toDate = date.setDate(date.getDate());
+    const fromDate = date.setDate(date.getDate() - 60);
     this.setState({
-      date: [before, today],
+      toDate,
+      fromDate,
     });
   };
 
-  inputUpdate = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
+  inputs = {
+    liveResult: (result) => {
+      this.setState({
+        userId: result,
+      });
+    },
   };
 
-  inputUpdateId = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-    const value = e.target.value;
-
-    if (this.state.typingTimeout) {
-      clearTimeout(this.state.typingTimeout);
-    }
-
-    this.setState({
-      typingTimeout: setTimeout(async () => {
-        if (value !== "") {
-          const userId = {
-            searchKeyword: value.trim(),
-          };
-          await postApi("admin/um/searchusers", userId).then((res) => {
-            const {
-              data: { data },
-            } = res;
-            this.setState({
-              userList: {
-                visible: true,
-                list: data,
-              },
-            });
-          });
-        } else if (value === "") {
-          this.setState({
-            userList: {
-              visible: false,
-              list: [],
-            },
-          });
-        }
-      }, 300),
-    });
-  };
-
-  setSearchId = async (e) => {
-    const userId = e.currentTarget.getAttribute("data-logid");
+  setSearchId = async () => {
+    const { userId } = this.state;
     await getApi(`admin/um/user/${userId}`).then((res) => {
       const {
         data: {
@@ -151,15 +113,9 @@ export default class extends React.Component {
       this.setState({
         userId: userinfo.logid,
         cvnas: userinfo.cvnas,
-        userList: {
-          visible: false,
-          list: [],
-        },
       });
     });
   };
-
-  onDataChange = (date) => this.setState({ date });
 
   submits = {
     formatDate: (date) => {
@@ -180,9 +136,9 @@ export default class extends React.Component {
     },
 
     searchList: async () => {
-      const { date, userId } = this.state;
-      const rawFromDate = new Date(date[0]);
-      const rawToDate = new Date(date[1]);
+      const { fromDate, toDate, userId } = this.state;
+      const rawFromDate = new Date(fromDate);
+      const rawToDate = new Date(toDate);
       const fromdate = this.submits.formatDate(rawFromDate);
       const todate = this.submits.formatDate(rawToDate);
       const searchoption = {
@@ -243,6 +199,12 @@ export default class extends React.Component {
     },
   };
 
+  componentDidUpdate(prevProp, prevState) {
+    if (this.state.userId !== prevState.userId) {
+      this.setSearchId();
+    }
+  }
+
   componentDidMount() {
     this.getDate();
     const {
@@ -250,7 +212,7 @@ export default class extends React.Component {
     } = this.props;
 
     this.setState({
-      userId: "bselpin",
+      userId: userinfo.logid,
       cvnas: userinfo.cvnas,
     });
   }
@@ -258,18 +220,21 @@ export default class extends React.Component {
   render() {
     const {
       loading,
-      userList,
       noticeList,
       columns,
       errorSearch,
       listMode,
       editData,
       editMode,
+      isMast,
+      fromDate,
+      toDate,
     } = this.state;
     const {
       user: { userinfo },
     } = this.props;
     const submits = this.submits;
+    const inputs = this.inputs;
 
     return (
       <>
@@ -284,47 +249,26 @@ export default class extends React.Component {
                   <form onSubmit={submits.searchOption}>
                     <div className="notify-header form">
                       <span className="label">사용자 조회</span>
-                      <input
-                        name="userId"
-                        placeholder="로그인ID로 검색"
-                        className="auth-search main-search"
-                        type="text"
-                        onChange={this.inputUpdateId}
-                        value={this.state.userId}
-                        onKeyPress={(e) => {
-                          if (e.key === "Enter") e.preventDefault();
-                        }}
-                        autoComplete="off"
-                        spellCheck="false"
+                      <LiveSearch
+                        user={userinfo}
+                        isMast={isMast}
+                        liveResult={inputs.liveResult}
                       />
-                      {userList.visible && userList.list ? (
-                        <ul className="user-list">
-                          {userList.list.map((list, index) => {
-                            return (
-                              <li
-                                key={index}
-                                onClick={this.setSearchId}
-                                data-logid={list.logid}
-                              >
-                                <span>{list.logid}</span>
-                                <span>{list.cvnas}</span>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      ) : null}
                       <div className="user-info">
                         <span>사용자명</span>
                         <span className="info-cvnas">{this.state.cvnas}</span>
                       </div>
                       <span className="label">등록일자</span>
-                      <DateRangePicker
-                        onChange={this.onDataChange}
-                        value={this.state.date}
-                        calendarIcon={null}
-                        clearIcon={null}
-                        required={true}
-                        locale={"ko-KR"}
+                      <DatePicker
+                        selected={fromDate}
+                        onChange={this.handleChange}
+                        dateFormat="yyyy/MM/dd"
+                      />
+                      <span className="date-divider">~</span>
+                      <DatePicker
+                        selected={toDate}
+                        onChange={this.handleChange}
+                        dateFormat="yyyy/MM/dd"
                       />
                       <div className="utils">
                         <button

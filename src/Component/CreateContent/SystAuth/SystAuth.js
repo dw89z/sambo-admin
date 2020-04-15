@@ -60,9 +60,10 @@ export default class extends React.Component {
     checkedList: [],
     selected: [],
     done: "정상적으로 처리를 완료하였습니다.",
-    innerLoading: false,
+    innerLoading: true,
   };
 
+  // LiveSearch 상속 필수 메소드, result를 부모(현재 컴포넌트)로 보냄
   inputs = {
     liveResult: (result) => {
       this.setState({
@@ -71,10 +72,11 @@ export default class extends React.Component {
     },
   };
 
+  // 사용자를 조회하여 프로그램 리스트를 가져옴
   setSearchId = async (e) => {
     const { userId } = this.state;
     this.setState({
-      loading: true,
+      innerloading: true,
     });
 
     await postApi(`admin/uam/programofuser/${userId}`, {})
@@ -89,7 +91,6 @@ export default class extends React.Component {
             userList: {
               visible: false,
             },
-            loading: false,
             innerLoading: false,
           });
         }
@@ -108,6 +109,7 @@ export default class extends React.Component {
     });
   };
 
+  // 체크박스를 클릭하면 변경된 데이터들을 쌓음
   toDeleteList = (row, isSelect) => {
     const { checkedList } = this.state;
     if (!isSelect) {
@@ -129,6 +131,8 @@ export default class extends React.Component {
     }
   };
 
+  // useyn값을 number번호로 만들어 배열에 담아
+  // bootstrap이 체크박스를 작동할 수 있도록 만드는 메소드
   detectCheck = (array) => {
     const useyn = array.filter((list) => list.useyn === "Y");
     const checkedList = useyn.map((list) => list.index);
@@ -137,6 +141,7 @@ export default class extends React.Component {
     });
   };
 
+  // 저장시 유저의 현재 리스트를 다시 요청, 수정한 배열과 비교하여 바뀐 배열을 보냄
   updateSumbit = async (e) => {
     e.preventDefault();
     const { authList, userId } = this.state;
@@ -179,6 +184,9 @@ export default class extends React.Component {
 
   componentDidUpdate(prevProp, prevState) {
     if (prevState.userId !== this.state.userId) {
+      this.setState({
+        innerLoading: true,
+      });
       this.setSearchId();
     }
   }
@@ -202,7 +210,7 @@ export default class extends React.Component {
   }
 
   render() {
-    const { loading, authList, columns, innerLoading } = this.state;
+    const { authList, columns, innerLoading } = this.state;
     const { userinfo } = this.props.user;
     const inputs = this.inputs;
 
@@ -222,48 +230,44 @@ export default class extends React.Component {
               <button className="save">저장</button>
             </div>
             <div className="table">
-              {loading ? (
-                <Loading />
-              ) : (
-                <BootstrapTable
-                  bootstrap4
-                  wrapperClasses={
-                    this.props.menuAxis ? "auth-table" : "auth-table left"
-                  }
-                  keyField="index"
-                  data={authList}
-                  columns={columns}
-                  selectRow={{
-                    mode: "checkbox",
-                    clickToSelect: true,
-                    selected: this.state.checkedList,
-                    onSelect: (row, isSelect, rowIndex, e) => {
-                      this.toDeleteList(row, isSelect);
-                    },
-                    onSelectAll: async (isSelect, rows, e) => {
-                      let chklist;
-                      let checkAll;
-                      const { authList } = this.state;
-                      let rowsString = JSON.stringify(authList);
+              <BootstrapTable
+                bootstrap4
+                wrapperClasses={
+                  this.props.menuAxis ? "auth-table" : "auth-table left"
+                }
+                keyField="index"
+                data={authList}
+                columns={columns}
+                selectRow={{
+                  mode: "checkbox",
+                  clickToSelect: true,
+                  selected: this.state.checkedList,
+                  onSelect: (row, isSelect, rowIndex, e) => {
+                    this.toDeleteList(row, isSelect);
+                  },
+                  onSelectAll: async (isSelect, rows, e) => {
+                    let chklist;
+                    let checkAll;
+                    const { authList } = this.state;
+                    let rowsString = JSON.stringify(authList);
 
-                      if (isSelect) {
-                        checkAll = authList.map((list) => parseInt(list.index));
-                        rowsString = rowsString.replace(/\"N\"/g, '"Y"');
-                      } else {
-                        checkAll = [];
-                        rowsString = rowsString.replace(/\"Y\"/g, '"N"');
-                      }
+                    if (isSelect) {
+                      checkAll = authList.map((list) => parseInt(list.index));
+                      rowsString = rowsString.replace(/\"N\"/g, '"Y"');
+                    } else {
+                      checkAll = [];
+                      rowsString = rowsString.replace(/\"Y\"/g, '"N"');
+                    }
 
-                      chklist = JSON.parse(rowsString);
+                    chklist = JSON.parse(rowsString);
 
-                      this.setState({
-                        authList: chklist,
-                        checkedList: checkAll,
-                      });
-                    },
-                  }}
-                />
-              )}
+                    this.setState({
+                      authList: chklist,
+                      checkedList: checkAll,
+                    });
+                  },
+                }}
+              />
             </div>
           </form>
         </div>

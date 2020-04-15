@@ -17,13 +17,13 @@ class CreateContent extends React.Component {
       {
         index: 0,
         window_name: "대시보드",
-        window_id: "SendLoprint",
+        window_id: "SystAuth",
       },
     ],
     currentComp: {
       index: 0,
       window_name: "대시보드",
-      window_id: "SendLoprint",
+      window_id: "SystAuth",
     },
     doneMsg: "",
     errorMsg: "",

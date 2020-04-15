@@ -2,6 +2,7 @@ import React from "react";
 import "../../../globals";
 import edit from "../../../assets/img/edit.svg";
 import search from "../../../assets/img/search-blue.svg";
+import LiveSearch from "../common/LiveSeach";
 import BootstrapTable from "react-bootstrap-table-next";
 import DatePicker from "react-datepicker";
 import TextEditor from "./TextEditor";
@@ -75,6 +76,15 @@ export default class extends React.Component {
     listMode: true,
     editData: {},
     editMode: false,
+    isMast: true,
+  };
+
+  inputs = {
+    liveResult: (result) => {
+      this.setState({
+        userId: result,
+      });
+    },
   };
 
   changeMode = () => {
@@ -87,61 +97,16 @@ export default class extends React.Component {
 
   getDate = () => {
     const date = new Date();
-    const today = date.setDate(date.getDate());
-    const before = date.setDate(date.getDate() - 60);
+    const eddat = date.setDate(date.getDate());
+    const stdat = date.setDate(date.getDate() - 60);
     this.setState({
-      stdat: before,
-      eddat: today,
+      stdat,
+      eddat,
     });
   };
 
-  inputUpdate = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  inputUpdateId = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-    const value = e.target.value;
-
-    if (this.state.typingTimeout) {
-      clearTimeout(this.state.typingTimeout);
-    }
-
-    this.setState({
-      typingTimeout: setTimeout(async () => {
-        if (value !== "") {
-          const userId = {
-            searchKeyword: value.trim(),
-          };
-          await postApi("admin/um/searchusers", userId).then((res) => {
-            const {
-              data: { data },
-            } = res;
-            this.setState({
-              userList: {
-                visible: true,
-                list: data,
-              },
-            });
-          });
-        } else if (value === "") {
-          this.setState({
-            userList: {
-              visible: false,
-              list: [],
-            },
-          });
-        }
-      }, 300),
-    });
-  };
-
-  setSearchId = async (e) => {
-    const userId = e.currentTarget.getAttribute("data-logid");
+  setSearchId = async () => {
+    const { userId } = this.state;
     await getApi(`admin/um/user/${userId}`).then((res) => {
       const {
         data: {
@@ -152,10 +117,6 @@ export default class extends React.Component {
       this.setState({
         userId: userinfo.logid,
         cvnas: userinfo.cvnas,
-        userList: {
-          visible: false,
-          list: [],
-        },
       });
     });
   };
@@ -262,14 +223,22 @@ export default class extends React.Component {
     },
   };
 
+  componentDidUpdate(prevProp, prevState) {
+    if (this.state.userId !== prevState.userId) {
+      this.setSearchId();
+    }
+  }
+
   componentDidMount() {
     this.getDate();
     const {
       user: { userinfo },
     } = this.props;
 
+    console.log("mount", userinfo);
+
     this.setState({
-      userId: "bselpin",
+      userId: userinfo.logid,
       cvnas: userinfo.cvnas,
     });
   }
@@ -277,7 +246,6 @@ export default class extends React.Component {
   render() {
     const {
       loading,
-      userList,
       libraryList,
       columns,
       errorSearch,
@@ -286,11 +254,13 @@ export default class extends React.Component {
       editMode,
       stdat,
       eddat,
+      isMast,
     } = this.state;
     const {
       user: { userinfo },
     } = this.props;
     const submits = this.submits;
+    const inputs = this.inputs;
 
     return (
       <>
@@ -305,35 +275,11 @@ export default class extends React.Component {
                   <form onSubmit={submits.searchOption}>
                     <div className="notify-header form">
                       <span className="label">사용자 조회</span>
-                      <input
-                        name="userId"
-                        placeholder="로그인ID로 검색"
-                        className="auth-search main-search"
-                        type="text"
-                        onChange={this.inputUpdateId}
-                        value={this.state.userId}
-                        onKeyPress={(e) => {
-                          if (e.key === "Enter") e.preventDefault();
-                        }}
-                        autoComplete="off"
-                        spellCheck="false"
+                      <LiveSearch
+                        user={userinfo}
+                        isMast={isMast}
+                        liveResult={inputs.liveResult}
                       />
-                      {userList.visible && userList.list ? (
-                        <ul className="user-list">
-                          {userList.list.map((list, index) => {
-                            return (
-                              <li
-                                key={index}
-                                onClick={this.setSearchId}
-                                data-logid={list.logid}
-                              >
-                                <span>{list.logid}</span>
-                                <span>{list.cvnas}</span>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      ) : null}
                       <div className="user-info">
                         <span>사용자명</span>
                         <span className="info-cvnas">{this.state.cvnas}</span>

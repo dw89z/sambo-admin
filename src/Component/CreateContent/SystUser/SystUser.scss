@@ -110,6 +110,68 @@
   padding-top: 1.5rem;
   overflow-y: scroll;
 
+  .input-div {
+    input {
+      width: 15rem;
+    }
+
+    .search-cod-list {
+      width: 15rem;
+      position: absolute;
+      background: #fff;
+      border: 1px solid $pri;
+      border-top: none;
+      z-index: 99;
+      left: 5.5rem;
+      top: 1.9rem;
+      font-size: 0.7rem;
+      height: 15rem;
+      overflow-y: scroll;
+      overflow-x: hidden;
+
+      li {
+        cursor: pointer;
+        width: 100%;
+        padding: 0;
+        display: flex;
+
+        &:first-child {
+          border-top: 1px solid $gray2;
+        }
+
+        &:hover {
+          background: $gray;
+        }
+
+        span {
+          font-weight: 400;
+          width: 4.5rem;
+          padding: 0.35rem;
+          display: inline-block;
+          text-align: center;
+          margin: 0;
+
+          &.list-label {
+            background: $gray;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.65rem;
+          }
+
+          &:last-child {
+            width: 10.5rem;
+            border-left: 1px solid #333;
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            text-align: left;
+          }
+        }
+      }
+    }
+
+  }
+
   .title {
     margin-bottom: 0.7rem;
   }

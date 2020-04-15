@@ -267,12 +267,13 @@ class TextEditor extends React.Component {
             { headers: config }
           )
           .then((res) => {
+            console.log(res);
             if (!res.data.errorCode) {
               this.init();
               this.props.changeMode();
               this.props.done(res.data.data.message);
             } else {
-              this.props.error(res.data.data.errorMessage);
+              this.props.error(res.data.data.message);
             }
           });
       }
@@ -627,7 +628,7 @@ class TextEditor extends React.Component {
                   </div>
                   <BootstrapTable
                     wrapperClasses="user-list-table"
-                    keyField="id"
+                    keyField="logid"
                     data={userList}
                     columns={columns}
                     rowEvents={this.rowEvents}
