@@ -83,6 +83,18 @@ export default class extends React.Component {
     this.submits.searchList();
   };
 
+  fromDateChange = (date) => {
+    this.setState({
+      fromDate: date,
+    });
+  };
+
+  toDateChange = (date) => {
+    this.setState({
+      toDate: date,
+    });
+  };
+
   getDate = () => {
     const date = new Date();
     const toDate = date.setDate(date.getDate());
@@ -261,13 +273,13 @@ export default class extends React.Component {
                       <span className="label">등록일자</span>
                       <DatePicker
                         selected={fromDate}
-                        onChange={this.handleChange}
+                        onChange={this.fromDateChange}
                         dateFormat="yyyy/MM/dd"
                       />
                       <span className="date-divider">~</span>
                       <DatePicker
                         selected={toDate}
-                        onChange={this.handleChange}
+                        onChange={this.toDateChange}
                         dateFormat="yyyy/MM/dd"
                       />
                       <div className="utils">

@@ -121,19 +121,23 @@ export default class extends React.Component {
     });
   };
 
+  // 시작일자 변경 함수
   stDatChange = (date) => {
     this.setState({
       stdat: date,
     });
   };
 
+  // 종료일자 변경 함수
   edDatChange = (date) => {
     this.setState({
       eddat: date,
     });
   };
 
+  // 섭밋 메소드 모음 객체
   submits = {
+    // date객체를 yyyymmdd형식으로 바꿔주는 메소드
     formatDate: (date) => {
       const toDate = new Date(date);
       const yearNum = toDate.getFullYear();
@@ -152,6 +156,7 @@ export default class extends React.Component {
       return fulldate;
     },
 
+    // 조회버튼을 누르면 아이디와 날짜로 api를 요청하여 리스트에 표시
     searchList: async () => {
       const { userId, stdat, eddat } = this.state;
       const fromdate = this.submits.formatDate(stdat);
@@ -201,13 +206,9 @@ export default class extends React.Component {
         }
       });
     },
-
-    searchOption: async (e) => {
-      e.preventDefault();
-      this.submits.searchList();
-    },
   };
 
+  // 공지사항 리스트의 각 행을 누르면 TextEditor로 데이터를 넘겨주면서 수정 모드 작동
   rowEvents = {
     onClick: async (e, row, rowIndex) => {
       await postApi(`admin/library/getlibrary/${row.seqno}`, {}).then((res) => {
@@ -223,19 +224,19 @@ export default class extends React.Component {
     },
   };
 
+  // 사용자 조회 리스트에서 기존과 다른 id를 클릭했다면 사용자명을 그에 맞는 데이터로 변경
   componentDidUpdate(prevProp, prevState) {
     if (this.state.userId !== prevState.userId) {
       this.setSearchId();
     }
   }
 
+  // 컴포넌트를 시작하면 사용자조회 입력란과 사용자명을 해당 데이터로 변경
   componentDidMount() {
     this.getDate();
     const {
       user: { userinfo },
     } = this.props;
-
-    console.log("mount", userinfo);
 
     this.setState({
       userId: userinfo.logid,
@@ -243,6 +244,7 @@ export default class extends React.Component {
     });
   }
 
+  // 신규등록 및 수정은 TextEditor쪽으로 위임
   render() {
     const {
       loading,
@@ -259,7 +261,6 @@ export default class extends React.Component {
     const {
       user: { userinfo },
     } = this.props;
-    const submits = this.submits;
     const inputs = this.inputs;
 
     return (
@@ -272,7 +273,12 @@ export default class extends React.Component {
             <>
               {listMode ? (
                 <>
-                  <form onSubmit={submits.searchOption}>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      this.submits.searchList();
+                    }}
+                  >
                     <div className="notify-header form">
                       <span className="label">사용자 조회</span>
                       <LiveSearch

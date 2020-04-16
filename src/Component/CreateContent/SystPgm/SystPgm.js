@@ -41,7 +41,9 @@ export default class extends React.Component {
     noSub1Id: false,
   };
 
+  // 트리구조 메소드 객체
   tree = {
+    // 데이터를 받아와서 각각의 리스트로 저장
     getTreeData: async () => {
       await getApi("admin/pm/programlist").then((res) => {
         const {
@@ -58,6 +60,7 @@ export default class extends React.Component {
       });
     },
 
+    // 데이터를 ul>li 구조로 표시
     treeStr: (data) => {
       return (
         <>
@@ -131,6 +134,7 @@ export default class extends React.Component {
       );
     },
 
+    // main-depth 클릭시의 토글 이벤트, 높이를 계산하여 부모 높이에 포함
     toggleClass: (e) => {
       let subMenu = e.currentTarget.nextElementSibling;
       if (subMenu.style.maxHeight) {
@@ -140,6 +144,7 @@ export default class extends React.Component {
       }
     },
 
+    // sub-dapth 클릭시의 토글 이벤트, 최하위 list의 높이를 계산하여 최상위 부모 높이에 포함
     toggleSubClass: (e) => {
       let subMenu = e.currentTarget.nextElementSibling;
       let parent = subMenu.parentElement.parentElement;
@@ -153,6 +158,7 @@ export default class extends React.Component {
       }
     },
 
+    // 트리구조의 각 depth를 눌렀을 때 해당하는 programdetail을 조작 패널에 바인딩
     lookupProgram: async (e) => {
       this.setState({
         tabIndex: 1,
@@ -211,7 +217,9 @@ export default class extends React.Component {
     },
   };
 
+  // 인풋 메소드 모음 객체
   inputs = {
+    // 기본 인풋 state 메소드
     inputUpdate: (e) => {
       const { programdetail } = this.state;
       this.setState({
@@ -222,6 +230,8 @@ export default class extends React.Component {
       });
     },
 
+    // select창에 사용되는 이벤트, main_id와 sub1_id를 조작할때
+    // 그에 따른 리스트 세팅, 중복처리 등의 기능을 수행
     inputSelect: (e) => {
       const { programdetail, data, innerTabIndex } = this.state;
       const id = e.target.value;
@@ -310,6 +320,7 @@ export default class extends React.Component {
       }
     },
 
+    // validation이 필요한 인풋에 적용되는 유효성 및 중복 검사 함수
     inputMain: (e) => {
       const { data, sub1Select, sub2Select } = this.state;
       const id = parseInt(e.target.value);
@@ -319,13 +330,13 @@ export default class extends React.Component {
         this.inputs.inputVali(e, id, list);
       } else if (e.target.name === "sub1_id") {
         const sub1list = sub1Select.map((sub) => parseInt(sub.program.sub1_id));
-
         this.inputs.inputVali(e, id, sub1list);
       } else if (e.target.name === "sub2_id") {
         this.inputs.inputVali(e, id, sub2Select);
       }
     },
 
+    // 체크박스에 사용되는 메소드, 체크 여부에 따라 Y,N값을 세팅
     inputCheck: (e) => {
       const programdetail = this.state.programdetail;
       if (e.target.checked === true) {
@@ -345,6 +356,7 @@ export default class extends React.Component {
       }
     },
 
+    // inputMain()에 사용되는 유효성 체크 메소드
     inputVali: (e, id, list) => {
       const { programdetail, invalid } = this.state;
       if (id === "" || this.state.regexp.test(id)) {
@@ -382,7 +394,9 @@ export default class extends React.Component {
     },
   };
 
+  // 섭밋 메소드 모음 객체
   submits = {
+    // 등록 요청을 보낼때 사용하는 메소드
     registSubmit: async (e) => {
       e.preventDefault();
       const { programdetail } = this.state;
@@ -417,6 +431,7 @@ export default class extends React.Component {
       }
     },
 
+    // 수정 요청을 보낼 때 사용하는 메소드
     updateSubmit: async (e) => {
       e.preventDefault();
 
@@ -452,6 +467,7 @@ export default class extends React.Component {
       }
     },
 
+    // 삭제 요청을 보낼 때 사용하는 메소드
     deleteSubmit: async (e) => {
       e.preventDefault();
       const { programdetail } = this.state;
@@ -485,6 +501,7 @@ export default class extends React.Component {
     },
   };
 
+  // 컴포넌트가 마운트되면 트리데이터를 불러와 트리구조를 렌더
   async componentDidMount() {
     this.tree.getTreeData();
   }
