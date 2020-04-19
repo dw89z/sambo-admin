@@ -11,12 +11,22 @@
     form {
       display: block;
       width: 100%;
+      position: relative;
+
+      .save {
+        bottom: 0
+      }
+
+      .search {
+        right: 3.7rem;
+        background: $dark;
+      }
     }
   }
 
-  input[type="checkbox"] {
-    width: 1.25rem;
-    height: 1.25rem;
+  .test {
+    width: 1.5rem;
+    height: 1.5rem;
     margin-top: 0.25rem;
   }
 
@@ -25,6 +35,10 @@
     align-items: center;
     width: 100%;
     height: 2rem;
+
+    &.mt {
+      margin-top: 0.5rem;
+    }
 
     .label {
       &.mr {
@@ -66,15 +80,76 @@
     .react-bootstrap-table {
       &.send-table {
         height: calc(100vh - 20rem);
+
         table {
-          width: 140%;
+          width: 2000px;
+
+          .th-sort {
+            cursor: pointer;
+          }
+
+          .delete {
+            cursor: default;
+            width: 3.7rem;
+            padding: 0;
+            background: none;
+            background-size: 1.6rem;
+
+            &.active {
+              cursor: pointer;
+              background: url('../../../assets/img/trash.svg') center center no-repeat;
+              background-size: 1.6rem;
+            }
+          }
+
+          .copy {
+            cursor: default;
+            width: 3.7rem;
+            padding: 0;
+            background: none;
+            background-size: 1.6rem;
+
+            &.deactive {
+              cursor: default;
+              background: url('../../../assets/img/copy-un.svg') center center no-repeat;
+              background-size: 1.6rem;
+            }
+
+            &.active {
+              cursor: pointer;
+              background: url('../../../assets/img/copy.svg') center center no-repeat;
+              background-size: 1.6rem;
+            }
+          }
+
+          .num {
+            text-align: right;
+          }
+
+          tr {
+            background: $gray;
+
+            &.active {
+              background: #fff;
+            }
+          }
         }
       }
 
       &.print-table {
         height: calc(100vh - 20rem);
+
         table {
           width: 110%;
+        }
+      }
+
+      .balseq {
+        font-weight: 600;
+        width: 40px;
+
+        &.copied {
+          color: $gray3;
         }
       }
     }
@@ -141,11 +216,15 @@
   }
 }
 
-.react-bootstrap-table-editing-cell {
-  input {
-    width: 4rem;
-    height: 1.15rem;
-    padding: 0.45rem 0.25rem;
-    font-size: 0.75rem;
-  }
+.table-check {
+  border-radius: 0;
+  margin: 0 auto;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+}
+
+.table-input {
+  padding: 0.25rem;
+  width: 8rem;
 }

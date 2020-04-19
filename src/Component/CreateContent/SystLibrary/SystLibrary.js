@@ -175,7 +175,7 @@ export default class extends React.Component {
           },
         } = res;
         console.log(res);
-        const modifyDate = libraryList.map((list) => {
+        libraryList.map((list) => {
           const crtyear = list.crtdat.substring(0, 4);
           const crtmonth = list.crtdat.substring(4, 6);
           const crtday = list.crtdat.substring(6, 8);

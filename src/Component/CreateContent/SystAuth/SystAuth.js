@@ -253,10 +253,10 @@ export default class extends React.Component {
 
                     if (isSelect) {
                       checkAll = authList.map((list) => parseInt(list.index));
-                      rowsString = rowsString.replace(/\"N\"/g, '"Y"');
+                      rowsString = rowsString.replace(/"N"/g, '"Y"');
                     } else {
                       checkAll = [];
-                      rowsString = rowsString.replace(/\"Y\"/g, '"N"');
+                      rowsString = rowsString.replace(/"Y"/g, '"N"');
                     }
 
                     chklist = JSON.parse(rowsString);

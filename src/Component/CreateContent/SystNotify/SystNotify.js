@@ -166,7 +166,7 @@ export default class extends React.Component {
             data: { noticelist },
           },
         } = res;
-        const modifyDate = noticelist.map((list) => {
+        noticelist.map((list) => {
           const year = list.crtdat.substr(0, 4);
           const month = list.crtdat.substr(4, 2);
           const day = list.crtdat.substr(6, 2);
