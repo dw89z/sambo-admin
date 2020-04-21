@@ -17,7 +17,9 @@ export default class extends React.Component {
     errorSearch: true,
     innerLoading: true,
     isMast: true,
-    selectedList: [],
+    cvnas: this.props.user.userinfo.cvnas,
+    logid: this.props.user.userinfo.logid,
+    cvcod: this.props.user.userinfo.cvcod,
   };
 
   inputs = {
@@ -58,6 +60,40 @@ export default class extends React.Component {
       }
     },
 
+    updateYNumber: (e) => {
+      const id = parseInt(e.target.id.replace(/[^\d.-]/g, ""));
+      const key = e.target.id.replace(/\d+/g, "");
+      let num = e.target.value;
+      const { departureprocessinglist } = this.state;
+      let getRow = departureprocessinglist.filter(
+        (list, index) => index === id
+      );
+      let maxNumRaw = getRow[0].janru;
+      let maxNum = maxNumRaw.replace(",", "");
+      let currentNum = e.target.value;
+
+      if (/^\d+$/.test(num) || num === "") {
+        if (parseInt(maxNum) < parseInt(currentNum)) {
+          this.props.error("납품수량은 발주잔량보다 클 수 없습니다");
+          departureprocessinglist[id] = {
+            ...departureprocessinglist[id],
+            [key]: 0,
+          };
+          this.setState({
+            departureprocessinglist,
+          });
+        } else {
+          departureprocessinglist[id] = {
+            ...departureprocessinglist[id],
+            [key]: e.target.value,
+          };
+          this.setState({
+            departureprocessinglist,
+          });
+        }
+      }
+    },
+
     updateCheck: (e) => {
       const id = e.target.id.replace(/[^\d.-]/g, "");
       const key = e.target.id.replace(/\d+/g, "");
@@ -75,6 +111,8 @@ export default class extends React.Component {
         departureprocessinglist[id] = {
           ...departureprocessinglist[id],
           [key]: "N",
+          eo_no: "",
+          issue_date: null,
         };
         this.setState({
           departureprocessinglist,
@@ -112,25 +150,25 @@ export default class extends React.Component {
       });
     },
 
-    getRow: (e) => {
+    checkRow: (e) => {
       const id = parseInt(e.target.id);
-      let selectedList = [...this.state.selectedList];
-      if (selectedList.includes(id)) {
-        let remainList = selectedList.filter((list) => list !== id);
-        remainList.sort();
-        this.setState({
-          selectedList: remainList,
-        });
+      let { departureprocessinglist } = this.state;
+      let checked = departureprocessinglist.filter(
+        (list, index) => index === id
+      );
+      let remain = departureprocessinglist.filter(
+        (list, index) => index !== id
+      );
+      if (checked[0].checked === false) {
+        checked[0].checked = true;
       } else {
-        selectedList.push(id);
-        selectedList.sort((a, b) => a - b);
-        this.setState({
-          selectedList,
-        });
+        checked[0].checked = false;
       }
+      remain.splice(id, 0, checked[0]);
+      this.setState({
+        departureprocessinglist: remain,
+      });
     },
-
-    checkSelect: () => {},
 
     sortBy: (e) => {
       const key = e.target.id;
@@ -143,33 +181,76 @@ export default class extends React.Component {
     },
 
     delRow: (e) => {
-      const { departureprocessinglist, selectedList } = this.state;
+      const { departureprocessinglist } = this.state;
       const index = parseInt(e.currentTarget.getAttribute("data-index"));
       const remains = departureprocessinglist.filter(
         (list, idx) => idx !== index
       );
-      const deSelect = selectedList.filter((list) => list !== index);
       this.setState({
         departureprocessinglist: remains,
-        selectedList: deSelect,
       });
     },
 
     copyRow: (e) => {
       const id = e.target.id;
       const index = parseInt(e.currentTarget.getAttribute("data-index"));
-      let { departureprocessinglist, selectedList } = this.state;
+      let { departureprocessinglist } = this.state;
       const getRow = departureprocessinglist.filter(
         (list) => list.balseq === id
       );
       const copiedRow = getRow.map((row) => ({ ...row, copied: true }));
       departureprocessinglist.splice(index + 1, 0, copiedRow[0]);
-      selectedList.push(index + getRow.length);
       this.setState({
         departureprocessinglist,
-        selectedList,
       });
     },
+
+    fromDate: (date) => {
+      this.setState({
+        fromDate: date,
+      });
+    },
+
+    toDate: (date) => {
+      this.setState({
+        toDate: date,
+      });
+    },
+
+    startDate: (date) => {
+      this.setState({
+        startDate: date,
+      });
+    },
+
+    issueDate: (date, e) => {
+      const { departureprocessinglist } = this.state;
+      const datePickerCell = this.findPicker(e.target, "date-picker-cell");
+      const datePicker = datePickerCell.children[0].children[0].children[0];
+      const id = parseInt(datePicker.id.replace(/[^\d.-]/g, ""));
+      const getRow = departureprocessinglist.filter(
+        (list, index) => index === id
+      );
+      let remain = departureprocessinglist.filter(
+        (list, index) => index !== id
+      );
+      getRow[0].issue_date = date;
+      console.log(getRow);
+      remain.splice(id, 0, getRow[0]);
+      console.log(remain);
+      this.setState({
+        departureprocessinglist: remain,
+      });
+    },
+  };
+
+  findPicker = (elem, selector) => {
+    for (; elem && elem !== document; elem = elem.parentNode) {
+      if (elem.classList.contains(selector)) {
+        return elem;
+      }
+    }
+    return null;
   };
 
   addCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -197,6 +278,7 @@ export default class extends React.Component {
             list.balqty = balqty;
             const janru = this.addCommas(list.janru);
             list.janru = janru;
+            list.checked = false;
 
             if (list.use_lot_no === null) {
               list.use_lot_no = "";
@@ -207,6 +289,9 @@ export default class extends React.Component {
             if (list.eo_no === null) {
               list.eo_no = "";
             }
+            if (list.packqty === null) {
+              list.packqty = "";
+            }
             return list;
           });
           this.setState({
@@ -216,6 +301,93 @@ export default class extends React.Component {
         }
       );
     },
+
+    regist: async (e) => {
+      e.preventDefault();
+      const { departureprocessinglist, logid, cvcod } = this.state;
+      const selection = departureprocessinglist.filter(
+        (list) => list.checked === true
+      );
+      if (selection.length === 0) {
+        this.props.error("1개 이상의 리스트를 선택해야 합니다");
+      } else if (selection.length > 0) {
+        const failedOut = selection.filter((list) => list.out_lot_no === "");
+        const failedYoung = selection.filter(
+          (list) => list.young === "" || list.young === 0
+        );
+        const hasYN = selection.filter((list) => list.issue_yn === "Y");
+        const failYN = hasYN.filter(
+          (list) => list.issue_date === null || list.eo_no === ""
+        );
+        if (
+          failedOut.length > 0 ||
+          failYN.length > 0 ||
+          failedYoung.length > 0
+        ) {
+          this.props.error("필수 값이 입력되지 않았습니다");
+        } else {
+          const dataList = selection.map((list) => {
+            if (list.use_lot_no === "") {
+              list.use_lot_no = null;
+            }
+            if (list.packqty === "") {
+              list.packqty = null;
+            }
+            if (list.issue_date !== null) {
+              const formatDat = this.formatDate(list.issue_date);
+              list.issue_date = formatDat;
+            }
+            delete list.copied;
+            delete list.itdsc;
+            delete list.ispec;
+            delete list.checked;
+            delete list.issue_yn;
+            delete list.packtype;
+            delete list.nadat;
+            delete list.balqty;
+            delete list.janru;
+            list.qty = list.packqty;
+            delete list.packqty;
+            list.naqty = list.young;
+            list.use_qty = list.young;
+            delete list.young;
+            return list;
+          });
+          const crtDat = this.formatDate(new Date());
+
+          const data = {
+            nadate: "20201231",
+            crt_dt: crtDat,
+            crt_id: logid,
+            cvcod: cvcod,
+            list: dataList,
+          };
+          await postApi(
+            "scm/paymentorder/registdepartureProcess",
+            data
+          ).then((res) => console.log(res));
+        }
+      }
+    },
+  };
+
+  formatDate = (date) => {
+    if (date) {
+      const yearNum = date.getFullYear();
+      let monthNum = date.getMonth() + 1;
+      let dayNum = date.getDate();
+      let year = yearNum.toString();
+      let month = monthNum.toString();
+      let day = dayNum.toString();
+      if (month.length === 1) {
+        month = "0" + month;
+      }
+      if (day.length === 1) {
+        day = "0" + day;
+      }
+      const fulldate = `${year}${month}${day}`;
+      return fulldate;
+    }
   };
 
   subTest = (e) => {
@@ -228,8 +400,8 @@ export default class extends React.Component {
       list: [
         {
           baljpno: "20201201000X",
-          balseq: "2",
-          naqty: "500000",
+          balseq: "1",
+          naqty: "50000",
           use_lot_no: null,
           use_qty: "50000",
           issue_date: "20201231",
@@ -240,23 +412,28 @@ export default class extends React.Component {
         },
       ],
     };
-    postApi(
-      "http://192.168.75.104:8080/scm/paymentorder/registdepartureProcess",
-      data
-    ).then((res) => console.log(res));
+    postApi("scm/paymentorder/registdepartureProcess", data).then((res) =>
+      console.log(res)
+    );
   };
 
-  componentDidMount() {
+  componentDidUpdate = (prevProp, prevState) => {
+    if (prevState.logid !== this.state.logid) {
+      console.log("did");
+    }
+  };
+
+  componentDidMount = () => {
     let date = new Date();
     date.setDate(date.getDate() - 20);
     this.setState({
       fromDate: date,
       toDate: new Date(),
-      startdate: new Date(),
-      cvcod: this.props.user.cvcod,
+      startDate: new Date(),
+      cvcod: this.props.user.userinfo.cvcod,
     });
     this.submits.process();
-  }
+  };
 
   render() {
     const {
@@ -266,13 +443,12 @@ export default class extends React.Component {
       innerLoading,
       isMast,
       searchKeyword,
-      selectedList,
+      startDate,
+      cvnas,
     } = this.state;
     const { userinfo } = this.props.user;
     const submits = this.submits;
     const inputs = this.inputs;
-    console.log(departureprocessinglist);
-    console.log(selectedList);
 
     return (
       <>
@@ -280,20 +456,20 @@ export default class extends React.Component {
         <div className="content-component send-logistc">
           <h2>{this.props.title}</h2>
           <div className="form">
-            <form onSubmit={this.subTest}>
+            <form onSubmit={submits.regist}>
               <div className="input-divide">
                 <div className="input-div">
                   <span className="label mr">납기예정일</span>
                 </div>
                 <DatePicker
                   selected={fromDate}
-                  onChange={this.handleChange}
+                  onChange={inputs.fromDate}
                   dateFormat="yyyy/MM/dd"
                 />
                 <span className="date-divider">~</span>
                 <DatePicker
                   selected={toDate}
-                  onChange={this.handleChange}
+                  onChange={inputs.toDate}
                   dateFormat="yyyy/MM/dd"
                 />
                 <div className="input-div">
@@ -303,8 +479,10 @@ export default class extends React.Component {
                     isMast={isMast}
                     liveResult={inputs.liveResult}
                   />
-                  <span className="result-span">협력사 ID</span>
-                  <span className="result-span">구분번호</span>
+                  <span className="result-span">{cvnas}</span>
+                  <span className="result-span">
+                    {userinfo.auth === "0" ? "외주업체" : "구매업체"}
+                  </span>
                 </div>
               </div>
               <div className="input-divide mt">
@@ -320,8 +498,8 @@ export default class extends React.Component {
                   <>
                     <span className="label ml">출발일자</span>
                     <DatePicker
-                      selected={toDate}
-                      onChange={this.handleChange}
+                      selected={startDate}
+                      onChange={inputs.startDate}
                       dateFormat="yyyy/MM/dd"
                     />
                   </>
@@ -418,9 +596,7 @@ export default class extends React.Component {
                     return (
                       <tr
                         key={index}
-                        className={
-                          selectedList.includes(index) ? "list active" : "list"
-                        }
+                        className={list.checked ? "list active" : "list"}
                         id={`row${index}`}
                       >
                         <td
@@ -433,23 +609,21 @@ export default class extends React.Component {
                             type="checkbox"
                             id={index}
                             className="table-check"
-                            onChange={inputs.getRow}
-                            checked={selectedList.includes(index)}
+                            onChange={inputs.checkRow}
+                            checked={list.checked}
                           />
                         </td>
                         <td
                           className={
                             list.copied
                               ? "copy"
-                              : !list.copied && selectedList.includes(index)
+                              : !list.copied && list.checked
                               ? "copy active"
                               : "copy deactive"
                           }
                           id={list.balseq}
                           onClick={
-                            selectedList.includes(index) && !list.copied
-                              ? inputs.copyRow
-                              : null
+                            !list.copied && list.checked ? inputs.copyRow : null
                           }
                           data-index={index}
                         ></td>
@@ -466,7 +640,10 @@ export default class extends React.Component {
                             id={`use_lot_no${index}`}
                             className="table-input"
                             onChange={inputs.updateTable}
-                            disabled={!selectedList.includes(index)}
+                            disabled={!list.checked}
+                            placeholder={
+                              list.checked ? "사용자재 LOT" : undefined
+                            }
                           />
                         </td>
                         <td>
@@ -476,7 +653,10 @@ export default class extends React.Component {
                             id={`out_lot_no${index}`}
                             className="table-input"
                             onChange={inputs.updateTable}
-                            disabled={!selectedList.includes(index)}
+                            disabled={!list.checked}
+                            placeholder={
+                              list.checked ? "제조 LOT(필수)" : undefined
+                            }
                             required
                           />
                         </td>
@@ -486,8 +666,8 @@ export default class extends React.Component {
                             value={list.young}
                             id={`young${index}`}
                             className="table-input num"
-                            onChange={inputs.updateNumber}
-                            disabled={!selectedList.includes(index)}
+                            onChange={inputs.updateYNumber}
+                            disabled={!list.checked}
                           />
                         </td>
                         <td>
@@ -497,18 +677,17 @@ export default class extends React.Component {
                             checked={list.issue_yn === "Y"}
                             className="table-check"
                             onChange={inputs.updateCheck}
-                            disabled={!selectedList.includes(index)}
+                            disabled={!list.checked}
                           />
                         </td>
-                        <td>
+                        <td className="date-picker-cell">
                           <DatePicker
-                            selected={toDate}
-                            onChange={this.handleChange}
+                            selected={list.issue_date}
+                            onChange={(date, e) => {
+                              inputs.issueDate(date, e);
+                            }}
                             dateFormat="yyyy/MM/dd"
-                            disabled={
-                              !selectedList.includes(index) ||
-                              list.issue_yn === "N"
-                            }
+                            disabled={!list.checked || list.issue_yn === "N"}
                             id={`issue_date${index}`}
                           />
                         </td>
@@ -519,9 +698,9 @@ export default class extends React.Component {
                             id={`eo_no${index}`}
                             className="table-input num"
                             onChange={inputs.updateNumber}
-                            disabled={
-                              !selectedList.includes(index) ||
-                              list.issue_yn === "N"
+                            disabled={!list.checked || list.issue_yn === "N"}
+                            placeholder={
+                              list.issue_yn === "Y" ? "EO.NO(필수)" : undefined
                             }
                           />
                         </td>
@@ -533,7 +712,8 @@ export default class extends React.Component {
                             id={`packqty${index}`}
                             className="table-input num"
                             onChange={inputs.updateNumber}
-                            disabled={!selectedList.includes(index)}
+                            disabled={!list.checked}
+                            placeholder={list.checked ? "적입량" : undefined}
                           />
                         </td>
                         <td
