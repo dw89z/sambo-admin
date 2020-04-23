@@ -268,36 +268,44 @@ export default class extends React.Component {
           const {
             data: { data },
           } = res;
-          data.departureprocessinglist.map((list) => {
-            const year = list.nadat.substr(0, 4);
-            const month = list.nadat.substr(4, 2);
-            const day = list.nadat.substr(6, 2);
-            const date = `${year}-${month}-${day}`;
-            list.nadat = date;
-            const balqty = this.addCommas(list.balqty);
-            list.balqty = balqty;
-            const janru = this.addCommas(list.janru);
-            list.janru = janru;
-            list.checked = false;
+          if (data) {
+            data.departureprocessinglist.map((list) => {
+              const year = list.nadat.substr(0, 4);
+              const month = list.nadat.substr(4, 2);
+              const day = list.nadat.substr(6, 2);
+              const date = `${year}-${month}-${day}`;
+              list.nadat = date;
+              const balqty = this.addCommas(list.balqty);
+              list.balqty = balqty;
+              const janru = this.addCommas(list.janru);
+              list.janru = janru;
+              list.checked = false;
 
-            if (list.use_lot_no === null) {
-              list.use_lot_no = "";
-            }
-            if (list.out_lot_no === null) {
-              list.out_lot_no = "";
-            }
-            if (list.eo_no === null) {
-              list.eo_no = "";
-            }
-            if (list.packqty === null) {
-              list.packqty = "";
-            }
-            return list;
-          });
-          this.setState({
-            departureprocessinglist: data.departureprocessinglist,
-            innerLoading: false,
-          });
+              if (list.use_lot_no === null) {
+                list.use_lot_no = "";
+              }
+              if (list.out_lot_no === null) {
+                list.out_lot_no = "";
+              }
+              if (list.eo_no === null) {
+                list.eo_no = "";
+              }
+              if (list.packqty === null) {
+                list.packqty = "";
+              }
+              return list;
+            });
+            this.setState({
+              departureprocessinglist: data.departureprocessinglist,
+              innerLoading: false,
+              errorSearch: false,
+            });
+          } else {
+            this.setState({
+              innerLoading: false,
+              errorSearch: false,
+            });
+          }
         }
       );
     },
@@ -362,10 +370,25 @@ export default class extends React.Component {
             cvcod: cvcod,
             list: dataList,
           };
-          await postApi(
-            "scm/paymentorder/registdepartureProcess",
-            data
-          ).then((res) => console.log(res));
+          await postApi("scm/paymentorder/registdepartureProcess", data).then(
+            (res) => {
+              const {
+                data: { data },
+              } = res;
+              const cardData = {
+                fromDate: "20200401",
+                toDate: "20201231",
+                cvcod: "000010",
+                printgbn: "N",
+                itgbn: "1",
+                jajegbn: "2",
+                searchKeyword: "",
+              };
+              if (!data.errorCode) {
+                this.props.mountLoPrint(cardData);
+              }
+            }
+          );
         }
       }
     },
@@ -388,33 +411,6 @@ export default class extends React.Component {
       const fulldate = `${year}${month}${day}`;
       return fulldate;
     }
-  };
-
-  subTest = (e) => {
-    e.preventDefault();
-    const data = {
-      nadate: "20201231",
-      crt_dt: "20200417",
-      crt_id: "system",
-      cvcod: "000010",
-      list: [
-        {
-          baljpno: "20201201000X",
-          balseq: "1",
-          naqty: "50000",
-          use_lot_no: null,
-          use_qty: "50000",
-          issue_date: "20201231",
-          eo_no: "1",
-          out_lot_no: "lot-04-test",
-          qty: "400",
-          itnbr: "09111-43000",
-        },
-      ],
-    };
-    postApi("scm/paymentorder/registdepartureProcess", data).then((res) =>
-      console.log(res)
-    );
   };
 
   componentDidUpdate = (prevProp, prevState) => {
@@ -445,6 +441,7 @@ export default class extends React.Component {
       searchKeyword,
       startDate,
       cvnas,
+      errorSearch,
     } = this.state;
     const { userinfo } = this.props.user;
     const submits = this.submits;
@@ -513,6 +510,9 @@ export default class extends React.Component {
             </form>
           </div>
           <div className="table">
+            <div className={errorSearch ? "error active" : "error"}>
+              검색된 데이터가 없습니다.
+            </div>
             <div
               className={
                 this.props.menuAxis

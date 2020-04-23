@@ -17,16 +17,17 @@ class CreateContent extends React.Component {
       {
         index: 0,
         window_name: "대시보드",
-        window_id: "SendLogistc",
+        window_id: "SendLoprint",
       },
     ],
     currentComp: {
       index: 0,
       window_name: "대시보드",
-      window_id: "SendLogistc",
+      window_id: "SendLoprint",
     },
     doneMsg: "",
     errorMsg: "",
+    logistc: [],
   };
 
   uiFunc = {
@@ -141,9 +142,25 @@ class CreateContent extends React.Component {
     },
   };
 
+  mountLoPrint = (props) => {
+    const { mountedComp } = this.state;
+    const loprint = {
+      index: 6,
+      window_name: "닙입 카드 발행",
+      window_id: "SendLoprint",
+    };
+    this.setState({
+      mountedComp: [...mountedComp, loprint],
+      currentComp: {
+        index: 6,
+        window_name: "닙입 카드 발행",
+        window_id: "SendLoprint",
+      },
+      logistc: props,
+    });
+  };
+
   async componentDidUpdate(prevProps) {
-    registerLocale("ko", ko);
-    setDefaultLocale("ko");
     if (this.props.currentMode !== prevProps.currentMode) {
       this.setState({
         loading: true,
@@ -183,6 +200,8 @@ class CreateContent extends React.Component {
   }
 
   async componentDidMount() {
+    registerLocale("ko", ko);
+    setDefaultLocale("ko");
     try {
       await postApi("main/menu", {
         mainid: this.props.currentMode.main_id,
@@ -225,6 +244,8 @@ class CreateContent extends React.Component {
             user={this.props.user}
             done={msg.done}
             error={msg.error}
+            mountLoPrint={this.mountLoPrint}
+            logistc={this.state.logistc}
           />
         </div>
       );
