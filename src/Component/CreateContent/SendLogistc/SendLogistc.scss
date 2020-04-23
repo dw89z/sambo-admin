@@ -84,6 +84,19 @@
         table {
           width: 2000px;
 
+          &.loprint {
+            width: 100%;
+          }
+
+          .selection {
+            width: 2.5rem;
+            padding-right: 0;
+
+            &.td {
+              padding: 0;
+            }
+          }
+
           .th-sort {
             cursor: pointer;
           }
