@@ -6,6 +6,7 @@ import { postApi } from "../../../api";
 import DatePicker from "react-datepicker";
 import "../SendLogistc/SendLogistc.scss";
 import "react-datepicker/dist/react-datepicker.css";
+import { post } from "jquery";
 
 export default class extends React.Component {
   state = {
@@ -19,6 +20,10 @@ export default class extends React.Component {
     cvnas: this.props.user.userinfo.cvnas,
     logid: this.props.user.userinfo.logid,
     cvcod: this.props.user.userinfo.cvcod,
+    itgbn: "1",
+    jajegbn: "2",
+    printgbn: "N",
+    searchKeyword: "",
   };
 
   inputs = {
@@ -51,10 +56,12 @@ export default class extends React.Component {
         this.setState({
           paymentcardlist: remain,
         });
-      } else {
-        if (checked[0].checked === true) {
-          checked[0].checked = false;
-        }
+      } else if (checkAmount.length === 10) {
+        checked[0].checked = false;
+        remain.splice(id, 0, checked[0]);
+        this.setState({
+          paymentcardlist: remain,
+        });
       }
     },
 
@@ -85,7 +92,13 @@ export default class extends React.Component {
   };
 
   submits = {
-    paymentCard: async () => {
+    paymentCard: async (e) => {
+      if (e) {
+        e.preventDefault();
+      }
+      this.setState({
+        innerLoading: true,
+      });
       const data = {
         fromDate: "20200401",
         toDate: "20201231",
@@ -112,13 +125,16 @@ export default class extends React.Component {
             list.index = index + 1;
 
             if (list.use_lot_no === null) {
-              list.use_lot_no = "";
+              list.use_lot_no = "-";
             }
             if (list.packtype === null) {
-              list.packtype = "";
+              list.packtype = "-";
             }
             if (list.prt_JPNO === null) {
               list.prt_JPNO = "";
+            }
+            if (list.packqty === null) {
+              list.packqty = "-";
             }
             return list;
           });
@@ -139,6 +155,53 @@ export default class extends React.Component {
         });
       });
     },
+
+    pubPayment: async () => {
+      const { paymentcardlist } = this.state;
+      const checked = paymentcardlist.filter((list) => list.checked);
+      const jpnos = checked.map((list) => list.jpno);
+      const data = {
+        fromDate: "20200401",
+        toDate: "20201231",
+        cvcod: "000010",
+        printgbn: "Y",
+        itgbn: "1",
+        jajegbn: "2",
+        searchKeyword: "",
+      };
+
+      if (jpnos.length !== 0) {
+        this.setState({
+          printgbn: "Y",
+        });
+        await postApi("scm/paymentorder/publishpaymentcard", jpnos).then(
+          async (res) => {
+            if (!res.data.data.errorCode) {
+              await postApi("scm/paymentorder/paymentcardlist", data).then(
+                (res) => {
+                  const {
+                    data: { data },
+                  } = res;
+                  console.log(data);
+                  const result = this.groupBy(data.paymentcardlist, "prt_JPNO");
+                  console.log(result);
+                }
+              );
+            }
+          }
+        );
+      }
+    },
+  };
+
+  groupBy = (array, key) => {
+    return array.reduce((result, currentValue) => {
+      (result[currentValue[key]] = result[currentValue[key]] || []).push(
+        currentValue
+      );
+
+      return result;
+    }, {});
   };
 
   addCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -162,6 +225,121 @@ export default class extends React.Component {
     }
   };
 
+  generateList = () => {
+    const { paymentcardlist, printgbn } = this.state;
+    const inputs = this.inputs;
+    let resultList;
+    if (printgbn === "N") {
+      resultList = paymentcardlist.map((list, index) => {
+        return (
+          <tr
+            key={index}
+            className={list.checked ? "list active" : "list"}
+            id={`row${index}`}
+          >
+            <td className="balseq">{list.index}</td>
+            {list.prt_JPNO ? (
+              index < 1 && (
+                <td className="selection td" rowSpan={paymentcardlist.length}>
+                  <input
+                    type="checkbox"
+                    id={index}
+                    className="table-check"
+                    onChange={inputs.checkRow}
+                    checked={list.checked}
+                  />
+                </td>
+              )
+            ) : (
+              <td className="selection td">
+                <input
+                  type="checkbox"
+                  id={index}
+                  className="table-check"
+                  onChange={inputs.checkRow}
+                  checked={list.checked}
+                />
+              </td>
+            )}
+
+            <td className="num">{list.prt_JPNO}</td>
+            <td className="num">{list.nadate}</td>
+            <td className="num">{list.jpno}</td>
+            <td className="num">{list.itnbr}</td>
+            <td>{list.itdsc}</td>
+            <td>{list.packtype}</td>
+            <td className="num">{list.packqty}</td>
+            <td className="num">{list.naqty}</td>
+            <td
+              data-index={index}
+              className={
+                list.checked && list.prt_JPNO ? "print active" : "print"
+              }
+              id={index}
+              onClick={list.prt_JPNO ? inputs.printLabel : null}
+            >
+              <span>print</span>
+            </td>
+          </tr>
+        );
+      });
+    } else if (printgbn === "Y") {
+      // resultList = paymentcardlist.map((list, index) => {
+      //   return (
+      //     <tr
+      //       key={index}
+      //       className={list.checked ? "list active" : "list"}
+      //       id={`row${index}`}
+      //     >
+      //       <td className="balseq">{list.index}</td>
+      //       {list.prt_JPNO ? (
+      //         index < 1 && (
+      //           <td className="selection td" rowSpan={paymentcardlist.length}>
+      //             <input
+      //               type="checkbox"
+      //               id={index}
+      //               className="table-check"
+      //               onChange={inputs.checkRow}
+      //               checked={list.checked}
+      //             />
+      //           </td>
+      //         )
+      //       ) : (
+      //           <td className="selection td">
+      //             <input
+      //               type="checkbox"
+      //               id={index}
+      //               className="table-check"
+      //               onChange={inputs.checkRow}
+      //               checked={list.checked}
+      //             />
+      //           </td>
+      //         )}
+      //       <td className="num">{list.prt_JPNO}</td>
+      //       <td className="num">{list.nadate}</td>
+      //       <td className="num">{list.jpno}</td>
+      //       <td className="num">{list.itnbr}</td>
+      //       <td>{list.itdsc}</td>
+      //       <td>{list.packtype}</td>
+      //       <td className="num">{list.packqty}</td>
+      //       <td className="num">{list.naqty}</td>
+      //       <td
+      //         data-index={index}
+      //         className={
+      //           list.checked && list.prt_JPNO ? "print active" : "print"
+      //         }
+      //         id={index}
+      //         onClick={list.prt_JPNO ? inputs.printLabel : null}
+      //       >
+      //         <span>print</span>
+      //       </td>
+      //     </tr>
+      //   );
+      // });
+    }
+    return resultList;
+  };
+
   async componentDidMount() {
     let date = new Date();
     date.setDate(date.getDate() - 20);
@@ -182,6 +360,9 @@ export default class extends React.Component {
       isMast,
       searchKeyword,
       cvnas,
+      jajegbn,
+      printgbn,
+      itgbn,
     } = this.state;
     const { userinfo } = this.props.user;
     const submits = this.submits;
@@ -194,7 +375,7 @@ export default class extends React.Component {
         <div className="content-component send-logistc">
           <h2>{this.props.title}</h2>
           <div className="form">
-            <form onSubmit={submits.regist}>
+            <form onSubmit={submits.paymentCard}>
               <div className="input-divide">
                 <div className="input-div">
                   <span className="label mr">납기예정일</span>
@@ -230,13 +411,95 @@ export default class extends React.Component {
                     type="text"
                     name="searchKeyword"
                     value={searchKeyword}
+                    onChange={inputs.update}
                   />
                 </div>
-                <span className="label ml">시작품</span>
+                <div className="input-div radio-div">
+                  <p>자재 구분</p>
+
+                  <div className="radio">
+                    <input
+                      type="radio"
+                      name="jajegbn"
+                      id="purcahse"
+                      value="1"
+                      onChange={inputs.update}
+                      checked={jajegbn === "1"}
+                      required
+                    />
+                    <label htmlFor="purcahse">구매</label>
+                  </div>
+                  <div className="radio">
+                    <input
+                      type="radio"
+                      name="jajegbn"
+                      id="outsourcing"
+                      value="2"
+                      onChange={inputs.update}
+                      checked={jajegbn === "2"}
+                      required
+                    />
+                    <label htmlFor="outsourcing">외주</label>
+                  </div>
+                </div>
+                <div className="input-div radio-div">
+                  <p>품목 구분</p>
+
+                  <div className="radio">
+                    <input
+                      type="radio"
+                      name="itgbn"
+                      id="raw"
+                      value="1"
+                      onChange={inputs.update}
+                      checked={itgbn === "1"}
+                      required
+                    />
+                    <label htmlFor="raw">원자재</label>
+                  </div>
+                  <div className="radio">
+                    <input
+                      type="radio"
+                      name="itgbn"
+                      id="goods"
+                      value="2"
+                      onChange={inputs.update}
+                      checked={itgbn === "2"}
+                      required
+                    />
+                    <label htmlFor="goods">상품</label>
+                  </div>
+                </div>
+                <span className="label ml mt">시작품</span>
                 <input type="checkbox" className="test" />
               </div>
+              {printgbn === "Y" && (
+                <button
+                  className="save repub"
+                  type="button"
+                  onClick={submits.pubPayment}
+                >
+                  재발행
+                </button>
+              )}
               <button className="save search">조회</button>
-              <button className="save">저장</button>
+              {printgbn === "N" ? (
+                <button
+                  className="save"
+                  type="button"
+                  onClick={submits.pubPayment}
+                >
+                  발행
+                </button>
+              ) : (
+                <button
+                  className="save"
+                  type="button"
+                  onClick={() => alert("미발행")}
+                >
+                  미발행
+                </button>
+              )}
             </form>
           </div>
           <div className="table">
@@ -254,7 +517,8 @@ export default class extends React.Component {
                       번호
                     </th>
                     <th className="selection">선택</th>
-                    <th>발행번호</th>
+
+                    <th>명세서번호</th>
                     <th onClick={inputs.sortBy} className="th-sort">
                       출발일자
                     </th>
@@ -276,38 +540,12 @@ export default class extends React.Component {
                     <th onClick={inputs.sortBy} className="th-sort">
                       수량
                     </th>
+                    <th onClick={inputs.sortBy} className="th-sort">
+                      라벨
+                    </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {paymentcardlist.map((list, index) => {
-                    return (
-                      <tr
-                        key={index}
-                        className={list.checked ? "list active" : "list"}
-                        id={`row${index}`}
-                      >
-                        <td className="balseq">{list.index}</td>
-                        <td className="selection td">
-                          <input
-                            type="checkbox"
-                            id={index}
-                            className="table-check"
-                            onChange={inputs.checkRow}
-                            checked={list.checked}
-                          />
-                        </td>
-                        <td className="num">{list.jpno}</td>
-                        <td className="num">{list.nadate}</td>
-                        <td className="num">{list.jpno}</td>
-                        <td className="num">{list.itnbr}</td>
-                        <td>{list.itdsc}</td>
-                        <td>{list.packtype}</td>
-                        <td className="num">{list.packqty}</td>
-                        <td className="num">{list.naqty}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
+                <tbody>{this.generateList()}</tbody>
               </table>
             </div>
           </div>

@@ -237,7 +237,7 @@
 .tabs {
   position: absolute;
   display: flex;
-  z-index: 50;
+  z-index: 0;
   top: 4.82rem;
   left: 1rem;
   width: 100%;
@@ -289,7 +289,6 @@
     }
 
     &.non-delete {
-
       &:after,
       &:before {
         content: none;
@@ -331,7 +330,7 @@
   left: 1rem;
   padding: 1rem 1.25rem 1.25rem;
   overflow-y: auto;
-  box-shadow: 5px 5px 15px rgba(20, 30, 60, 0.25);
+  box-shadow: 10px 10px 10px rgba(20, 30, 60, 0.25);
 
   &.left {
     width: calc(100% - 13rem);

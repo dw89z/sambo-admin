@@ -14,12 +14,21 @@
       position: relative;
 
       .save {
-        bottom: 0
+        width: 4.5rem;
+        bottom: 0;
+        padding: 0.35rem 0.4rem;
       }
 
       .search {
-        right: 3.7rem;
+        right: 5rem;
         background: $dark;
+      }
+
+      .repub {
+        right: 10rem;
+        background: none;
+        border: 1px solid $pri;
+        color: $pri;
       }
     }
   }
@@ -52,6 +61,10 @@
       &.ml {
         margin-left: 1.5rem;
       }
+
+      &.mt {
+        margin-top: 0.2rem;
+      }
     }
 
     &:last-child {
@@ -71,6 +84,18 @@
 
         &.live-search {
           width: 15rem;
+        }
+      }
+
+      &.radio-div {
+        p {
+          margin: 0;
+          margin-left: 1.5rem;
+          margin-top: 0.15rem;
+        }
+
+        input {
+          width: auto;
         }
       }
     }
@@ -110,8 +135,34 @@
 
             &.active {
               cursor: pointer;
-              background: url('../../../assets/img/trash.svg') center center no-repeat;
+              background: url("../../../assets/img/trash.svg") center center
+                no-repeat;
               background-size: 1.6rem;
+            }
+          }
+
+          .print {
+            cursor: default;
+            text-align: center;
+            padding: 0;
+
+            span {
+              background: $gray3;
+              padding: 0.15rem 0.35rem;
+              border-radius: 6px;
+              color: #fff;
+            }
+
+            &.active {
+              cursor: pointer;
+
+              &:hover {
+                opacity: 0.75;
+              }
+
+              span {
+                background: $pri;
+              }
             }
           }
 
@@ -124,13 +175,15 @@
 
             &.deactive {
               cursor: default;
-              background: url('../../../assets/img/copy-un.svg') center center no-repeat;
+              background: url("../../../assets/img/copy-un.svg") center center
+                no-repeat;
               background-size: 1.6rem;
             }
 
             &.active {
               cursor: pointer;
-              background: url('../../../assets/img/copy.svg') center center no-repeat;
+              background: url("../../../assets/img/copy.svg") center center
+                no-repeat;
               background-size: 1.6rem;
             }
           }
