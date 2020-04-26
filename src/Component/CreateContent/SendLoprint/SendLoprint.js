@@ -22,8 +22,9 @@ export default class extends React.Component {
     cvcod: this.props.user.userinfo.cvcod,
     itgbn: "1",
     jajegbn: "2",
-    printgbn: "N",
+    printgbn: "Y",
     searchKeyword: "",
+    printcardlist: [],
   };
 
   inputs = {
@@ -63,6 +64,19 @@ export default class extends React.Component {
           paymentcardlist: remain,
         });
       }
+    },
+
+    checkPrtRow: (e) => {
+      const id = parseInt(e.target.id);
+      let { printcardlist } = this.state;
+      if (printcardlist[id][0].checked === false) {
+        printcardlist[id].forEach((list) => (list.checked = true));
+      } else {
+        printcardlist[id].forEach((list) => (list.checked = false));
+      }
+      this.setState({
+        printcardlist: [...printcardlist],
+      });
     },
 
     sortBy: (e) => {
@@ -182,9 +196,17 @@ export default class extends React.Component {
                   const {
                     data: { data },
                   } = res;
-                  console.log(data);
                   const result = this.groupBy(data.paymentcardlist, "prt_JPNO");
-                  console.log(result);
+                  let resArr = [];
+                  for (let i in result) {
+                    let resRow = Object.values(result[i]);
+                    resRow.checked = false;
+
+                    resArr.push(resRow);
+                  }
+                  this.setState({
+                    printcardlist: resArr,
+                  });
                 }
               );
             }
@@ -192,6 +214,40 @@ export default class extends React.Component {
         );
       }
     },
+  };
+
+  test = async () => {
+    const data = {
+      fromDate: "20200401",
+      toDate: "20201231",
+      cvcod: "000010",
+      printgbn: "Y",
+      itgbn: "1",
+      jajegbn: "2",
+      searchKeyword: "",
+    };
+    this.setState({
+      innerLoading: false,
+    });
+    await postApi("scm/paymentorder/paymentcardlist", data).then((res) => {
+      const {
+        data: { data },
+      } = res;
+      const result = this.groupBy(data.paymentcardlist, "prt_JPNO");
+      console.log(result.length, result);
+      let resArr = [];
+      for (let i in result) {
+        let resRow = Object.values(result[i]);
+        let resChk = resRow.map((list) => {
+          list.checked = false;
+          return list;
+        });
+        resArr.push(resChk);
+      }
+      this.setState({
+        printcardlist: resArr,
+      });
+    });
   };
 
   groupBy = (array, key) => {
@@ -226,7 +282,7 @@ export default class extends React.Component {
   };
 
   generateList = () => {
-    const { paymentcardlist, printgbn } = this.state;
+    const { paymentcardlist, printgbn, printcardlist } = this.state;
     const inputs = this.inputs;
     let resultList;
     if (printgbn === "N") {
@@ -240,7 +296,7 @@ export default class extends React.Component {
             <td className="balseq">{list.index}</td>
             {list.prt_JPNO ? (
               index < 1 && (
-                <td className="selection td" rowSpan={paymentcardlist.length}>
+                <td className="selection td">
                   <input
                     type="checkbox"
                     id={index}
@@ -284,58 +340,68 @@ export default class extends React.Component {
         );
       });
     } else if (printgbn === "Y") {
-      // resultList = paymentcardlist.map((list, index) => {
-      //   return (
-      //     <tr
-      //       key={index}
-      //       className={list.checked ? "list active" : "list"}
-      //       id={`row${index}`}
-      //     >
-      //       <td className="balseq">{list.index}</td>
-      //       {list.prt_JPNO ? (
-      //         index < 1 && (
-      //           <td className="selection td" rowSpan={paymentcardlist.length}>
-      //             <input
-      //               type="checkbox"
-      //               id={index}
-      //               className="table-check"
-      //               onChange={inputs.checkRow}
-      //               checked={list.checked}
-      //             />
-      //           </td>
-      //         )
-      //       ) : (
-      //           <td className="selection td">
-      //             <input
-      //               type="checkbox"
-      //               id={index}
-      //               className="table-check"
-      //               onChange={inputs.checkRow}
-      //               checked={list.checked}
-      //             />
-      //           </td>
-      //         )}
-      //       <td className="num">{list.prt_JPNO}</td>
-      //       <td className="num">{list.nadate}</td>
-      //       <td className="num">{list.jpno}</td>
-      //       <td className="num">{list.itnbr}</td>
-      //       <td>{list.itdsc}</td>
-      //       <td>{list.packtype}</td>
-      //       <td className="num">{list.packqty}</td>
-      //       <td className="num">{list.naqty}</td>
-      //       <td
-      //         data-index={index}
-      //         className={
-      //           list.checked && list.prt_JPNO ? "print active" : "print"
-      //         }
-      //         id={index}
-      //         onClick={list.prt_JPNO ? inputs.printLabel : null}
-      //       >
-      //         <span>print</span>
-      //       </td>
-      //     </tr>
-      //   );
-      // });
+      resultList = printcardlist.map((list, mainIndex) => {
+        return list.map((sub, index) => {
+          console.log(sub.checked);
+          return (
+            <tr
+              key={index}
+              className={sub.checked ? "list active" : "list"}
+              id={`row${index}`}
+            >
+              {sub.prt_JPNO ? (
+                index < 1 && (
+                  <>
+                    <td className="balseq" rowSpan={list.length}>
+                      {mainIndex + 1}
+                    </td>
+                    <td className="selection td" rowSpan={list.length}>
+                      <input
+                        type="checkbox"
+                        id={mainIndex}
+                        className="table-check"
+                        onChange={inputs.checkPrtRow}
+                        checked={sub.checked}
+                      />
+                    </td>
+                  </>
+                )
+              ) : (
+                <>
+                  <td className="balseq">{mainIndex + 1}</td>
+                  <td className="selection td">
+                    <input
+                      type="checkbox"
+                      id={index}
+                      className="table-check"
+                      onChange={inputs.checkPrtRow}
+                      checked={sub.checked}
+                    />
+                  </td>
+                </>
+              )}
+              <td className="num">{sub.prt_JPNO}</td>
+              <td className="num">{sub.nadate}</td>
+              <td className="num">{sub.jpno}</td>
+              <td className="num">{sub.itnbr}</td>
+              <td>{sub.itdsc}</td>
+              <td>{sub.packtype}</td>
+              <td className="num">{sub.packqty}</td>
+              <td className="num">{sub.naqty}</td>
+              <td
+                data-index={index}
+                className={
+                  sub.checked && sub.prt_JPNO ? "print active" : "print"
+                }
+                id={index}
+                onClick={sub.prt_JPNO ? inputs.printLabel : null}
+              >
+                <span>print</span>
+              </td>
+            </tr>
+          );
+        });
+      });
     }
     return resultList;
   };
@@ -348,7 +414,8 @@ export default class extends React.Component {
       toDate: new Date(),
       cvcod: this.props.user.cvcod,
     });
-    this.submits.paymentCard();
+    // this.submits.paymentCard();
+    this.test();
   }
 
   render() {
@@ -363,11 +430,12 @@ export default class extends React.Component {
       jajegbn,
       printgbn,
       itgbn,
+      printcardlist,
     } = this.state;
     const { userinfo } = this.props.user;
     const submits = this.submits;
     const inputs = this.inputs;
-    console.log(paymentcardlist);
+    console.log(printcardlist);
 
     return (
       <>
