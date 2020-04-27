@@ -1,7 +1,9 @@
 import React from "react";
 import Loading from "../../Loading";
-import { postApi, getApi } from "../../../api";
+import { postApi } from "../../../api";
+import { formatDate, addCommas } from "../common/Common";
 import BootstrapTable from "react-bootstrap-table-next";
+import DatePicker from "react-datepicker";
 import InnerLoading from "../../InnerLoading";
 import "./PlanWeek.scss";
 
@@ -9,7 +11,6 @@ export default class extends React.Component {
   state = {
     loading: false,
     weekplan: [],
-    d: [],
     columns: [
       {
         dataField: "rowseq",
@@ -73,44 +74,59 @@ export default class extends React.Component {
       },
     ],
     errorSearch: true,
+    searchkeyword: "",
+    date: new Date(),
   };
 
-  componentDidMount() {
-    const date = new Date();
-    const year = date.getFullYear();
+  setDate = (date) => {
+    this.setState({
+      date,
+    });
+  };
 
-    this.setState(
-      {
-        date,
-        cvcod: this.props.user.userinfo.cvcod,
-        innerLoading: true,
-      },
-      async () => {
-        const data = {
-          date: "20170619",
-          cvcod: this.state.cvcod,
-          searchkeyword: "",
-        };
-        console.log(data);
-        await postApi("scm/purchaseplan/weekplan", data).then((res) => {
-          console.log(res);
-          const {
-            data: {
-              data: { weekplan },
-            },
-          } = res;
-          this.setState({
-            weekplan,
-            innerLoading: false,
-            errorSearch: false,
-          });
-        });
-      }
-    );
-  }
+  submit = async () => {
+    this.setState({
+      innerLoading: true,
+    });
+    const { date, searchkeyword } = this.state;
+    const resDate = formatDate(date);
+    const data = {
+      date: resDate,
+      cvcod: this.state.cvcod,
+      searchkeyword,
+    };
+    await postApi("scm/purchaseplan/weekplan", data).then((res) => {
+      const {
+        data: {
+          data: { weekplan },
+        },
+      } = res;
+      console.log(weekplan);
+      this.setState({
+        weekplan,
+        innerLoading: false,
+        errorSearch: false,
+      });
+    });
+  };
+
+  componentDidUpdate = (prev, state) => {
+    if (state.date !== this.state.date) {
+      this.submit();
+    }
+  };
+
+  componentDidMount = () => {
+    this.setState({
+      cvcod: this.props.user.userinfo.cvcod,
+      innerLoading: true,
+    });
+    this.submit();
+  };
 
   render() {
-    const { d, weekplan, columns, errorSearch, innerLoading } = this.state;
+    const { weekplan, columns, errorSearch, innerLoading, date } = this.state;
+
     return (
       <>
         {innerLoading ? <InnerLoading /> : null}
@@ -118,13 +134,11 @@ export default class extends React.Component {
           <h2>{this.props.title}</h2>
           <div className="form">
             <form onSubmit={this.userSearch}>
-              <span className="label">계획년도</span>
-              <input
-                name="userSearch"
-                placeholder="로그인ID 및 거래처명으로 검색"
-                className="user-search main-search"
-                type="text"
-                onChange={this.inputUpdate}
+              <span className="label">계획일자</span>
+              <DatePicker
+                selected={date}
+                onChange={this.setDate}
+                dateFormat="yyyy/MM/dd"
               />
               <span className="label ml">검색어</span>
               <input

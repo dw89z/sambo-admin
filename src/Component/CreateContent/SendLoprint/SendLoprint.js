@@ -422,7 +422,6 @@ export default class extends React.Component {
     const {
       fromDate,
       toDate,
-      paymentcardlist,
       innerLoading,
       isMast,
       searchKeyword,
@@ -430,12 +429,10 @@ export default class extends React.Component {
       jajegbn,
       printgbn,
       itgbn,
-      printcardlist,
     } = this.state;
     const { userinfo } = this.props.user;
     const submits = this.submits;
     const inputs = this.inputs;
-    console.log(printcardlist);
 
     return (
       <>

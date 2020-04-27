@@ -3,6 +3,7 @@ import _ from "lodash";
 import InnerLoading from "../../InnerLoading";
 import LiveSearch from "../common/LiveSeach";
 import { postApi } from "../../../api";
+import { formatDate, addCommas } from "../common/Common";
 import DatePicker from "react-datepicker";
 import "./SendLogistc.scss";
 import "react-datepicker/dist/react-datepicker.css";
@@ -253,8 +254,6 @@ export default class extends React.Component {
     return null;
   };
 
-  addCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
   submits = {
     process: async () => {
       const data = {
@@ -275,9 +274,9 @@ export default class extends React.Component {
               const day = list.nadat.substr(6, 2);
               const date = `${year}-${month}-${day}`;
               list.nadat = date;
-              const balqty = this.addCommas(list.balqty);
+              const balqty = addCommas(list.balqty);
               list.balqty = balqty;
-              const janru = this.addCommas(list.janru);
+              const janru = addCommas(list.janru);
               list.janru = janru;
               list.checked = false;
 
@@ -342,7 +341,7 @@ export default class extends React.Component {
               list.packqty = null;
             }
             if (list.issue_date !== null) {
-              const formatDat = this.formatDate(list.issue_date);
+              const formatDat = formatDate(list.issue_date);
               list.issue_date = formatDat;
             }
             delete list.copied;
@@ -361,7 +360,7 @@ export default class extends React.Component {
             delete list.young;
             return list;
           });
-          const crtDat = this.formatDate(new Date());
+          const crtDat = formatDate(new Date());
 
           const data = {
             nadate: "20201231",
@@ -392,25 +391,6 @@ export default class extends React.Component {
         }
       }
     },
-  };
-
-  formatDate = (date) => {
-    if (date) {
-      const yearNum = date.getFullYear();
-      let monthNum = date.getMonth() + 1;
-      let dayNum = date.getDate();
-      let year = yearNum.toString();
-      let month = monthNum.toString();
-      let day = dayNum.toString();
-      if (month.length === 1) {
-        month = "0" + month;
-      }
-      if (day.length === 1) {
-        day = "0" + day;
-      }
-      const fulldate = `${year}${month}${day}`;
-      return fulldate;
-    }
   };
 
   componentDidUpdate = (prevProp, prevState) => {
