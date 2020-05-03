@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 import InnerLoading from "../../InnerLoading";
 import LiveSearch from "../common/LiveSeach";
-import { postApi } from "../../../api";
+import { postApi, getApi } from "../../../api";
 import { formatDate, addCommas } from "../common/Common";
 import DatePicker from "react-datepicker";
 import "./SendLogistc.scss";
@@ -256,6 +256,9 @@ export default class extends React.Component {
 
   submits = {
     process: async () => {
+      this.setState({
+        innerLoading: true,
+      });
       const data = {
         fromDate: "20200401",
         toDate: "20200430",
@@ -393,13 +396,24 @@ export default class extends React.Component {
     },
   };
 
-  componentDidUpdate = (prevProp, prevState) => {
+  componentDidUpdate = async (prevProp, prevState) => {
     if (prevState.logid !== this.state.logid) {
-      console.log("did");
+      await getApi(`admin/um/user/${this.state.logid}`).then((res) => {
+        const {
+          data: {
+            data: { userinfo },
+          },
+        } = res;
+        this.setState({
+          userId: userinfo.logid,
+          cvnas: userinfo.cvnas,
+          gubn: userinfo.gubn,
+        });
+      });
     }
   };
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     let date = new Date();
     date.setDate(date.getDate() - 20);
     this.setState({
@@ -408,7 +422,35 @@ export default class extends React.Component {
       startDate: new Date(),
       cvcod: this.props.user.userinfo.cvcod,
     });
-    this.submits.process();
+    await this.submits.process();
+  };
+
+  comp = {
+    resultSpan: () => {
+      const { userinfo } = this.props.user;
+      const { subcontractor, gubn, cvnas } = this.state;
+      let spans;
+      if (userinfo.auth === "1") {
+        spans = (
+          <>
+            <span className="result-span">{cvnas}</span>
+            <span className="result-span">
+              {gubn === "0" ? "구매업체" : "외주업체"}
+            </span>
+          </>
+        );
+      } else {
+        spans = (
+          <>
+            <span className="result-span">{subcontractor.cvnas}</span>
+            <span className="result-span">
+              {gubn === "0" ? "구매업체" : "외주업체"}
+            </span>
+          </>
+        );
+      }
+      return spans;
+    },
   };
 
   render() {
@@ -420,7 +462,6 @@ export default class extends React.Component {
       isMast,
       searchKeyword,
       startDate,
-      cvnas,
       errorSearch,
     } = this.state;
     const { userinfo } = this.props.user;
@@ -456,10 +497,7 @@ export default class extends React.Component {
                     isMast={isMast}
                     liveResult={inputs.liveResult}
                   />
-                  <span className="result-span">{cvnas}</span>
-                  <span className="result-span">
-                    {userinfo.auth === "0" ? "외주업체" : "구매업체"}
-                  </span>
+                  {this.comp.resultSpan()}
                 </div>
               </div>
               <div className="input-divide mt">
@@ -485,7 +523,13 @@ export default class extends React.Component {
                 <span className="label ml">시작품</span>
                 <input type="checkbox" className="test" />
               </div>
-              <button className="save search">조회</button>
+              <button
+                className="save search"
+                onClick={submits.process}
+                type="button"
+              >
+                조회
+              </button>
               <button className="save">저장</button>
             </form>
           </div>

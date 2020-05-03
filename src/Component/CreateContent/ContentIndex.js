@@ -23,7 +23,6 @@ Components["SystAuth"] = require("./SystAuth/index").default;
 Components["SystNotify"] = require("./SystNotify/index").default;
 Components["SystLibrary"] = require("./SystLibrary/index").default;
 Components["MastEntry"] = require("./MastEntry/index").default;
-
 Components["SystNotifyQ"] = require("./SystNotifyQ/index").default;
 Components["SystLibraryQ"] = require("./SystLibraryQ/index").default;
 Components["ConGrfail"] = require("./ConGrfail/index").default;

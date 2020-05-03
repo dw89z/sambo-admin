@@ -2,11 +2,11 @@ import React from "react";
 import InnerLoading from "../../InnerLoading";
 import LiveSearch from "../common/LiveSeach";
 import _ from "lodash";
-import { postApi } from "../../../api";
+import { postApi, getApi } from "../../../api";
+import { addCommas } from "../common/Common";
 import DatePicker from "react-datepicker";
 import "../SendLogistc/SendLogistc.scss";
 import "react-datepicker/dist/react-datepicker.css";
-import { post } from "jquery";
 
 export default class extends React.Component {
   state = {
@@ -133,7 +133,7 @@ export default class extends React.Component {
             const day = list.nadate.substr(6, 2);
             const date = `${year}-${month}-${day}`;
             list.nadate = date;
-            const naqty = this.addCommas(list.naqty);
+            const naqty = addCommas(list.naqty);
             list.naqty = naqty;
             list.checked = false;
             list.index = index + 1;
@@ -216,6 +216,23 @@ export default class extends React.Component {
     },
   };
 
+  componentDidUpdate = async (prevProp, prevState) => {
+    if (prevState.logid !== this.state.logid) {
+      await getApi(`admin/um/user/${this.state.logid}`).then((res) => {
+        const {
+          data: {
+            data: { userinfo },
+          },
+        } = res;
+        this.setState({
+          userId: userinfo.logid,
+          cvnas: userinfo.cvnas,
+          gubn: userinfo.gubn,
+        });
+      });
+    }
+  };
+
   test = async () => {
     const data = {
       fromDate: "20200401",
@@ -258,27 +275,6 @@ export default class extends React.Component {
 
       return result;
     }, {});
-  };
-
-  addCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-  formatDate = (date) => {
-    if (date) {
-      const yearNum = date.getFullYear();
-      let monthNum = date.getMonth() + 1;
-      let dayNum = date.getDate();
-      let year = yearNum.toString();
-      let month = monthNum.toString();
-      let day = dayNum.toString();
-      if (month.length === 1) {
-        month = "0" + month;
-      }
-      if (day.length === 1) {
-        day = "0" + day;
-      }
-      const fulldate = `${year}${month}${day}`;
-      return fulldate;
-    }
   };
 
   generateList = () => {
@@ -406,6 +402,34 @@ export default class extends React.Component {
     return resultList;
   };
 
+  comp = {
+    resultSpan: () => {
+      const { userinfo } = this.props.user;
+      const { subcontractor, gubn, cvnas } = this.state;
+      let spans;
+      if (userinfo.auth === "1") {
+        spans = (
+          <>
+            <span className="result-span">{cvnas}</span>
+            <span className="result-span">
+              {gubn === "0" ? "구매업체" : "외주업체"}
+            </span>
+          </>
+        );
+      } else {
+        spans = (
+          <>
+            <span className="result-span">{subcontractor.cvnas}</span>
+            <span className="result-span">
+              {gubn === "0" ? "구매업체" : "외주업체"}
+            </span>
+          </>
+        );
+      }
+      return spans;
+    },
+  };
+
   async componentDidMount() {
     let date = new Date();
     date.setDate(date.getDate() - 20);
@@ -425,7 +449,6 @@ export default class extends React.Component {
       innerLoading,
       isMast,
       searchKeyword,
-      cvnas,
       jajegbn,
       printgbn,
       itgbn,
@@ -463,10 +486,7 @@ export default class extends React.Component {
                     isMast={isMast}
                     liveResult={inputs.liveResult}
                   />
-                  <span className="result-span">{cvnas}</span>
-                  <span className="result-span">
-                    {userinfo.auth === "0" ? "외주업체" : "구매업체"}
-                  </span>
+                  {this.comp.resultSpan()}
                 </div>
               </div>
               <div className="input-divide mt">

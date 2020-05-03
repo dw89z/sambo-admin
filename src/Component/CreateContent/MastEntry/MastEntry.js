@@ -24,6 +24,7 @@ export default class extends React.Component {
     signURL: "",
     isMast: true,
     stampimage: "",
+    gubn: "",
   };
 
   inputs = {
@@ -85,14 +86,18 @@ export default class extends React.Component {
           });
         }
       });
-      // console.log(logid);
-      // await getApi(`admin/um/user/${logid}`).then((res) => {
-      //   console.log(res);
-      //   this.setState({
-      //     userId: userinfo.logid,
-      //     cvnas: userinfo.cvnas,
-      //   });
-      // });
+      await getApi(`admin/um/user/${this.state.logid}`).then((res) => {
+        const {
+          data: {
+            data: { userinfo },
+          },
+        } = res;
+        this.setState({
+          userId: userinfo.logid,
+          cvnas: userinfo.cvnas,
+          gubn: userinfo.gubn,
+        });
+      });
     },
 
     changePass: async (e) => {
@@ -132,7 +137,6 @@ export default class extends React.Component {
         cvcod: this.state.subcontractor.cvcod,
       };
       await postApi("scm/subcontractor/stampdelete", data).then((res) => {
-        console.log(res, this.state);
         this.setState({
           stampimage: "",
         });
@@ -160,7 +164,6 @@ export default class extends React.Component {
           const {
             data: { data },
           } = res;
-          console.log(res);
           this.setState(
             {
               stampimage: data.stampimage,
@@ -210,11 +213,13 @@ export default class extends React.Component {
       this.setState({
         logid: userinfo.logid,
         auth: true,
+        gubn: userinfo.gubn,
       });
     } else {
       this.setState({
         logid: userinfo.logid,
         auth: false,
+        gubn: userinfo.gubn,
       });
     }
 
@@ -226,6 +231,7 @@ export default class extends React.Component {
         const {
           data: { data },
         } = res;
+        console.log(res);
         if (data.stampimage) {
           this.setState({
             subcontractor: data.subcontractor,
@@ -243,16 +249,16 @@ export default class extends React.Component {
   }
 
   comp = {
-    resultSpan: (auth) => {
+    resultSpan: () => {
       const { userinfo } = this.props.user;
-      const { subcontractor } = this.state;
+      const { subcontractor, gubn, cvnas } = this.state;
       let spans;
-      if (auth === "1") {
+      if (userinfo.auth === "1") {
         spans = (
           <>
-            <span className="result-span">{userinfo.cvnas}</span>
+            <span className="result-span">{cvnas}</span>
             <span className="result-span">
-              {userinfo.gubn === "0" ? "외주업체" : "구매업체"}
+              {gubn === "0" ? "구매업체" : "외주업체"}
             </span>
           </>
         );
@@ -261,7 +267,7 @@ export default class extends React.Component {
           <>
             <span className="result-span">{subcontractor.cvnas}</span>
             <span className="result-span">
-              {subcontractor.gubn === "0" ? "외주업체" : "구매업체"}
+              {gubn === "0" ? "구매업체" : "외주업체"}
             </span>
           </>
         );
@@ -286,7 +292,6 @@ export default class extends React.Component {
     const { userinfo } = this.props.user;
     const submits = this.submits;
     const inputs = this.inputs;
-    console.log(this.state.stampimage);
 
     return (
       <>

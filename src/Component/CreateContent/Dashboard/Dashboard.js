@@ -1,6 +1,6 @@
 import React from "react";
-import Chart from "react-apexcharts";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import Chart from "react-apexcharts";
 import ko from "apexcharts/dist/locales/ko.json";
 import "./Dashboard.scss";
 import { postApi } from "../../../api";
@@ -15,13 +15,13 @@ export default class extends React.Component {
         {
           name: "금액",
           type: "column",
-          data: []
+          data: [],
         },
         {
           name: "수량",
           type: "line",
-          data: []
-        }
+          data: [],
+        },
       ],
       options: {
         chart: {
@@ -31,27 +31,27 @@ export default class extends React.Component {
           defaultLocale: "ko",
           locales: [ko],
           animations: {
-            speed: 1500
+            speed: 1500,
           },
           toolbar: {
-            offsetY: -25
-          }
+            offsetY: -25,
+          },
         },
         stroke: {
-          width: [1, 2]
+          width: [1, 2],
         },
         dataLabels: {
           enabled: true,
-          enabledOnSeries: [1]
+          enabledOnSeries: [1],
         },
         labels: [],
         xaxis: {
           labels: {
             style: {
               fontSize: "10px",
-              fontWeight: 700
-            }
-          }
+              fontWeight: 700,
+            },
+          },
         },
         yaxis: [
           {
@@ -64,9 +64,9 @@ export default class extends React.Component {
               style: {
                 colors: "#d1d1d9",
                 fontSize: "10px",
-                fontWeight: 700
-              }
-            }
+                fontWeight: 700,
+              },
+            },
           },
           {
             opposite: true,
@@ -79,25 +79,25 @@ export default class extends React.Component {
               style: {
                 colors: "#d1d1d9",
                 fontSize: "10px",
-                fontWeight: 700
-              }
-            }
-          }
-        ]
-      }
+                fontWeight: 700,
+              },
+            },
+          },
+        ],
+      },
     },
     monthFailChart: {
       series: [
         {
           name: "수량",
           type: "column",
-          data: []
+          data: [],
         },
         {
           name: "PPM",
           type: "column",
-          data: []
-        }
+          data: [],
+        },
       ],
       options: {
         chart: {
@@ -106,27 +106,27 @@ export default class extends React.Component {
           defaultLocale: "ko",
           locales: [ko],
           animations: {
-            speed: 1500
+            speed: 1500,
           },
           toolbar: {
-            offsetY: -25
-          }
+            offsetY: -25,
+          },
         },
         stroke: {
-          width: [1, 2]
+          width: [1, 2],
         },
         dataLabels: {
           enabled: true,
-          enabledOnSeries: [1]
+          enabledOnSeries: [1],
         },
         labels: [],
         xaxis: {
           labels: {
             style: {
               fontSize: "10px",
-              fontWeight: 700
-            }
-          }
+              fontWeight: 700,
+            },
+          },
         },
         yaxis: [
           {
@@ -137,12 +137,12 @@ export default class extends React.Component {
               style: {
                 colors: "#d1d1d9",
                 fontSize: "10px",
-                fontWeight: 700
+                fontWeight: 700,
               },
               formatter: function numberWithCommas(x) {
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-              }
-            }
+              },
+            },
           },
           {
             opposite: true,
@@ -152,15 +152,15 @@ export default class extends React.Component {
               style: {
                 colors: "#d1d1d9",
                 fontSize: "10px",
-                fontWeight: 700
+                fontWeight: 700,
               },
               formatter: function numberWithCommas(x) {
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-              }
-            }
-          }
-        ]
-      }
+              },
+            },
+          },
+        ],
+      },
     },
     mainSupplyChart: {
       series: [],
@@ -170,16 +170,16 @@ export default class extends React.Component {
           type: "pie",
           animations: {
             easing: "easeinout",
-            speed: 2000
-          }
+            speed: 2000,
+          },
         },
         plotOptions: {
           pie: {
-            customScale: 0.7
-          }
+            customScale: 0.7,
+          },
         },
-        labels: []
-      }
+        labels: [],
+      },
     },
     failRateChart: {
       series: [],
@@ -189,8 +189,8 @@ export default class extends React.Component {
           type: "radialBar",
           animations: {
             easing: "easeinout",
-            speed: 3500
-          }
+            speed: 3500,
+          },
         },
         colors: ["#20E647"],
         plotOptions: {
@@ -200,18 +200,18 @@ export default class extends React.Component {
             track: {
               background: "#333",
               startAngle: -90,
-              endAngle: 90
+              endAngle: 90,
             },
             dataLabels: {
               name: {
-                show: false
+                show: false,
               },
               value: {
                 fontSize: "30px",
-                show: true
-              }
-            }
-          }
+                show: true,
+              },
+            },
+          },
         },
         fill: {
           type: "gradient",
@@ -219,17 +219,17 @@ export default class extends React.Component {
             shade: "dark",
             type: "horizontal",
             gradientToColors: ["#87D4F9"],
-            stops: [0, 100]
-          }
+            stops: [0, 100],
+          },
         },
         stroke: {
-          lineCap: "butt"
+          lineCap: "butt",
         },
-        labels: ["Progress"]
-      }
+        labels: ["Progress"],
+      },
     },
     notice: [],
-    dataRoom: []
+    dataRoom: [],
   };
 
   sortObject(object) {
@@ -275,7 +275,7 @@ export default class extends React.Component {
   }
 
   dateFormatter(array) {
-    let newDates = array.map(arr => {
+    let newDates = array.map((arr) => {
       let year = arr.slice(2, 4);
       let month = arr.slice(4, 6);
       let dateFormat = `${year}년${month}월`;
@@ -295,21 +295,21 @@ export default class extends React.Component {
 
   async componentDidMount() {
     try {
-      await postApi("main/maincomp").then(res => {
+      await postApi("main/maincomp").then((res) => {
         const {
           monthlyFailureRate,
           mainSupplyItems,
           dataRoomList,
           failureRate,
           salesQuantityTurnover,
-          notisList
+          notisList,
         } = res.data.data;
 
         let salesQuantity = this.modifyChartData(salesQuantityTurnover, 3);
         let monthlyFailure = this.modifyChartData(monthlyFailureRate, 3);
         let mainSupply = this.modifyChartData(mainSupplyItems, 2);
         let failRate = Object.values(failureRate);
-        let mainInt = mainSupply[0].map(string => {
+        let mainInt = mainSupply[0].map((string) => {
           let int = parseInt(string);
           return int;
         });
@@ -321,51 +321,51 @@ export default class extends React.Component {
           salesChart: {
             series: [
               { ...this.state.salesChart.series[0], data: salesQuantity[0] },
-              { ...this.state.salesChart.series[1], data: salesQuantity[1] }
+              { ...this.state.salesChart.series[1], data: salesQuantity[1] },
             ],
             options: {
               ...this.state.salesChart.options,
-              labels: newDates
-            }
+              labels: newDates,
+            },
           },
           monthFailChart: {
             series: [
               {
                 ...this.state.monthFailChart.series[0],
-                data: monthlyFailure[1]
+                data: monthlyFailure[1],
               },
               {
                 ...this.state.monthFailChart.series[1],
-                data: monthlyFailure[0]
-              }
+                data: monthlyFailure[0],
+              },
             ],
             options: {
               ...this.state.monthFailChart.options,
-              labels: newDates
-            }
+              labels: newDates,
+            },
           },
           mainSupplyChart: {
             series: mainInt,
             options: {
               ...this.state.mainSupplyChart.options,
-              labels: mainSupply[1]
-            }
+              labels: mainSupply[1],
+            },
           },
           failRateChart: {
             series: failRate,
             options: {
-              ...this.state.failRateChart.options
-            }
+              ...this.state.failRateChart.options,
+            },
           },
           notice: notisList,
-          dataRoom: dataRoomList
+          dataRoom: dataRoomList,
         });
       });
     } catch (err) {
       console.log(err);
     } finally {
       this.setState({
-        loading: false
+        loading: false,
       });
     }
   }
@@ -378,7 +378,7 @@ export default class extends React.Component {
       monthFailChart,
       failRateChart,
       dataRoom,
-      notice
+      notice,
     } = this.state;
     return (
       <>

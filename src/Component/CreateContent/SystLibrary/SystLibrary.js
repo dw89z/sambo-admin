@@ -7,6 +7,8 @@ import BootstrapTable from "react-bootstrap-table-next";
 import DatePicker from "react-datepicker";
 import TextEditor from "./TextEditor";
 import Loading from "../../Loading";
+import InnerLoading from "../../InnerLoading";
+import { formatDate } from "../common/Common";
 import { postApi, getApi } from "../../../api";
 import "../SystNotify/SystNotify.scss";
 
@@ -77,6 +79,7 @@ export default class extends React.Component {
     editData: {},
     editMode: false,
     isMast: true,
+    innerLoading: false,
   };
 
   inputs = {
@@ -137,30 +140,14 @@ export default class extends React.Component {
 
   // 섭밋 메소드 모음 객체
   submits = {
-    // date객체를 yyyymmdd형식으로 바꿔주는 메소드
-    formatDate: (date) => {
-      const toDate = new Date(date);
-      const yearNum = toDate.getFullYear();
-      let monthNum = toDate.getMonth() + 1;
-      let dayNum = toDate.getDate();
-      let year = yearNum.toString();
-      let month = monthNum.toString();
-      let day = dayNum.toString();
-      if (month.length === 1) {
-        month = "0" + month;
-      }
-      if (day.length === 1) {
-        day = "0" + day;
-      }
-      const fulldate = `${year}${month}${day}`;
-      return fulldate;
-    },
-
     // 조회버튼을 누르면 아이디와 날짜로 api를 요청하여 리스트에 표시
     searchList: async () => {
       const { userId, stdat, eddat } = this.state;
-      const fromdate = this.submits.formatDate(stdat);
-      const todate = this.submits.formatDate(eddat);
+      this.setState({
+        innerLoading: true,
+      });
+      const fromdate = formatDate(stdat);
+      const todate = formatDate(eddat);
       const searchoption = {
         searchoption: {
           logid: userId,
@@ -197,11 +184,13 @@ export default class extends React.Component {
           this.setState({
             errorSearch: true,
             libraryList: [],
+            innerLoading: false,
           });
         } else {
           this.setState({
             libraryList: libraryList,
             errorSearch: false,
+            innerLoading: false,
           });
         }
       });
@@ -238,10 +227,15 @@ export default class extends React.Component {
       user: { userinfo },
     } = this.props;
 
-    this.setState({
-      userId: userinfo.logid,
-      cvnas: userinfo.cvnas,
-    });
+    this.setState(
+      {
+        userId: userinfo.logid,
+        cvnas: userinfo.cvnas,
+      },
+      () => {
+        this.submits.searchList();
+      }
+    );
   }
 
   // 신규등록 및 수정은 TextEditor쪽으로 위임
@@ -257,6 +251,7 @@ export default class extends React.Component {
       stdat,
       eddat,
       isMast,
+      innerLoading,
     } = this.state;
     const {
       user: { userinfo },
@@ -265,6 +260,7 @@ export default class extends React.Component {
 
     return (
       <>
+        {innerLoading ? <InnerLoading /> : null}
         <div className="content-component notify data-room">
           <h2>{this.props.title}</h2>
           {loading ? (

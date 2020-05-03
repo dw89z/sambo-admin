@@ -1,1 +1,41 @@
 @import "../../../scss/Variables.scss";
+
+
+.congrsales {
+	.input-div {
+		display: flex;
+		justify-content: center;
+		margin-top: 0;
+		align-items: center;
+
+		.live-search {
+			input {
+				border: 1px solid $gray2;
+
+				&:focus {
+					border-color: $pri;
+				}
+			}
+		}
+	}
+
+	.result-wrapper {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+
+		.left,
+		.right {
+			width: calc(50% - 0.35rem);
+			border: 1px solid $gray3;
+		}
+	}
+
+	.chart-wrapper {
+		padding: 0.75rem 1rem;
+
+		h3 {
+			font-size: 1rem;
+		}
+	}
+}

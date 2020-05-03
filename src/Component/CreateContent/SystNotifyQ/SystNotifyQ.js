@@ -1,12 +1,317 @@
 import React from "react";
-import "./SystNotifyQ.scss";
+import "../../../globals";
+import search from "../../../assets/img/search-blue.svg";
+import LiveSearch from "../common/LiveSeach";
+import BootstrapTable from "react-bootstrap-table-next";
+import DatePicker from "react-datepicker";
+import Loading from "../../Loading";
+import InnerLoading from "../../InnerLoading";
+import { formatDate } from "../common/Common";
+import { postApi, getApi } from "../../../api";
+import "../SystNotify/SystNotify.scss";
 
 export default class extends React.Component {
+  state = {
+    loading: false,
+    typing: false,
+    typingTimeout: 0,
+    fromDate: "",
+    toData: "",
+    columns: [
+      {
+        dataField: "seqno",
+        text: "번호",
+        sort: true,
+      },
+      {
+        dataField: "crtdat",
+        text: "등록일자",
+        sort: true,
+      },
+      {
+        dataField: "mslvl",
+        text: "메시지구분",
+        sort: true,
+        formatter: (cell, row, rowIndex, formatExtraData) => {
+          return <span>{formatExtraData[cell]}</span>;
+        },
+        formatExtraData: {
+          0: "일반",
+          1: "중요",
+        },
+      },
+      {
+        dataField: "gubun",
+        text: "전달구분",
+        sort: true,
+        formatter: (cell, row, rowIndex, formatExtraData) => {
+          return <span>{formatExtraData[cell]}</span>;
+        },
+        formatExtraData: {
+          0: "전체",
+          1: "특정ID",
+        },
+      },
+      {
+        dataField: "title",
+        text: "제목",
+        sort: true,
+        classes: "notice-title",
+        headerClasses: "notice-title notice-title-header",
+      },
+      {
+        dataField: "logid",
+        text: "등록자명",
+        sort: true,
+      },
+    ],
+    noticeList: [],
+    title: "",
+    userId: "",
+    cvnas: "",
+    errorSearch: true,
+    listMode: true,
+    editData: {},
+    editMode: false,
+    innerLoading: false,
+  };
+
+  changeMode = () => {
+    this.setState({
+      listMode: !this.state.listMode,
+      editMode: false,
+    });
+    this.submits.searchList();
+  };
+
+  fromDateChange = (date) => {
+    this.setState({
+      fromDate: date,
+    });
+  };
+
+  toDateChange = (date) => {
+    this.setState({
+      toDate: date,
+    });
+  };
+
+  getDate = () => {
+    const date = new Date();
+    const toDate = date.setDate(date.getDate());
+    const fromDate = date.setDate(date.getDate() - 60);
+    this.setState({
+      toDate,
+      fromDate,
+    });
+  };
+
+  inputs = {
+    liveResult: (result) => {
+      this.setState({
+        userId: result,
+      });
+    },
+  };
+
+  setSearchId = async () => {
+    const { userId } = this.state;
+    await getApi(`admin/um/user/${userId}`).then((res) => {
+      const {
+        data: {
+          data: { userinfo },
+        },
+      } = res;
+
+      this.setState({
+        userId: userinfo.logid,
+        cvnas: userinfo.cvnas,
+      });
+    });
+  };
+
+  submits = {
+    searchList: async () => {
+      const { fromDate, toDate, userId } = this.state;
+      this.setState({
+        innerLoading: true,
+      });
+      const rawFromDate = new Date(fromDate);
+      const rawToDate = new Date(toDate);
+      const fromdate = formatDate(rawFromDate);
+      const todate = formatDate(rawToDate);
+      const searchoption = {
+        searchoption: {
+          logid: userId,
+          fromdate,
+          todate,
+        },
+      };
+      await postApi("admin/notify/noticeList", searchoption).then((res) => {
+        const {
+          data: {
+            data: { noticelist },
+          },
+        } = res;
+        noticelist.map((list) => {
+          const year = list.crtdat.substr(0, 4);
+          const month = list.crtdat.substr(4, 2);
+          const day = list.crtdat.substr(6, 2);
+          const date = `${year}-${month}-${day}`;
+          list.crtdat = date;
+          return list;
+        });
+        if (noticelist.length === 0) {
+          this.setState({
+            errorSearch: true,
+            noticeList: [],
+            innerLoading: false,
+          });
+        } else {
+          this.setState({
+            noticeList: noticelist,
+            errorSearch: false,
+            innerLoading: false,
+          });
+        }
+      });
+    },
+  };
+
+  rowEvents = {
+    onClick: async (e, row, rowIndex) => {
+      await postApi(`admin/notify/getnoticedetail/${row.seqno}`, {}).then(
+        (res) => {
+          const {
+            data: { data },
+          } = res;
+          this.setState({
+            editData: data,
+            editMode: true,
+            listMode: false,
+          });
+        }
+      );
+    },
+  };
+
+  componentDidUpdate(prevProp, prevState) {
+    if (this.state.userId !== prevState.userId) {
+      this.setSearchId();
+    }
+  }
+
+  componentDidMount() {
+    this.getDate();
+    const {
+      user: { userinfo },
+    } = this.props;
+
+    this.setState(
+      {
+        userId: userinfo.logid,
+        cvnas: userinfo.cvnas,
+      },
+      () => {
+        this.submits.searchList();
+      }
+    );
+  }
+
   render() {
+    const {
+      loading,
+      noticeList,
+      columns,
+      errorSearch,
+      listMode,
+      editData,
+      editMode,
+      isMast,
+      fromDate,
+      toDate,
+      innerLoading,
+    } = this.state;
+    const {
+      user: { userinfo },
+    } = this.props;
+    const submits = this.submits;
+    const inputs = this.inputs;
+
     return (
       <>
-        <div className="content-component">
+        {innerLoading ? <InnerLoading /> : null}
+        <div className="content-component notify data-room">
           <h2>{this.props.title}</h2>
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              {listMode ? (
+                <>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      submits.searchList();
+                    }}
+                  >
+                    <div className="notify-header form">
+                      <span className="label">사용자 조회</span>
+                      <LiveSearch
+                        user={userinfo}
+                        isMast={isMast}
+                        liveResult={inputs.liveResult}
+                      />
+                      <div className="user-info">
+                        <span>사용자명</span>
+                        <span className="info-cvnas">{this.state.cvnas}</span>
+                      </div>
+                      <span className="label">등록일자</span>
+                      <DatePicker
+                        selected={fromDate}
+                        onChange={this.fromDateChange}
+                        dateFormat="yyyy/MM/dd"
+                      />
+                      <span className="date-divider">~</span>
+                      <DatePicker
+                        selected={toDate}
+                        onChange={this.toDateChange}
+                        dateFormat="yyyy/MM/dd"
+                      />
+                      <div className="utils">
+                        <button
+                          type="submit"
+                          className="util-button"
+                          onClick={this.openAddMode}
+                        >
+                          <img src={search} alt="add" />
+                          <span>조회</span>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                  <div className="table">
+                    <div className={errorSearch ? "error active" : "error"}>
+                      검색된 데이터가 없습니다.
+                    </div>
+                    <BootstrapTable
+                      wrapperClasses={
+                        this.props.menuAxis
+                          ? "notice-table"
+                          : "notice-table left"
+                      }
+                      keyField="seqno"
+                      data={noticeList}
+                      columns={columns}
+                      rowEvents={this.rowEvents}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="dummy">dummy</div>
+              )}
+            </>
+          )}
         </div>
       </>
     );

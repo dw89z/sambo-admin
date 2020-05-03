@@ -7,6 +7,8 @@ import BootstrapTable from "react-bootstrap-table-next";
 import DatePicker from "react-datepicker";
 import TextEditor from "./TextEditor";
 import Loading from "../../Loading";
+import InnerLoading from "../../InnerLoading";
+import { formatDate } from "../common/Common";
 import { postApi, getApi } from "../../../api";
 import "./SystNotify.scss";
 
@@ -73,6 +75,7 @@ export default class extends React.Component {
     listMode: true,
     editData: {},
     editMode: false,
+    innerLoading: false,
   };
 
   changeMode = () => {
@@ -130,29 +133,16 @@ export default class extends React.Component {
   };
 
   submits = {
-    formatDate: (date) => {
-      const yearNum = date.getFullYear();
-      let monthNum = date.getMonth() + 1;
-      let dayNum = date.getDate();
-      let year = yearNum.toString();
-      let month = monthNum.toString();
-      let day = dayNum.toString();
-      if (month.length === 1) {
-        month = "0" + month;
-      }
-      if (day.length === 1) {
-        day = "0" + day;
-      }
-      const fulldate = `${year}${month}${day}`;
-      return fulldate;
-    },
-
     searchList: async () => {
+      console.log("this");
       const { fromDate, toDate, userId } = this.state;
+      this.setState({
+        innerLoading: true,
+      });
       const rawFromDate = new Date(fromDate);
       const rawToDate = new Date(toDate);
-      const fromdate = this.submits.formatDate(rawFromDate);
-      const todate = this.submits.formatDate(rawToDate);
+      const fromdate = formatDate(rawFromDate);
+      const todate = formatDate(rawToDate);
       const searchoption = {
         searchoption: {
           logid: userId,
@@ -166,6 +156,7 @@ export default class extends React.Component {
             data: { noticelist },
           },
         } = res;
+        console.log(res);
         noticelist.map((list) => {
           const year = list.crtdat.substr(0, 4);
           const month = list.crtdat.substr(4, 2);
@@ -178,11 +169,13 @@ export default class extends React.Component {
           this.setState({
             errorSearch: true,
             noticeList: [],
+            innerLoading: false,
           });
         } else {
           this.setState({
             noticeList: noticelist,
             errorSearch: false,
+            innerLoading: false,
           });
         }
       });
@@ -223,10 +216,15 @@ export default class extends React.Component {
       user: { userinfo },
     } = this.props;
 
-    this.setState({
-      userId: userinfo.logid,
-      cvnas: userinfo.cvnas,
-    });
+    this.setState(
+      {
+        userId: userinfo.logid,
+        cvnas: userinfo.cvnas,
+      },
+      () => {
+        this.submits.searchList();
+      }
+    );
   }
 
   render() {
@@ -241,6 +239,7 @@ export default class extends React.Component {
       isMast,
       fromDate,
       toDate,
+      innerLoading,
     } = this.state;
     const {
       user: { userinfo },
@@ -250,6 +249,7 @@ export default class extends React.Component {
 
     return (
       <>
+        {innerLoading ? <InnerLoading /> : null}
         <div className="content-component notify data-room">
           <h2>{this.props.title}</h2>
           {loading ? (
