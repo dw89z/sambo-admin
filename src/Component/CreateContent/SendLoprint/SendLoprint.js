@@ -204,6 +204,7 @@ export default class extends React.Component {
 
                     resArr.push(resRow);
                   }
+                  console.log(resArr);
                   this.setState({
                     printcardlist: resArr,
                   });
@@ -213,6 +214,16 @@ export default class extends React.Component {
           }
         );
       }
+    },
+
+    pubPdf: async () => {
+      const data = {
+        cvcod: "000010",
+        prt_jpno: "202004220008",
+      };
+      await postApi("scm/paymentorder/maketradingstatement", data).then((res) =>
+        console.log(res)
+      );
     },
   };
 
@@ -251,12 +262,18 @@ export default class extends React.Component {
         data: { data },
       } = res;
       const result = this.groupBy(data.paymentcardlist, "prt_JPNO");
-      console.log(result.length, result);
       let resArr = [];
       for (let i in result) {
         let resRow = Object.values(result[i]);
         let resChk = resRow.map((list) => {
           list.checked = false;
+          const year = list.nadate.substr(0, 4);
+          const month = list.nadate.substr(4, 2);
+          const day = list.nadate.substr(6, 2);
+          const date = `${year}-${month}-${day}`;
+          list.nadate = date;
+          const naqty = addCommas(list.naqty);
+          list.naqty = naqty;
           return list;
         });
         resArr.push(resChk);
@@ -338,7 +355,6 @@ export default class extends React.Component {
     } else if (printgbn === "Y") {
       resultList = printcardlist.map((list, mainIndex) => {
         return list.map((sub, index) => {
-          console.log(sub.checked);
           return (
             <tr
               key={index}
@@ -577,11 +593,7 @@ export default class extends React.Component {
                   발행
                 </button>
               ) : (
-                <button
-                  className="save"
-                  type="button"
-                  onClick={() => alert("미발행")}
-                >
+                <button className="save" type="button" onClick={submits.pubPdf}>
                   미발행
                 </button>
               )}

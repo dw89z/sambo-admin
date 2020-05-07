@@ -6,6 +6,7 @@ import "./Dashboard.scss";
 import { postApi } from "../../../api";
 import Loading from "../../Loading";
 import Table from "../../Fragments/TableDash";
+import BootstrapTable from "react-bootstrap-table-next";
 
 export default class extends React.Component {
   state = {
@@ -230,6 +231,20 @@ export default class extends React.Component {
     },
     notice: [],
     dataRoom: [],
+    columns: [
+      {
+        dataField: "crtdat",
+        text: "일자",
+      },
+      {
+        dataField: "seqno",
+        text: "등록번호",
+      },
+      {
+        dataField: "title",
+        text: "제목",
+      },
+    ],
   };
 
   sortObject(object) {
@@ -284,14 +299,24 @@ export default class extends React.Component {
     return newDates;
   }
 
+  dateFormat(array) {
+    let newDates = array.map((arr) => {
+      const year = arr.crtdat.substr(0, 4);
+      const month = arr.crtdat.substr(4, 2);
+      const day = arr.crtdat.substr(6, 2);
+      const date = `${year}-${month}-${day}`;
+      arr.crtdat = date;
+      return arr;
+    });
+    return newDates;
+  }
+
   modifyChartData(data, num) {
     let sorted = this.sortObject(data);
     let values = Object.values(sorted);
     let splitValues = this.splitUp(values, num);
     return splitValues;
   }
-
-  renameKeys() {}
 
   async componentDidMount() {
     try {
@@ -305,17 +330,20 @@ export default class extends React.Component {
           notisList,
         } = res.data.data;
 
-        let salesQuantity = this.modifyChartData(salesQuantityTurnover, 3);
-        let monthlyFailure = this.modifyChartData(monthlyFailureRate, 3);
-        let mainSupply = this.modifyChartData(mainSupplyItems, 2);
-        let failRate = Object.values(failureRate);
-        let mainInt = mainSupply[0].map((string) => {
-          let int = parseInt(string);
+        const forRoomList = this.dateFormat(dataRoomList);
+        const forNoticeList = this.dateFormat(notisList);
+
+        const salesQuantity = this.modifyChartData(salesQuantityTurnover, 3);
+        const monthlyFailure = this.modifyChartData(monthlyFailureRate, 3);
+        const mainSupply = this.modifyChartData(mainSupplyItems, 2);
+        const failRate = Object.values(failureRate);
+        const mainInt = mainSupply[0].map((string) => {
+          const int = parseInt(string);
           return int;
         });
 
-        let dates = salesQuantity[2];
-        let newDates = this.dateFormatter(dates);
+        const dates = salesQuantity[2];
+        const newDates = this.dateFormatter(dates);
 
         this.setState({
           salesChart: {
@@ -357,8 +385,8 @@ export default class extends React.Component {
               ...this.state.failRateChart.options,
             },
           },
-          notice: notisList,
-          dataRoom: dataRoomList,
+          notice: forNoticeList,
+          dataRoom: forRoomList,
         });
       });
     } catch (err) {
@@ -394,7 +422,7 @@ export default class extends React.Component {
                     options={salesChart.options}
                     series={salesChart.series}
                     width="100%"
-                    height="265"
+                    height="100%"
                     className="chart"
                   />
                 </div>
@@ -404,7 +432,7 @@ export default class extends React.Component {
                     options={monthFailChart.options}
                     series={monthFailChart.series}
                     width="100%"
-                    height="265"
+                    height="100%"
                     className="chart half"
                   />
                 </div>
@@ -417,7 +445,7 @@ export default class extends React.Component {
                     series={mainSupplyChart.series}
                     type="pie"
                     width="100%"
-                    height="250"
+                    height="105%"
                     className="chart half"
                   />
                 </div>
@@ -428,7 +456,7 @@ export default class extends React.Component {
                     series={failRateChart.series}
                     type="radialBar"
                     width="100%"
-                    height="250"
+                    height="160%"
                     className="chart half"
                   />
                 </div>
@@ -439,10 +467,22 @@ export default class extends React.Component {
                   <Tab>자료실</Tab>
                 </TabList>
                 <TabPanel className="table-wrapper">
-                  <Table data={notice} />
+                  <div className="dash-table">
+                    <BootstrapTable
+                      keyField="seqno"
+                      data={notice}
+                      columns={this.state.columns}
+                    />
+                  </div>
                 </TabPanel>
                 <TabPanel className="table-wrapper">
-                  <Table data={dataRoom} />
+                  <div className="dash-table">
+                    <BootstrapTable
+                      keyField="seqno"
+                      data={dataRoom}
+                      columns={this.state.columns}
+                    />
+                  </div>
                 </TabPanel>
               </Tabs>
             </>

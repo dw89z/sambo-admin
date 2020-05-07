@@ -17,13 +17,13 @@ class CreateContent extends React.Component {
       {
         index: 0,
         window_name: "대시보드",
-        window_id: "InfoItemas",
+        window_id: "SendLoprint",
       },
     ],
     currentComp: {
       index: 0,
       window_name: "대시보드",
-      window_id: "InfoItemas",
+      window_id: "SendLoprint",
     },
     doneMsg: "",
     errorMsg: "",
@@ -258,7 +258,6 @@ class CreateContent extends React.Component {
     const { menuAxis } = this.props;
     const { currentMenu, loading, doneMsg, errorMsg } = this.state;
     const uiFunc = this.uiFunc;
-    console.log(this.state.mountedComp);
 
     return (
       <>
