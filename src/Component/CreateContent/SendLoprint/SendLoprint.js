@@ -1,6 +1,7 @@
 import React from "react";
 import InnerLoading from "../../InnerLoading";
 import LiveSearch from "../common/LiveSeach";
+import NewWindow from "react-new-window";
 import _ from "lodash";
 import { postApi, getApi } from "../../../api";
 import { addCommas } from "../common/Common";
@@ -22,9 +23,12 @@ export default class extends React.Component {
     cvcod: this.props.user.userinfo.cvcod,
     itgbn: "1",
     jajegbn: "2",
-    printgbn: "Y",
+    printgbn: "N",
     searchKeyword: "",
     printcardlist: [],
+    newWindow: false,
+    pdfPath: "",
+    prtJpno: "",
   };
 
   inputs = {
@@ -46,7 +50,6 @@ export default class extends React.Component {
       let checked = paymentcardlist.filter((list, index) => index === id);
       let remain = paymentcardlist.filter((list, index) => index !== id);
       let checkAmount = paymentcardlist.filter((list) => list.checked === true);
-      console.log(checkAmount);
       if (checkAmount.length < 10) {
         if (checked[0].checked === false) {
           checked[0].checked = true;
@@ -184,12 +187,16 @@ export default class extends React.Component {
         searchKeyword: "",
       };
 
-      if (jpnos.length !== 0) {
-        this.setState({
-          printgbn: "Y",
-        });
+      this.setState({
+        printgbn: "Y",
+        innerLoading: true,
+      });
+      try {
         await postApi("scm/paymentorder/publishpaymentcard", jpnos).then(
           async (res) => {
+            this.setState({
+              prtJpno: res.data.data.prt_jpno,
+            });
             if (!res.data.data.errorCode) {
               await postApi("scm/paymentorder/paymentcardlist", data).then(
                 (res) => {
@@ -200,13 +207,52 @@ export default class extends React.Component {
                   let resArr = [];
                   for (let i in result) {
                     let resRow = Object.values(result[i]);
-                    resRow.checked = false;
-
-                    resArr.push(resRow);
+                    let resChk = resRow.map((list) => {
+                      list.checked = false;
+                      const year = list.nadate.substr(0, 4);
+                      const month = list.nadate.substr(4, 2);
+                      const day = list.nadate.substr(6, 2);
+                      const date = `${year}-${month}-${day}`;
+                      list.nadate = date;
+                      const naqty = addCommas(list.naqty);
+                      list.naqty = naqty;
+                      return list;
+                    });
+                    resArr.push(resChk);
                   }
-                  console.log(resArr);
                   this.setState({
                     printcardlist: resArr,
+                    innerLoading: false,
+                  });
+                }
+              );
+            }
+          }
+        );
+      } catch (error) {
+        alert(error);
+      } finally {
+        const { prtJpno } = this.state;
+        const data = {
+          cvcod: "000010",
+          prt_jpno: prtJpno,
+        };
+        await postApi("scm/paymentorder/maketradingstatement", data).then(
+          (res) => {
+            const { data } = res;
+            if (data.errorCode === "1") {
+              this.setState({
+                innerLoading: false,
+              });
+            } else {
+              this.setState(
+                {
+                  pdfPath: data.data.reportpath,
+                  innerLoading: false,
+                },
+                () => {
+                  this.setState({
+                    newWindow: true,
                   });
                 }
               );
@@ -249,7 +295,7 @@ export default class extends React.Component {
       fromDate: "20200401",
       toDate: "20201231",
       cvcod: "000010",
-      printgbn: "Y",
+      printgbn: "N",
       itgbn: "1",
       jajegbn: "2",
       searchKeyword: "",
@@ -331,7 +377,6 @@ export default class extends React.Component {
               </td>
             )}
 
-            <td className="num">{list.prt_JPNO}</td>
             <td className="num">{list.nadate}</td>
             <td className="num">{list.jpno}</td>
             <td className="num">{list.itnbr}</td>
@@ -446,6 +491,30 @@ export default class extends React.Component {
     },
   };
 
+  controlPrintYN = () => {
+    const { printgbn } = this.state;
+    if (printgbn === "Y") {
+      this.setState(
+        {
+          printgbn: "N",
+          innerLoading: true,
+        },
+        () => {
+          this.submits.paymentCard();
+        }
+      );
+    } else if (printgbn === "N") {
+      this.setState(
+        {
+          printgbn: "Y",
+        },
+        () => {
+          this.submits.pubPayment();
+        }
+      );
+    }
+  };
+
   async componentDidMount() {
     let date = new Date();
     date.setDate(date.getDate() - 20);
@@ -454,8 +523,7 @@ export default class extends React.Component {
       toDate: new Date(),
       cvcod: this.props.user.cvcod,
     });
-    // this.submits.paymentCard();
-    this.test();
+    this.submits.paymentCard();
   }
 
   render() {
@@ -468,6 +536,9 @@ export default class extends React.Component {
       jajegbn,
       printgbn,
       itgbn,
+      newWindow,
+      pdfPath,
+      paymentcardlist,
     } = this.state;
     const { userinfo } = this.props.user;
     const submits = this.submits;
@@ -476,6 +547,9 @@ export default class extends React.Component {
     return (
       <>
         {innerLoading ? <InnerLoading /> : null}
+        {newWindow ? (
+          <NewWindow url={`http://125.141.30.222:8757/${pdfPath}`}></NewWindow>
+        ) : null}
         <div className="content-component send-logistc">
           <h2>{this.props.title}</h2>
           <div className="form">
@@ -574,29 +648,42 @@ export default class extends React.Component {
                 <span className="label ml mt">시작품</span>
                 <input type="checkbox" className="test" />
               </div>
-              {printgbn === "Y" && (
-                <button
-                  className="save repub"
-                  type="button"
-                  onClick={submits.pubPayment}
-                >
-                  재발행
-                </button>
-              )}
               <button className="save search">조회</button>
               {printgbn === "N" ? (
                 <button
                   className="save"
                   type="button"
-                  onClick={submits.pubPayment}
+                  onClick={() => {
+                    const checked = paymentcardlist.filter(
+                      (list) => list.checked
+                    );
+                    if (checked.length === 0) {
+                      this.props.error("1개 이상의 리스트를 선택해주세요");
+                    } else {
+                      submits.pubPayment();
+                    }
+                  }}
                 >
                   발행
                 </button>
               ) : (
                 <button className="save" type="button" onClick={submits.pubPdf}>
-                  미발행
+                  재발행
                 </button>
               )}
+
+              <div className="switch">
+                <span className={printgbn === "N" ? "mr active" : "mr"}>
+                  미발행
+                </span>
+                <div className="switch-cont" onClick={this.controlPrintYN}>
+                  <p className={printgbn === "N" ? "btn no" : "btn yes"}></p>
+                  <p className="btn-back"></p>
+                </div>
+                <span className={printgbn === "Y" ? "ml active" : "ml"}>
+                  발행
+                </span>
+              </div>
             </form>
           </div>
           <div className="table">
@@ -615,7 +702,7 @@ export default class extends React.Component {
                     </th>
                     <th className="selection">선택</th>
 
-                    <th>명세서번호</th>
+                    {printgbn === "Y" ? <th>명세서번호</th> : null}
                     <th onClick={inputs.sortBy} className="th-sort">
                       출발일자
                     </th>

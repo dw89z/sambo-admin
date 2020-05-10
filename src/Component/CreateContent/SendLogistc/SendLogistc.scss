@@ -135,8 +135,7 @@
 
             &.active {
               cursor: pointer;
-              background: url("../../../assets/img/trash.svg") center center
-                no-repeat;
+              background: url("../../../assets/img/trash.svg") center center no-repeat;
               background-size: 1.6rem;
             }
           }
@@ -175,15 +174,13 @@
 
             &.deactive {
               cursor: default;
-              background: url("../../../assets/img/copy-un.svg") center center
-                no-repeat;
+              background: url("../../../assets/img/copy-un.svg") center center no-repeat;
               background-size: 1.6rem;
             }
 
             &.active {
               cursor: pointer;
-              background: url("../../../assets/img/copy.svg") center center
-                no-repeat;
+              background: url("../../../assets/img/copy.svg") center center no-repeat;
               background-size: 1.6rem;
             }
           }
@@ -216,6 +213,64 @@
 
         &.copied {
           color: $gray3;
+        }
+      }
+    }
+  }
+
+  .switch {
+    position: absolute;
+    display: flex;
+    right: 0;
+    top: 0.35rem;
+    align-items: center;
+
+    span {
+      color: $gray3;
+      font-weight: 500;
+      font-size: 0.8rem;
+
+      &.active {
+        color: $pri;
+      }
+
+      &.mr {
+        margin-right: 0.75rem;
+      }
+
+      &.ml {
+        margin-left: 0.75rem;
+      }
+    }
+
+    .switch-cont {
+      position: relative;
+      cursor: pointer;
+
+      .btn-back {
+        width: 1.5rem;
+        height: 0.5rem;
+        border-radius: 1rem;
+        background: $gray3;
+      }
+
+      .btn {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 1rem;
+        background: $pri;
+        position: absolute;
+        top: -0.25rem;
+        transition: all 0.25s;
+
+        &.no {
+          left: 0;
+          right: initial;
+        }
+
+        &.yes {
+          left: initial;
+          right: 0;
         }
       }
     }

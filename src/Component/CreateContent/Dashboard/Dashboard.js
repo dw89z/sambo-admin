@@ -24,6 +24,7 @@ export default class extends React.Component {
           data: [],
         },
       ],
+
       options: {
         chart: {
           width: "120%",
@@ -38,12 +39,18 @@ export default class extends React.Component {
             offsetY: -25,
           },
         },
+        colors: ["#273ae6", "#06b4ac"],
         stroke: {
-          width: [1, 2],
+          width: [0, 3],
         },
         dataLabels: {
           enabled: true,
           enabledOnSeries: [1],
+          background: {
+            borderRadius: 2,
+            borderWidth: 1,
+            padding: 6,
+          },
         },
         labels: [],
         xaxis: {
@@ -63,7 +70,7 @@ export default class extends React.Component {
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
               },
               style: {
-                colors: "#d1d1d9",
+                colors: "#a1a1a9",
                 fontSize: "10px",
                 fontWeight: 700,
               },
@@ -78,7 +85,7 @@ export default class extends React.Component {
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
               },
               style: {
-                colors: "#d1d1d9",
+                colors: "#a1a1a9",
                 fontSize: "10px",
                 fontWeight: 700,
               },
@@ -113,12 +120,18 @@ export default class extends React.Component {
             offsetY: -25,
           },
         },
+        colors: ["#273ae6", "#f43d6b"],
         stroke: {
-          width: [1, 2],
+          width: [0, 0],
         },
         dataLabels: {
           enabled: true,
           enabledOnSeries: [1],
+          background: {
+            borderRadius: 2,
+            borderWidth: 1,
+            padding: 6,
+          },
         },
         labels: [],
         xaxis: {
@@ -136,7 +149,7 @@ export default class extends React.Component {
               maxWidth: 71,
               offsetX: -5,
               style: {
-                colors: "#d1d1d9",
+                colors: "#a1a1a9",
                 fontSize: "10px",
                 fontWeight: 700,
               },
@@ -151,7 +164,7 @@ export default class extends React.Component {
               minWidth: 70,
               maxWidth: 71,
               style: {
-                colors: "#d1d1d9",
+                colors: "#a1a1a9",
                 fontSize: "10px",
                 fontWeight: 700,
               },
@@ -174,9 +187,21 @@ export default class extends React.Component {
             speed: 2000,
           },
         },
+        colors: [
+          "#273ae6",
+          "#7b88ff",
+          "#6c5ce7",
+          "#32dbc6",
+          "#76b39d",
+          "#15cda8",
+        ],
         plotOptions: {
           pie: {
             customScale: 0.7,
+            dataLabels: {
+              offset: -10,
+              minAngleToShowLabel: 10,
+            },
           },
         },
         labels: [],
@@ -186,14 +211,14 @@ export default class extends React.Component {
       series: [],
       options: {
         chart: {
-          height: 280,
+          height: 300,
           type: "radialBar",
           animations: {
             easing: "easeinout",
             speed: 3500,
           },
         },
-        colors: ["#20E647"],
+        colors: ["#f43d6b"],
         plotOptions: {
           radialBar: {
             startAngle: -90,
@@ -208,8 +233,10 @@ export default class extends React.Component {
                 show: false,
               },
               value: {
-                fontSize: "30px",
+                offsetY: -1,
+                fontSize: "35px",
                 show: true,
+                fontWeight: "bold",
               },
             },
           },
@@ -219,7 +246,7 @@ export default class extends React.Component {
           gradient: {
             shade: "dark",
             type: "horizontal",
-            gradientToColors: ["#87D4F9"],
+            gradientToColors: ["#f76a8c"],
             stops: [0, 100],
           },
         },
@@ -422,7 +449,7 @@ export default class extends React.Component {
                     options={salesChart.options}
                     series={salesChart.series}
                     width="100%"
-                    height="100%"
+                    height="95%"
                     className="chart"
                   />
                 </div>
@@ -432,7 +459,7 @@ export default class extends React.Component {
                     options={monthFailChart.options}
                     series={monthFailChart.series}
                     width="100%"
-                    height="100%"
+                    height="95%"
                     className="chart half"
                   />
                 </div>
@@ -456,7 +483,7 @@ export default class extends React.Component {
                     series={failRateChart.series}
                     type="radialBar"
                     width="100%"
-                    height="160%"
+                    height="150%"
                     className="chart half"
                   />
                 </div>
